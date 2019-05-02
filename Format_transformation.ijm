@@ -11,6 +11,7 @@ for (i=0; i<list.length; i++) {
 	print(list[i], i+1 + "/" + list.length);
 	open(dir+File.separator+list[i]);
 	name=File.nameWithoutExtension;
+	run("8-bit");
 	saveAs("tif", output+File.separator+name);
 	close(name+".tif");
 }
