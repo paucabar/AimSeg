@@ -86,6 +86,9 @@ for (i=0; i<list.length; i++) {
 		count++;
 	}
 }
+if (count==0) {
+	exit("No TIF files are found")
+}
 
 Dialog.create("Field of view");
 Dialog.addChoice("Process", images);
