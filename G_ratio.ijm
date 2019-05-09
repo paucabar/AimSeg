@@ -221,6 +221,26 @@ run("Fill Holes");
 imageCalculator("AND create", "axon_class","Outlines_to_count");
 rename("myel_axon_class");
 run("Analyze Particles...", "  circularity=0.00-Infinity add");
+
+//convex hull
+roiN=roiManager("count");
+for (i=0; i<roiN; i++) {
+	roiManager("Select", i);
+	run("Convex Hull");
+	roiManager("Update");
+}
+roiManager("Deselect");
+roiManager("Combine");
+run("Create Mask");
+rename("Axons_ConvexHull");
+selectWindow("ROI Manager");
+run("Close");
+imageCalculator("AND create", "Inner_to_count_corrected","Axons_ConvexHull");
+rename("Axons_ConvexHull_Corrected");
+run("Analyze Particles...", "  circularity=0.00-Infinity add");
+close("Axons_ConvexHull");
+close("Axons_ConvexHull_Corrected");
+
 selectWindow(objectTag);
 run("Duplicate...", "title=reject_class");
 setThreshold(3, 4);
