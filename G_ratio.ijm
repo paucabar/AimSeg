@@ -1,46 +1,70 @@
 
 //Check if the ilastik plugin is installed
 List.setCommands; 
-if (List.get("Import HDF5")=="" || List.get("Add Borders")=="") { 
-	if (List.get("Import HDF5")=="") {
-		options=newArray("Yes, update", "No, exit");
-		Dialog.create("Update");
-		Dialog.addRadioButtonGroup("In order to run this macro you will need to install the \"ilastik\" plugin.\nDo you want to install the \"ilastik\" plugin now?", options, 1, 2, options[0]);
-		html = "<html>"
-				+"Follow the next steps at the <b>ImageJ updater</b>:<br>"
-				+"<H5><i>The updater will be automaically opened once you select \"Yes, update\"</i></H5><br>"
-				+"1. Click on \"Manage update sites\"<br>"
-				+"2. Check the \"ilastik\" site<br>"
-				+"3. Click on \"Close\" (<b>DO NOT</b> click on \"Add update site\")<br>"
-				+"4. Click on \"Apply changes\"<br>"
-				+"5. Restart ImageJ";
-		Dialog.addHelp(html);
-		Dialog.show();
-		answer=Dialog.getRadioButton();
-		if (answer==options[0]) {
-			run("Update...");
-		}
+if (List.get("Import HDF5")=="" && List.get("Add Borders")=="") { 
+	options=newArray("Yes, update", "No, exit");
+	Dialog.create("Update");
+	Dialog.addRadioButtonGroup("In order to run this macro you will need to install the \"ilastik\" and \"Morphology\" plugins.\nDo you want to install the \"ilastik\" and \"Morphology\" plugins now?", options, 1, 2, options[0]);
+	html = "<html>"
+		+"Follow the next steps at the <b>ImageJ updater</b>:<br>"
+		+"<H5><i>The updater will be automaically opened once you select \"Yes, update\"</i></H5><br>"
+		+"1. Click on \"Manage update sites\"<br>"
+		+"2. Check the \"ilastik\" site<br>"
+		+"3. Check the \"Morphology\" site<br>"
+		+"4. Click on \"Close\" (<b>DO NOT</b> click on \"Add update site\")<br>"
+		+"5. Click on \"Apply changes\"<br>"
+		+"6. Restart ImageJ";
+	Dialog.addHelp(html);
+	Dialog.show();
+	answer=Dialog.getRadioButton();
+	if (answer==options[0]) {
+		run("Update...");
+		exit()
+	} else {
+		exit()
 	}
-	if (List.get("Add Borders")=="") {
-		options=newArray("Yes, update", "No, exit");
-		Dialog.create("Update");
-		Dialog.addRadioButtonGroup("In order to run this macro you will need to install the \"Morphology\" plugin.\nDo you want to install the \"Morphology\" plugin now?", options, 1, 2, options[0]);
-		html = "<html>"
-				+"Follow the next steps at the <b>ImageJ updater</b>:<br>"
-				+"<H5><i>The updater will be automaically opened once you select \"Yes, update\"</i></H5><br>"
-				+"1. Click on \"Manage update sites\"<br>"
-				+"2. Check the \"Morphology\" site<br>"
-				+"3. Click on \"Close\" (<b>DO NOT</b> click on \"Add update site\")<br>"
-				+"4. Click on \"Apply changes\"<br>"
-				+"5. Restart ImageJ";
-		Dialog.addHelp(html);
-		Dialog.show();
-		answer=Dialog.getRadioButton();
-		if (answer==options[0]) {
-			run("Update...");
-		}
+} else if (List.get("Import HDF5")=="") {
+	options=newArray("Yes, update", "No, exit");
+	Dialog.create("Update");
+	Dialog.addRadioButtonGroup("In order to run this macro you will need to install the \"ilastik\" plugin.\nDo you want to install the \"ilastik\" plugin now?", options, 1, 2, options[0]);
+	html = "<html>"
+		+"Follow the next steps at the <b>ImageJ updater</b>:<br>"
+		+"<H5><i>The updater will be automaically opened once you select \"Yes, update\"</i></H5><br>"
+		+"1. Click on \"Manage update sites\"<br>"
+		+"2. Check the \"ilastik\" site<br>"
+		+"3. Click on \"Close\" (<b>DO NOT</b> click on \"Add update site\")<br>"
+		+"4. Click on \"Apply changes\"<br>"
+		+"5. Restart ImageJ";
+	Dialog.addHelp(html);
+	Dialog.show();
+	answer=Dialog.getRadioButton();
+	if (answer==options[0]) {
+		run("Update...");
+		exit()
+	} else {
+		exit()
 	}
-	exit()
+} else if (List.get("Add Borders")=="") {
+	options=newArray("Yes, update", "No, exit");
+	Dialog.create("Update");
+	Dialog.addRadioButtonGroup("In order to run this macro you will need to install the \"Morphology\" plugin.\nDo you want to install the \"Morphology\" plugin now?", options, 1, 2, options[0]);
+	html = "<html>"
+		+"Follow the next steps at the <b>ImageJ updater</b>:<br>"
+		+"<H5><i>The updater will be automaically opened once you select \"Yes, update\"</i></H5><br>"
+		+"1. Click on \"Manage update sites\"<br>"
+		+"2. Check the \"Morphology\" site<br>"
+		+"3. Click on \"Close\" (<b>DO NOT</b> click on \"Add update site\")<br>"
+		+"4. Click on \"Apply changes\"<br>"
+		+"5. Restart ImageJ";
+	Dialog.addHelp(html);
+	Dialog.show();
+	answer=Dialog.getRadioButton();
+	if (answer==options[0]) {
+		run("Update...");
+		exit()
+	} else {
+		exit()
+	}
 }
 
 if (isOpen("ROI Manager")) {
@@ -264,9 +288,9 @@ close("Outlines_to_count");
 close("Inner_to_count_corrected");
 close(imageName);
 close(name);
-//waitForUser
-waitForUser(titleWFU, msgWFU);
 
+//Edition, save and close all
+waitForUser(titleWFU, msgWFU);
 roiManager("Save", dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+"_RoiSet_AXON.zip");
 run("Close All");
 if (isOpen("ROI Manager")) {
