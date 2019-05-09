@@ -253,6 +253,18 @@ run("Merge Channels...", "c3=myel_reject_class c6=Myelin_to_count c4="+imageName
 Stack.setChannel(1);
 roiManager("Show All");
 setTool("freehand");
+//close images
+close("myel_reject_class");
+close("reject_class");
+close(objectTag);
+close("myel_axon_class");
+close("axon_class");
+close("Myelin_to_count");
+close("Outlines_to_count");
+close("Inner_to_count_corrected");
+close(imageName);
+close(name);
+//waitForUser
 waitForUser(titleWFU, msgWFU);
 
 roiManager("Save", dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+"_RoiSet_AXON.zip");
