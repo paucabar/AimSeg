@@ -29,7 +29,7 @@ title1 = "ResultsTable";
 title2 = "["+title1+"]";
 f = title2;
 run("Table...", "name="+title2+" width=650 height=500");
-print(f, "\\Headings:n\tImage Name\tROI code (inner myelin)\tAxon area\tInner Myelin area\tOuter Myelin area");
+print(f, "\\Headings:n\tImage Name\tROI code\tAxon area\tInner Myelin area\tOuter Myelin area");
 
 
 for (i=0; i<count; i++) {
@@ -106,26 +106,21 @@ for (i=0; i<count; i++) {
 			run("Convert to Mask");
 			run("Analyze Particles...", "display clear");
 			areaIn=getResult("Area", 0);
-			print(areaIn);
-			run("Set Measurements...", "centroid redirect=None decimal=2");
+			run("Set Measurements...", "feret's redirect=None decimal=2");
 			run("Analyze Particles...", "display clear");
-			xIn=getResult("X", 0);
-			yIn=getResult("Y", 0);
-			print(xIn, yIn);
+			xIn=getResult("FeretX", 0);
+			yIn=getResult("FeretY", 0);
 			selectImage("OuterMyelin_CountMasks");
 			run("Select None");
 			makePoint(xIn, yIn, "small yellow hybrid");
-			waitForUser("Hodor");
 			run("Set Measurements...", "mean redirect=None decimal=2");
 			run("Clear Results");
 			run("Measure");
 			pixelValue=getResult("Mean", 0);
-			print(pixelValue);
-			if (pixelValue!=0) {
+			if (pixelValue>0) {
 				run("Wand Tool...", "tolerance=0 mode=Legacy");
 				selectImage("OuterMyelin_CountMasks");
 				doWand(xIn, yIn);
-				waitForUser("Hodor");
 				run("Create Mask");
 				rename("Myelin_outline_mask");
 				run("Set Measurements...", "area redirect="+images[i]+" decimal=2");
