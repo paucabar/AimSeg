@@ -148,6 +148,14 @@ for (i=0; i<count; i++) {
 				n++;
 			}
 			close("ROI_IN"+roiNumberIn[j]);
+			if (j+1==roiNumberIn.length) {
+				close(images[i]);
+				close("InnerMyelin_CountMasks");
+				close("OuterMyelin_CountMasks");
+				close("AxonMasks");
+				selectWindow("Results");
+				run("Close");
+			}
 		}
 	} else {
 		print (images[i], "skipped: some ROI sets are missing");
