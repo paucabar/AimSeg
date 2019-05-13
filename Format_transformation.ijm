@@ -16,20 +16,5 @@ for (i=0; i<list.length; i++) {
 	close(name+".tif");
 }
 
-//Create a file containing the scale info
-open(dir+File.separator+list[0]);
-getPixelSize(unit, pixelWidth, pixelHeight);
-close();
-title1 = "pixel_size";
-title2 = "["+title1+"]";
-f = title2;
-run("Table...", "name="+title2+" width=500 height=500");
-print(f, "unit\t" + unit);
-print(f, "pixelWidth\t" + pixelWidth);
-print(f, "pixelHeight\t" + pixelHeight);
-saveAs("txt", output+File.separator+title1);
-selectWindow(title1);
-run("Close");
-
 setBatchMode(false);
 print("Macro ends");
