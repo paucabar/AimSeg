@@ -1,5 +1,11 @@
+print("\\Clear");
 if (isOpen("ROI Manager")) {
 	selectWindow("ROI Manager");
+	run("Close");
+}
+run("Close All");
+if (isOpen("ResultsTable")) {
+	selectWindow("ResultsTable");
 	run("Close");
 }
 run("Close All");
@@ -163,3 +169,22 @@ for (i=0; i<count; i++) {
 	}
 }
 setBatchMode(false);
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+dayOfMonth=d2s(dayOfMonth, 0);
+while (lengthOf(dayOfMonth) < 2) {
+	dayOfMonth="0"+dayOfMonth;
+}
+month=d2s(month, 0);
+while (lengthOf(month) < 2) {
+	month="0"+month;
+}
+hour=d2s(hour, 0);
+while (lengthOf(hour) < 2) {
+	hour="0"+hour;
+}
+minute=d2s(minute, 0);
+while (lengthOf(minute) < 2) {
+	minute="0"+minute;
+}
+selectWindow(title1);
+saveAs("Text", dir+File.separator+title1+dayOfMonth+month+year+"_"+hour+minute+".csv");
