@@ -39,6 +39,7 @@ print(f, "\\Headings:n\tImage Name\tROI code\tAxon area\tInner Myelin area\tOute
 
 run("ROI Manager...");
 setBatchMode(true);
+n=0;
 for (i=0; i<count; i++) {
 	name=substring(images[i], 0, lastIndexOf(images[i], "."));
 	//skip images missing some ROI set
@@ -55,7 +56,6 @@ for (i=0; i<count; i++) {
 		}
 	}
 	//open images
-	n=0;
 	if (checkIn==true && checkOut==true && checkAxon==true) {
 		open(images[i]);
 		//inner count masks
@@ -102,7 +102,8 @@ for (i=0; i<count; i++) {
 		run("Create Mask");
 		rename("AxonMasks");
 		selectWindow("ROI Manager");
-		run("Close");
+		roiManager("deselect");
+		roiManager("delete");
 		run("Select None");
 		for (j=0; j<roiNumberIn.length; j++) {
 			run("Set Measurements...", "area redirect="+images[i]+" decimal=2");
@@ -130,8 +131,8 @@ for (i=0; i<count; i++) {
 				doWand(xIn, yIn);
 				run("Create Mask");
 				rename("Myelin_outline_mask");
-				run("Set Measurements...", "area redirect="+images[i]+" decimal=2");
-				run("Analyze Particles...", "display exclude clear");		
+				run("Set Measurements...", "size=10-Infinity area redirect="+images[i]+" decimal=2");
+				run("Analyze Particles...", "display clear");		
 				areaOut=getResult("Area", 0);
 				imageCalculator("AND create", "ROI_IN"+roiNumberIn[j],"AxonMasks");
 				rename("Axon");
