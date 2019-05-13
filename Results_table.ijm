@@ -31,7 +31,8 @@ f = title2;
 run("Table...", "name="+title2+" width=650 height=500");
 print(f, "\\Headings:n\tImage Name\tROI code\tAxon area\tInner Myelin area\tOuter Myelin area");
 
-
+run("ROI Manager...");
+setBatchMode(true);
 for (i=0; i<count; i++) {
 	name=substring(images[i], 0, lastIndexOf(images[i], "."));
 	//skip images missing some ROI set
@@ -161,3 +162,4 @@ for (i=0; i<count; i++) {
 		print (images[i], "skipped: some ROI sets are missing");
 	}
 }
+setBatchMode(false);
