@@ -177,6 +177,7 @@ dayOfMonth=d2s(dayOfMonth, 0);
 while (lengthOf(dayOfMonth) < 2) {
 	dayOfMonth="0"+dayOfMonth;
 }
+month+=1;
 month=d2s(month, 0);
 while (lengthOf(month) < 2) {
 	month="0"+month;
