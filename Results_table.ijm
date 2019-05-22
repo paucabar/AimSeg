@@ -143,6 +143,8 @@ for (i=0; i<count; i++) {
 				close("Myelin_outline_mask");
 				if (results==1) {
 					areaAxon=getResult("Area", 0);
+				} else if (results==0) {
+					areaAxon=areaIn;
 				} else {
 					areaAxon=NaN;
 				}
