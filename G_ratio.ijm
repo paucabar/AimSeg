@@ -108,13 +108,14 @@ run("Duplicate...", "title=Myelin_inverted");
 run("Invert");
 run("Analyze Particles...", "  show=Masks exclude");
 rename("Myelin_inverted_excludedEdges");
+run("Options...", "iterations=2 count=1 do=Close");
+run("Fill Holes");
 imageCalculator("XOR create", "Myelin_inverted","Myelin_inverted_excludedEdges");
 selectWindow("Result of Myelin_inverted");
 run("Analyze Particles...", "  circularity=0.30-1.00 show=Masks");
 rename("Myelin_inverted_edges");
 imageCalculator("OR create", "Myelin_inverted_excludedEdges","Myelin_inverted_edges");
-run("Fill Holes");
-run("Analyze Particles...", "size=10000-Infinity circularity=0.30-1.00 show=Masks add");
+run("Analyze Particles...", "size=10000-Infinity circularity=0.4-1.00 show=Masks add");
 name=substring(imageName, 0, indexOf(imageName, "."))+"_Inner_masks";
 rename(name);
 
