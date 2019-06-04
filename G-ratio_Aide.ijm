@@ -148,37 +148,6 @@ roiManager("Combine");
 run("Create Mask");
 rename(name);
 close("Composite_inner");
-options=newArray("Yes, visualize", "No, next step");
-answer=options[0];
-do {
-	Dialog.create("Visualize");
-	Dialog.addRadioButtonGroup("Do you want to visualize your edition?", options, 1, 2, options[0]);
-	Dialog.show();
-	answer=Dialog.getRadioButton();
-	if (answer==options[0]) {
-		imageCalculator("OR create", "Myelin_inverted", name);
-		rename("All_masks");
-		imageCalculator("XOR create", "All_masks", name);
-		rename("Other_masks");
-		run("Merge Channels...", "c4="+imageName+" c3=Other_masks c1="+name+" create keep");
-		rename("Composite_inner");
-		close(name);
-		close("All_masks");
-		close("Other_masks");
-		Stack.setChannel(2);
-		setTool("wand");
-		roiManager("Show All");
-		waitForUser(titleWFU, msgWFU);
-		roiManager("Save", dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+"_RoiSet_IN.zip");
-		roiManager("Deselect");
-		roiManager("Combine");
-		run("Create Mask");
-		rename(name);
-		close("Composite_inner");
-	}
-} while (answer==options[0]);
-
-
 
 if (isOpen("ROI Manager")) {
 	selectWindow("ROI Manager");
