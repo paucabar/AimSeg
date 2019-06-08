@@ -98,7 +98,7 @@ imageName=Dialog.getChoice();
 run("Colors...", "foreground=white background=black selection=yellow");
 open(dir+File.separator+imageName);
 run("8-bit");
-run("Import HDF5", "select="+dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+probabilitiesTag+" datasetname=[/exported_data: (4096, 4096, 3) float32] axisorder=yxc");
+run("Import HDF5", "select=["+dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+probabilitiesTag+"] datasetname=[/exported_data: (4096, 4096, 3) float32] axisorder=yxc");
 rename("3-channels");
 run("Duplicate...", "title=Myelin duplicate channels=1");
 setThreshold(0.2000, 1000000000000000000000000000000.0000);
