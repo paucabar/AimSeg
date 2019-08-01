@@ -146,7 +146,13 @@ for (i=0; i<count; i++) {
 				} else if (results==0) {
 					areaAxon=areaIn;
 				} else {
-					areaAxon=NaN;
+					axonResults=newArray(results);
+					for (k=0; k<results; k++) {
+						axonResults[k]=getResult("Area", k);
+					}
+					Array.getStatistics(axonResults, minArea, maxArea, meanArea, stdDevArea);
+					areaAxon=maxArea;
+					
 				}
 				print(f, n+1 + "\t" + name + "\t" + roiNumberIn[j] + "\t"+areaAxon+"\t" + areaIn + "\t" + areaOut);
 				n++;
