@@ -65,7 +65,7 @@ for (i=0; i<count; i++) {
 		roiNumberIn=newArray(roiManager("count"));
 		for (j=0; j<roiNumberIn.length; j++) {
 			roiManager("select", j);
-			roiNumberIn[j]=d2s(j, 0);
+			roiNumberIn[j]=d2s(j+1, 0);
 			while (lengthOf(roiNumberIn[j])<3) {
 				roiNumberIn[j]="0"+roiNumberIn[j];
 			}
@@ -83,7 +83,7 @@ for (i=0; i<count; i++) {
 		roiNumberOut=newArray(roiManager("count"));
 		for (j=0; j<roiNumberOut.length; j++) {
 			roiManager("select", j);
-			roiNumberOut[j]=d2s(j, 0);
+			roiNumberOut[j]=d2s(j+1, 0);
 			while (lengthOf(roiNumberOut[j])<3) {
 				roiNumberOut[j]="0"+roiNumberOut[j];
 			}
