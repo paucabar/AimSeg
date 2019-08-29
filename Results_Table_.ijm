@@ -113,7 +113,17 @@ for (i=0; i<count; i++) {
 			setThreshold(j+1, j+1);
 			run("Convert to Mask");
 			run("Analyze Particles...", "display clear");
-			areaIn=getResult("Area", 0);
+			results=nResults;
+			if (results==1) {
+				areaIn=getResult("Area", 0);
+			} else {
+				innerResults=newArray(results);
+				for (k=0; k<results; k++) {
+					innerResults[k]=getResult("Area", k);
+				}
+				Array.getStatistics(innerResults, minArea, maxArea, meanArea, stdDevArea);
+				areaIn=maxArea;
+			}
 			run("Set Measurements...", "feret's redirect=None decimal=2");
 			run("Analyze Particles...", "display clear");
 			xIn=getResult("FeretX", 0);
@@ -152,7 +162,6 @@ for (i=0; i<count; i++) {
 					}
 					Array.getStatistics(axonResults, minArea, maxArea, meanArea, stdDevArea);
 					areaAxon=maxArea;
-					
 				}
 				print(f, n+1 + "\t" + name + "\t" + roiNumberIn[j] + "\t"+areaAxon+"\t" + areaIn + "\t" + areaOut);
 				n++;
