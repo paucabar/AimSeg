@@ -33,9 +33,10 @@ for (i=0; i<list.length; i++) {
 	print(list[i], i+1 + "/" + list.length);
 	open(dir+File.separator+list[i]);
 	name=File.nameWithoutExtension;
+	input=File.name;
 	run("8-bit");
-	saveAs("tif", output+File.separator+name);
-	close(name+".tif");
+	run("Export HDF5", "select=["+output+File.separator+name+".h5] exportpath=["+output+File.separator+name+".h5] datasetname=data compressionlevel=0 input="+input);
+	close(input);
 }
 setBatchMode(false);
 print("Macro ends");
