@@ -76,7 +76,8 @@ for (i=0; i<count; i++) {
 					options[k] = getResult("Area", k);
 				}
 				Array.getStatistics(options, min, max, mean, stdDev);
-				run("Analyze Particles...", "size="+max+"-"+max+" show=Masks");
+				selectImage("check");
+				run("Analyze Particles...", "size="+max-0.01+"-Infinity show=Masks");
 				rename("corrected");
 				roiManager("select", j);
 				roiManager("delete");
@@ -114,19 +115,15 @@ for (i=0; i<count; i++) {
 		newImage("OuterMyelin_CountMasks", "8-bit black", width, height, slices);
 		roiNumberOut=newArray(roiManager("count"));
 		for (j=0; j<roiNumberOut.length; j++) {
-			roiManager("select", j);
-			roiNumberOut[j]=d2s(j+1, 0);
-			while (lengthOf(roiNumberOut[j])<3) {
-				roiNumberOut[j]="0"+roiNumberOut[j];
-			}
-			roiManager("rename", "ROI_"+roiNumberOut[j]);
 			setForegroundColor(j+1, j+1, j+1);
+			roiManager("select", j);
 			roiManager("fill");
 		}
-		roiManager("Save", dir+name+roiOutTag);
 		roiManager("deselect");
 		roiManager("delete");
 		run("Select None");
+exit()
+
 		//axon masks
 		roiManager("Open", dir+File.separator+name+roiAxonTag);
 		roiManager("Deselect");
