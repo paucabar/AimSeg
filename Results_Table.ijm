@@ -38,7 +38,7 @@ run("Table...", "name="+title2+" width=650 height=500");
 print(f, "\\Headings:n\tImage Name\tROI code\tAxon area\tInner Myelin area\tOuter Myelin area");
 
 run("ROI Manager...");
-setBatchMode(true);
+//setBatchMode(true);
 n=0;
 for (i=0; i<count; i++) {
 	name=substring(images[i], 0, lastIndexOf(images[i], "."));
@@ -55,14 +55,47 @@ for (i=0; i<count; i++) {
 			checkAxon=true;
 		}
 	}
-	//open images
 	if (checkIn==true && checkOut==true && checkAxon==true) {
 		open(images[i]);
+		
 		//inner count masks
 		roiManager("Open", dir+File.separator+name+roiInTag);
+		run("Select None");
 		Stack.getDimensions(width, height, channels, slices, frames);
-		newImage("InnerMyelin_CountMasks", "8-bit black", width, height, slices);
 		roiNumberIn=newArray(roiManager("count"));
+		for (j=0; j<roiNumberIn.length; j++) {
+			roiManager("select", j);
+			run("Create Mask");
+			rename("check");
+			run("Set Measurements...", "area redirect=None decimal=2");
+			run("Analyze Particles...", "  show=Nothing display clear");
+			particles=nResults;
+			if (particles>1) {
+				options=newArray(particles);
+				for (k=0; k<particles; k++) {
+					options[k] = getResult("Area", k);
+				}
+				Array.getStatistics(options, min, max, mean, stdDev);
+				run("Analyze Particles...", "size="+max+"-"+max+" show=Masks");
+				rename("corrected");
+				roiManager("select", j);
+				roiManager("delete");
+				run("Create Selection");
+				roiManager("add");
+				close("corrected");
+			}
+			close("check");
+		}
+		roiManager("Deselect");
+		roiManager("Combine");
+		run("Create Mask");
+		rename("InnerMasks");
+		roiManager("deselect");
+		roiManager("delete");
+		run("Select None");
+		run("Analyze Particles...", "  show=[Count Masks] add");
+		rename("InnerMyelin_CountMasks");
+		close("InnerMasks");
 		for (j=0; j<roiNumberIn.length; j++) {
 			roiManager("select", j);
 			roiNumberIn[j]=d2s(j+1, 0);
@@ -70,13 +103,12 @@ for (i=0; i<count; i++) {
 				roiNumberIn[j]="0"+roiNumberIn[j];
 			}
 			roiManager("rename", "ROI_"+roiNumberIn[j]);
-			setForegroundColor(j+1, j+1, j+1);
-			roiManager("fill");
 		}
 		roiManager("Save", dir+name+roiInTag);
 		roiManager("deselect");
 		roiManager("delete");
 		run("Select None");
+		
 		//outer count masks
 		roiManager("Open", dir+File.separator+name+roiOutTag);
 		newImage("OuterMyelin_CountMasks", "8-bit black", width, height, slices);
