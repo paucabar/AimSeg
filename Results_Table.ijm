@@ -77,7 +77,7 @@ for (i=0; i<count; i++) {
 				}
 				Array.getStatistics(options, min, max, mean, stdDev);
 				selectImage("check");
-				run("Analyze Particles...", "size="+max-0.01+"-Infinity show=Masks");
+				run("Analyze Particles...", "size="+max-0.01+"-Infinity show=Masks clear");
 				rename("corrected");
 				roiManager("select", j);
 				roiManager("delete");
@@ -94,7 +94,7 @@ for (i=0; i<count; i++) {
 		roiManager("deselect");
 		roiManager("delete");
 		run("Select None");
-		run("Analyze Particles...", "  show=[Count Masks] add");
+		run("Analyze Particles...", "  show=[Count Masks] add clear");
 		rename("InnerMyelin_CountMasks");
 		close("InnerMasks");
 		for (j=0; j<roiNumberIn.length; j++) {
@@ -119,10 +119,10 @@ for (i=0; i<count; i++) {
 			roiManager("select", j);
 			roiManager("fill");
 		}
+		selectImage("InnerMyelin_CountMasks");
 		roiManager("deselect");
 		roiManager("delete");
 		run("Select None");
-exit()
 
 		//axon masks
 		roiManager("Open", dir+File.separator+name+roiAxonTag);
@@ -130,10 +130,40 @@ exit()
 		roiManager("Combine");
 		run("Create Mask");
 		rename("AxonMasks");
-		selectWindow("ROI Manager");
 		roiManager("deselect");
 		roiManager("delete");
 		run("Select None");
+
+		//clear
+		nIma=nImages;
+		for (j=1; j<=nIma; j++) {
+			selectImage(j);
+			run("Select None");
+		}
+
+		//results arrays
+		areaAxon=newArray(roiNumberIn.length);
+		areaIn=newArray(roiNumberIn.length);
+		areaOut=newArray(roiNumberIn.length);
+		xIn=newArray(roiNumberIn.length);
+		yIn=newArray(roiNumberIn.length);
+
+		//measure inner masks
+		run("Set Measurements...", "area feret's redirect="+images[i]+" decimal=2");
+		roiManager("Open", dir+File.separator+name+roiInTag);
+		for (j=0; j<roiNumberIn.length; j++) {
+			roiManager("select", j);
+			roiManager("measure");
+			areaAxon[j]=getResult("Area", 0);
+			xIn[j]=getResult("FeretX", 0);
+			yIn[j]=getResult("FeretY", 0);
+			run("Clear Results");
+		}
+		roiManager("deselect");
+		roiManager("delete");
+		run("Select None");
+exit()
+
 		for (j=0; j<roiNumberIn.length; j++) {
 			run("Set Measurements...", "area redirect="+images[i]+" decimal=2");
 			selectImage("InnerMyelin_CountMasks");
