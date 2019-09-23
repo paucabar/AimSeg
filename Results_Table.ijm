@@ -1,9 +1,9 @@
+//clean up
 print("\\Clear");
 if (isOpen("ROI Manager")) {
 	selectWindow("ROI Manager");
 	run("Close");
 }
-run("Close All");
 if (isOpen("ResultsTable")) {
 	selectWindow("ResultsTable");
 	run("Close");
@@ -42,6 +42,7 @@ run("ROI Manager...");
 n=0;
 for (i=0; i<count; i++) {
 	name=substring(images[i], 0, lastIndexOf(images[i], "."));
+	
 	//skip images missing some ROI set
 	checkIn=false;
 	checkOut=false;
@@ -55,7 +56,11 @@ for (i=0; i<count; i++) {
 			checkAxon=true;
 		}
 	}
+	
+	//start analysis
 	if (checkIn==true && checkOut==true && checkAxon==true) {
+		
+		//open image
 		open(images[i]);
 		
 		//inner count masks
@@ -103,7 +108,7 @@ for (i=0; i<count; i++) {
 			while (lengthOf(roiNumberIn[j])<3) {
 				roiNumberIn[j]="0"+roiNumberIn[j];
 			}
-			roiManager("rename", "ROI_"+roiNumberIn[j]);
+			roiManager("rename", roiNumberIn[j]);
 		}
 		roiManager("Save", dir+name+roiInTag);
 		roiManager("deselect");
@@ -154,7 +159,7 @@ for (i=0; i<count; i++) {
 		for (j=0; j<roiNumberIn.length; j++) {
 			roiManager("select", j);
 			roiManager("measure");
-			areaAxon[j]=getResult("Area", 0);
+			areaIn[j]=getResult("Area", 0);
 			xIn[j]=getResult("FeretX", 0);
 			yIn[j]=getResult("FeretY", 0);
 			run("Clear Results");
@@ -162,6 +167,42 @@ for (i=0; i<count; i++) {
 		roiManager("deselect");
 		roiManager("delete");
 		run("Select None");
+
+		//measure outer masks
+		for (j=0; j<roiNumberIn.length; j++) {
+			selectImage("OuterMyelin_CountMasks");
+			run("Select None");
+			makePoint(xIn[j], yIn[j], "small yellow hybrid");
+			run("Set Measurements...", "mean redirect=None decimal=2");
+			run("Clear Results");
+			run("Measure");
+			pixelValue=getResult("Mean", 0);
+			run("Clear Results");
+			if (pixelValue>0) {
+				run("Wand Tool...", "tolerance=0 mode=Legacy");
+				selectImage("OuterMyelin_CountMasks");
+				doWand(xIn[j], yIn[j]);
+				run("Create Mask");
+				rename("outline_mask");
+				run("Set Measurements...", " area redirect="+images[i]+" decimal=2");
+				run("Analyze Particles...", "display add");	
+				areaOut[j]=getResult("Area", 0);
+				run("Clear Results");
+				close("outline_mask");
+				roiCount=roiManager("count");
+				roiManager("select", roiCount-1);
+				roiManager("rename", roiNumberIn[j]);
+			} else {
+				areaAxon[j]=NaN;
+				areaIn[j]=NaN;
+				areaOut[j]=NaN;
+			}
+		}
+		roiManager("Save", dir+name+roiOutTag);
+		roiManager("deselect");
+		roiManager("delete");
+		run("Select None");
+		close("OuterMyelin_CountMasks");
 exit()
 
 		for (j=0; j<roiNumberIn.length; j++) {
