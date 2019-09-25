@@ -203,6 +203,54 @@ for (i=0; i<count; i++) {
 		roiManager("delete");
 		run("Select None");
 		close("OuterMyelin_CountMasks");
+
+		//measure axoplasm
+		for (j=0; j<roiNumberIn.length; j++) {
+			if (areaAxon[j]!=NaN) {
+				run("Clear Results");
+				selectImage("InnerMyelin_CountMasks");
+				setThreshold(j+1, j+1);
+				run("Create Mask");
+				rename("inner-"+j);
+				imageCalculator("AND create", "inner-"+j,"AxonMasks");
+				rename("axoplasm-"+j);
+				run("Set Measurements...", "area redirect=None decimal=2");
+				run("Analyze Particles...", "show=Nothing display");
+				particles=nResults;
+				if (particles>1) {
+					options=newArray(particles);
+					for (k=0; k<particles; k++) {
+						options[k] = getResult("Area", k);
+					}
+					Array.getStatistics(options, min, max, mean, stdDev);
+					selectImage("axoplasm-"+j);
+					run("Clear Results");
+					run("Analyze Particles...", "size="+max-0.01+"-"+max+0.01+" show=Masks add");
+					rename("corrected");
+					roiCount=roiManager("count");
+					roiManager("select", roiCount-1);
+					roiManager("rename", roiNumberIn[j]);
+					areaAxon[j]=max;
+					close("corrected");
+				} else if (particles == 0) {
+					rename("inner-"+j);
+					run("Analyze Particles...", "show=Nothing add");
+					roiCount=roiManager("count");
+					roiManager("select", roiCount-1);
+					roiManager("rename", roiNumberIn[j]);
+					areaAxon[j]=areaIn[j];
+				} else {
+					selectImage("axoplasm-"+j);
+					run("Analyze Particles...", "show=Nothing add");
+					roiCount=roiManager("count");
+					roiManager("select", roiCount-1);
+					roiManager("rename", roiNumberIn[j]);
+					areaAxon[j]=getResult("Area", 0);
+				}
+			close("inner-"+j);
+			close("axoplasm-"+j);
+			}
+		}
 exit()
 
 		for (j=0; j<roiNumberIn.length; j++) {
