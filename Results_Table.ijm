@@ -38,7 +38,7 @@ run("Table...", "name="+title2+" width=650 height=500");
 print(f, "\\Headings:n\tImage Name\tROI code\tAxon area\tInner Myelin area\tOuter Myelin area");
 
 run("ROI Manager...");
-//setBatchMode(true);
+setBatchMode(true);
 n=0;
 for (i=0; i<count; i++) {
 	name=substring(images[i], 0, lastIndexOf(images[i], "."));
@@ -83,7 +83,6 @@ for (i=0; i<count; i++) {
 					options[k] = getResult("Area", k);
 				}
 				Array.getStatistics(options, min, max, mean, stdDev);
-				print(max);
 				selectImage("check");
 				run("Analyze Particles...", "size="+max-0.01+"-"+max+0.01+" show=Masks clear");
 				rename("corrected");
@@ -233,7 +232,7 @@ for (i=0; i<count; i++) {
 					areaAxon[j]=max;
 					close("corrected");
 				} else if (particles == 0) {
-					rename("inner-"+j);
+					selectImage("inner-"+j);
 					run("Analyze Particles...", "show=Nothing add");
 					roiCount=roiManager("count");
 					roiManager("select", roiCount-1);
