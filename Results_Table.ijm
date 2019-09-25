@@ -258,6 +258,12 @@ for (i=0; i<count; i++) {
 		close("InnerMyelin_CountMasks");
 		close("AxonMasks");
 		run("Clear Results");
+
+		//print results
+		for (j=0; j<roiNumberIn.length; j++) {
+			print(f, n+1 + "\t" + name + "\t" + roiNumberIn[j] + "\t" + areaAxon[j] + "\t" + areaIn[j] + "\t" + areaOut[j]);
+			n++;
+		}
 exit()
 
 		for (j=0; j<roiNumberIn.length; j++) {
