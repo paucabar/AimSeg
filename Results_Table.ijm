@@ -38,7 +38,7 @@ run("Table...", "name="+title2+" width=650 height=500");
 print(f, "\\Headings:n\tImage Name\tROI code\tAxon area\tInner Myelin area\tOuter Myelin area");
 
 run("ROI Manager...");
-//setBatchMode(true);
+setBatchMode(true);
 n=0;
 for (i=0; i<count; i++) {
 	name=substring(images[i], 0, lastIndexOf(images[i], "."));
@@ -251,6 +251,13 @@ for (i=0; i<count; i++) {
 			close("axoplasm-"+j);
 			}
 		}
+		roiManager("Save", dir+name+roiAxonTag);
+		roiManager("deselect");
+		roiManager("delete");
+		run("Select None");
+		close("InnerMyelin_CountMasks");
+		close("AxonMasks");
+		run("Clear Results");
 exit()
 
 		for (j=0; j<roiNumberIn.length; j++) {
