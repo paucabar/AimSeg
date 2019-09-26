@@ -207,7 +207,9 @@ for (i=0; i<count; i++) {
 
 		//measure axoplasm
 		for (j=0; j<roiNumberIn.length; j++) {
-			if (areaAxon[j]!=NaN) {
+			axonString=d2s(areaAxon[j], 0);
+			if (axonString!="NaN") {
+				print(roiNumberIn[j]);
 				run("Clear Results");
 				selectImage("InnerMyelin_CountMasks");
 				setThreshold(j+1, j+1);
