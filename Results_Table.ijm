@@ -60,9 +60,10 @@ for (i=0; i<count; i++) {
 	//start analysis
 	if (checkIn==true && checkOut==true && checkAxon==true) {
 		
-		//open image
+		//get image scale
 		open(images[i]);
 		getVoxelSize(widthGbl, heightGbl, depthGbl, unitGbl);
+		
 		//inner count masks
 		roiManager("Open", dir+File.separator+name+roiInTag);
 		run("Select None");
@@ -107,6 +108,7 @@ for (i=0; i<count; i++) {
 			while (lengthOf(roiNumberIn[j])<3) {
 				roiNumberIn[j]="0"+roiNumberIn[j];
 			}
+			roiNumberIn[j]="ROI_"+roiNumberIn[j];
 			roiManager("rename", roiNumberIn[j]);
 		}
 		roiManager("Save", dir+name+roiInTag);
@@ -153,7 +155,7 @@ for (i=0; i<count; i++) {
 		yIn=newArray(roiNumberIn.length);
 
 		//measure inner masks
-		run("Set Measurements...", "area feret's redirect="+images[i]+" decimal=2");
+		run("Set Measurements...", "area feret's redirect=None decimal=2");
 		roiManager("Open", dir+File.separator+name+roiInTag);
 		for (j=0; j<roiNumberIn.length; j++) {
 			roiManager("select", j);
@@ -183,7 +185,7 @@ for (i=0; i<count; i++) {
 				doWand(xIn[j], yIn[j]);
 				run("Create Mask");
 				rename("outline_mask");
-				run("Set Measurements...", " area redirect="+images[i]+" decimal=2");
+				run("Set Measurements...", " area redirect=None decimal=2");
 				run("Analyze Particles...", "display add");	
 				areaOut[j]=getResult("Area", 0);
 				run("Clear Results");
@@ -256,6 +258,7 @@ for (i=0; i<count; i++) {
 		run("Select None");
 		close("InnerMyelin_CountMasks");
 		close("AxonMasks");
+		close(images[i]);
 		run("Clear Results");
 
 		//print results
@@ -265,90 +268,9 @@ for (i=0; i<count; i++) {
 		}
 	}
 }
-exit()
-
-		for (j=0; j<roiNumberIn.length; j++) {
-			run("Set Measurements...", "area redirect="+images[i]+" decimal=2");
-			selectImage("InnerMyelin_CountMasks");
-			run("Select None");
-			run("Duplicate...", "title=ROI_IN"+roiNumberIn[j]);
-			setThreshold(j+1, j+1);
-			run("Convert to Mask");
-			run("Analyze Particles...", "display clear");
-			results=nResults;
-			if (results==1) {
-				areaIn=getResult("Area", 0);
-			} else {
-				innerResults=newArray(results);
-				for (k=0; k<results; k++) {
-					innerResults[k]=getResult("Area", k);
-				}
-				Array.getStatistics(innerResults, minArea, maxArea, meanArea, stdDevArea);
-				areaIn=maxArea;
-			}
-			run("Set Measurements...", "feret's redirect=None decimal=2");
-			run("Analyze Particles...", "display clear");
-			xIn=getResult("FeretX", 0);
-			yIn=getResult("FeretY", 0);
-			selectImage("OuterMyelin_CountMasks");
-			run("Select None");
-			makePoint(xIn, yIn, "small yellow hybrid");
-			run("Set Measurements...", "mean redirect=None decimal=2");
-			run("Clear Results");
-			run("Measure");
-			pixelValue=getResult("Mean", 0);
-			if (pixelValue>0) {
-				run("Wand Tool...", "tolerance=0 mode=Legacy");
-				selectImage("OuterMyelin_CountMasks");
-				doWand(xIn, yIn);
-				run("Create Mask");
-				rename("Myelin_outline_mask");
-				run("Set Measurements...", "size=10-Infinity area redirect="+images[i]+" decimal=2");
-				run("Analyze Particles...", "display clear");		
-				areaOut=getResult("Area", 0);
-				imageCalculator("AND create", "ROI_IN"+roiNumberIn[j],"AxonMasks");
-				rename("Axon");
-				run("Set Measurements...", "area redirect="+images[i]+" decimal=2");
-				run("Analyze Particles...", "display clear");
-				results=nResults;
-				close("Axon");
-				close("Myelin_outline_mask");
-				if (results==1) {
-					areaAxon=getResult("Area", 0);
-				} else if (results==0) {
-					areaAxon=areaIn;
-				} else {
-					axonResults=newArray(results);
-					for (k=0; k<results; k++) {
-						axonResults[k]=getResult("Area", k);
-					}
-					Array.getStatistics(axonResults, minArea, maxArea, meanArea, stdDevArea);
-					areaAxon=maxArea;
-				}
-				print(f, n+1 + "\t" + name + "\t" + roiNumberIn[j] + "\t"+areaAxon+"\t" + areaIn + "\t" + areaOut);
-				n++;
-			} else {
-				areaOut=NaN;
-				areaIn=NaN;
-				areaAxon=NaN;
-				print(f, n+1 + "\t" + name + "\t" + roiNumberIn[j] + "\t" + areaAxon + "\t" + areaIn + "\t" + areaOut);
-				n++;
-			}
-			close("ROI_IN"+roiNumberIn[j]);
-			if (j+1==roiNumberIn.length) {
-				close(images[i]);
-				close("InnerMyelin_CountMasks");
-				close("OuterMyelin_CountMasks");
-				close("AxonMasks");
-				selectWindow("Results");
-				run("Close");
-			}
-		}
-	} else {
-		print (images[i], "skipped: some ROI sets are missing");
-	}
-}
 setBatchMode(false);
+
+//save results table
 getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
 dayOfMonth=d2s(dayOfMonth, 0);
 while (lengthOf(dayOfMonth) < 2) {
