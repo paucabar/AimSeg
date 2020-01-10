@@ -100,6 +100,7 @@ for (i=0; i<count; i++) {
 		selectImage("InnerMasks");
 		run("Invert");
 		run("Analyze Particles...", "  show=[Count Masks] add clear");
+		roiNumberIn=newArray(roiManager("count"));
 		rename("InnerMyelin_CountMasks");
 		close("InnerMasks");
 		for (j=0; j<roiNumberIn.length; j++) {
