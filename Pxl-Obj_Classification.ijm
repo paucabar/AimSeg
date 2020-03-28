@@ -28,8 +28,6 @@ for (i=0; i<list.length; i++) {
 		rename(fileName);
 		run("Run Pixel Classification Prediction", "projectfilename=["+projectPixel+"] inputimage=["+fileName+"] pixelclassificationtype=Probabilities");
 		probabilities=getTitle();
-		print(probabilities);
-		rename("Probabilities");
 		run("Export HDF5", "select=[Probabilities] exportpath=["+dir+File.separator+fileName+"_Probabilities.h5] datasetname=data compressionlevel=0 input=Probabilities");
 		run("Run Object Classification Prediction", "projectfilename=["+projectObject+"] inputimage=["+fileName+"] inputproborsegimage=["+probabilities+"] secondinputtype=Probabilities");
 		saveAs("tiff", dir+File.separator+fileName+"_Object Predictions");
