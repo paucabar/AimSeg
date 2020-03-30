@@ -10,14 +10,22 @@ if (isOpen("ResultsTable")) {
 }
 run("Close All");
 
+//setOptions
+setOption("BlackBackground", false); //disables the Process>Binary>Options "Black background" option
 setOption("ExpandableArrays", true);
+
+//some variables
 objectTag="_Object Predictions.tiff";
 probabilitiesTag="_Probabilities.h5";
 roiInTag="_RoiSet_IN.zip";
 roiOutTag="_RoiSet_OUT.zip";
 roiAxonTag="_RoiSet_AXON.zip";
+
+//get directory and file list
 dir=getDirectory("Choose a Directory");
 list=getFileList(dir);
+
+//count tifs
 images=newArray;
 count=0;
 for (i=0; i<list.length; i++) {
@@ -26,8 +34,10 @@ for (i=0; i<list.length; i++) {
 		count++;
 	}
 }
+
+//check that the folder contains tif files
 if (count==0) {
-	exit("No TIF files are found")
+	exit("No tif files are found")
 }
 
 //create results table
