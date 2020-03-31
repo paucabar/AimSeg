@@ -2,6 +2,7 @@
 #@ File(label="Directory", style="directory") dir
 #@ String (label="Extension", description="Enter the extension of the files to be transformed. Image extensions: tif, png, jpg, others...") extension
 #@ String (label="Histogram operations", choices={"None", "Normalization", "Equalization"}, style="radioButtonHorizontal") histogram
+#@ String (label="Bit Depth reduction", choices={"None", "8-bit"}, style="radioButtonHorizontal") bitDepthR
 #@ String (label="Postfix", description="Enter a postfix to tag the output folder") postfix
 #@ String (label=" ", value="<html><img src=\"https://live.staticflickr.com/65535/48557333566_d2a51be746_o.png\"></html>", visibility=MESSAGE, persist=false) logo
 #@ String (label=" ", value="<html><font size=2><b>Neuromolecular Biology Laboratory</b><br>ERI BIOTECMED - Universitat de València (Spain)</font></html>", visibility=MESSAGE, persist=false) message
@@ -38,7 +39,9 @@ for (i=0; i<list.length; i++) {
 	} else if (histogram == "Equalization") {
 		run("Enhance Contrast...", "saturated=0.1 equalize");
 	}
-	run("8-bit");
+	if (bitDepthR == "8-bit") {
+		run("8-bit");
+	}
 	saveAs("tif", output+File.separator+name);
 	close(name+".tif");
 }
