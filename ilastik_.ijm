@@ -39,7 +39,9 @@ for (i=0; i<list.length; i++) {
 	} else if (histogram == "Equalization") {
 		run("Enhance Contrast...", "saturated=0.1 equalize");
 	}
-	if (bitDepthR == "8-bit") {
+	imageBitDepth=bitDepth();
+	if (bitDepthR == "8-bit" && imageBitDepth != 8) {
+		setOption("ScaleConversions", true);
 		run("8-bit");
 	}
 	saveAs("tif", output+File.separator+name);
