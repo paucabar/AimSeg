@@ -45,8 +45,50 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 
 ### Pixel classification
 
+1. Load a pre-trained pixel classifier in ilastik
+2. Go to the Batch Processing applet
+3. Click on _Select Raw Data Files..._
+4. Load the raw data files
+5. Click on _Process all files_
+
 ### Object classification
 
-## G-Ratio Aide
+1. Load a pre-trained object classifier in ilastik
+2. Go to the Batch Processing applet
+3. Click on _Select Raw Data Files..._
+4. Load the raw data files
+5. Switch to the _Prediction Maps_ tab
+6. Click on _Select Prediction Maps Files..._
+7. Load the prediction maps files (sorted to match the raw data list)
+8. Click on _Process all files_
 
-## Results Table
+### G-Ratio Aide
+
+1. Run the **G-ratio Aide** macro (Plugins>NeuroMol Lab>G-ratio>G-Ratio Aide)
+2. Select the directory containing the image dataset and the ilastik output (both probability maps and object predictions)
+3. Select an image to be annotated
+4. The pre-processing step may take a few seconds
+
+*Stage 1: Myelin inner boundary*
+
+* The macro will display the raw elecron microscopy image merged with two additional channels. The red channel corresponds to the selected objects, whereas the blue channel corresponds to the rejected objects
+* It is possible to edit the ROI selection using the Fiji selection tools. Additionally, the wand tool can be used to select blue, rejected regions with a single click
+* Click ok to proceed to the next stage
+
+*Stage 2: Fibre*
+
+* The macro will display the raw elecron microscopy image merged with an additional magenta channel corresponding to the Stage 1 selection
+* It is possible to edit the ROI selection using the Fiji selection tools
+* Click ok to proceed to the next stage
+
+*Stage 3: Axoplasm*
+
+* The macro will display the raw elecron microscopy image merged with two additional channels. The magenta channel corresponds to the selected myelin (Stage 1 XOR Stage 2), whereas the blue channel corresponds to the potencial axoplasm objects rejected by the classifier (i.e., labeled as inner tongue)
+* It is possible to edit the ROI selection using the Fiji selection tools. Additionally, the wand tool can be used to select blue, rejected regions with a single click
+* Click ok to finish the annotation process
+
+### Results Table
+
+1. Run the **Results Table** macro (Plugins>NeuroMol Lab>G-ratio>Results Table)
+2. Select the directory containing the image dataset, the ilastik output and the ROI files 
+3. The macro will automatically analyze all the complete ROI sets 
