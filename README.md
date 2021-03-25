@@ -27,11 +27,13 @@ How to [follow an update site](https://imagej.net/Following_an_update_site) in F
 
 Download an example [image dataset](https://drive.google.com/drive/folders/1DEFtn71krM6cOjsnZpIEFMCBVmAYk9Lq?usp=sharing) and two [ilastik projects](https://drive.google.com/drive/folders/1tNyDpmd0wwBx-MKH-LhOZaZBgYMfTz2J?usp=sharing) for pixel and object classification.
 
+* In order to use the provided image dataset and ilastik classifiers, use the **Format transformation** macro (see below) to convert the images into 8-bit and save them as TIF files.
+
 ## Usage
 
 ### Format Transformation
 
-Please note that ilastik only supports a series of file formats (check [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, it may be necessary to transform the image dataset into a format supported by ilastik.
+Please note that ilastik only supports a series of file formats (check [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, it may be necessary to transform the image dataset into a format supported by ilastik. Moreover, in order to reuse an ilastik project in different datasets, it will be necessary to use the same settings in the format transformation step to pre-process the input data.
 
 1. Run the **Format transformation** macro (Plugins>NeuroMol Lab>G-ratio>Format Transformation)
 2. Select the directory containing the image dataset to be transformed
@@ -40,8 +42,6 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 5. Type the extension of the files to be transformed. Files with a different extension will be ignored
 6. Type a postfix (a new folder will be named after the original folder adding the postfix separated by an underscore)
 7. Run
-
-* In order to use the provided image dataset and ilastik classifiers, normalize the images and save them as TIF files
 
 ### Pixel classification
 
