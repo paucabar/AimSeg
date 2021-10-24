@@ -226,7 +226,8 @@ roiN=roiManager("count");
 for (i=0; i<roiN; i++) {
 	roiManager("Select", i);
 	run("Convex Hull");
-	roiManager("Update");
+	roiManager("add");
+	//roiManager("Update");
 }
 roiManager("Deselect");
 roiManager("Combine");
