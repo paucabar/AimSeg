@@ -1,4 +1,4 @@
-# Axon AIM
+# AimSeg
 
 ## Requirements
 
@@ -16,12 +16,12 @@ How to [follow an update site](https://imagej.net/Following_an_update_site) in F
 3. Click on <code>Manage update sites</code>
 4. Click on <code>Add update site</code>
 5. A new blank row is to be created at the bottom of the update sites list
-6. Type **NeuroMol Lab** in the **Name** column
-7. Type **http://sites.imagej.net/Paucabar/** in the **URL** column
+6. Type **AimSeg** in the **Name** column
+7. Type **http://sites.imagej.net/AimSeg/** in the **URL** column
 8. <code>Close</code> the update sites window
 9. <code>Apply changes</code>
 10. Restart Fiji
-11. Check if <code>NeuroMol Lab</code> appears now in the <code>Plugins</code> dropdown menu (note that it will be placed at the bottom of the dropdown menu)
+11. Check if <code>AimSeg</code> appears now in the <code>Plugins</code> dropdown menu (note that it will be placed at the bottom of the dropdown menu)
 
 ## Test Dataset
 
@@ -35,7 +35,7 @@ Download an example [image dataset](https://drive.google.com/drive/folders/1DEFt
 
 Please note that ilastik only supports a series of file formats (check [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, it may be necessary to transform the image dataset into a format supported by ilastik. Moreover, in order to reuse an ilastik project in different datasets, it will be necessary to use the same settings in the format transformation step to pre-process the input data.
 
-1. Run the **Format transformation** macro (Plugins>NeuroMol Lab>G-ratio>Format Transformation)
+1. Run the **Format transformation** macro (Plugins>AimSeg>Format Transformation)
 2. Select the directory containing the image dataset to be transformed
 3. It is possible to convert the images into 8-bit or to normalize the data
 4. It is possible to export the images as TIF or HDF5 files
@@ -64,7 +64,7 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 
 ### G-Ratio Aide
 
-1. Run the **G-ratio Aide** macro (Plugins>NeuroMol Lab>G-ratio>G-Ratio Aide)
+1. Run the **G-ratio Aide** macro (Plugins>AimSeg>G-Ratio Aide)
 2. Select the directory containing the image dataset and the ilastik output (both probability maps and object predictions)
 3. Select an image to be annotated
 4. The pre-processing step may take a few seconds
@@ -89,6 +89,6 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 
 ### Results Table
 
-1. Run the **Results Table** macro (Plugins>NeuroMol Lab>G-ratio>Results Table)
+1. Run the **Results Table** macro (Plugins>AimSeg>Results Table)
 2. Select the directory containing the image dataset, the ilastik output and the ROI files 
 3. The macro will automatically analyze all the complete ROI sets 
