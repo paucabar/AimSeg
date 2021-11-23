@@ -14,8 +14,7 @@ run("Close All");
 //setOptions
 setOption("BlackBackground", false); //disables the Process>Binary>Options "Black background" option
 setOption("ExpandableArrays", true);
-run("ROI Manager...");
-//setBatchMode(true);
+setBatchMode(true);
 
 //some variables
 objectTag="_Object Predictions.tiff";
@@ -27,6 +26,9 @@ roiAxonTag="_RoiSet_AXON.zip";
 //get directory and file list
 dir=getDirectory("Choose a Directory");
 list=getFileList(dir);
+original=File.getName(dir);
+outputLabeled=File.getParent(dir)+File.separator+original+"_labeled";
+File.makeDirectory(outputLabeled);
 
 //count tifs
 images=newArray;
@@ -44,6 +46,8 @@ if (count==0) {
 }
 
 //start processing
+print("Macro starts...");
+run("ROI Manager...");
 for (i=0; i<count; i++) {
 	name=substring(images[i], 0, lastIndexOf(images[i], "."));	
 	//skip images missing some ROI set
@@ -61,6 +65,7 @@ for (i=0; i<count; i++) {
 	}
 	if (checkIn==true && checkOut==true && checkAxon==true) {		
 		//(ROIs to binary masks
+		print("Processing "+images[i]);
 		open(images[i]);
 		binaryMasks(roiInTag, "inner");
 		binaryMasks(roiOutTag, "outer");
@@ -80,10 +85,15 @@ for (i=0; i<count; i++) {
 		labeledImage("Mask_innertongue", 2);
 		labeledImage("Mask_myelin", 3);
 		run("glasbey on dark ");
-		//setBatchMode(false);
-		exit;
+
+		//save labeled image
+		saveAs("tif", outputLabeled+File.separator+"Labeled_"+images[i]);
+		run("Close All");
 	}
 }
+
+setBatchMode(false);
+print("Done");
 
 function binaryMasks(roi_tag, name_tag) {
 	selectImage(images[i]);
