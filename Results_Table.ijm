@@ -50,6 +50,7 @@ print(f, "\\Headings:n\tImage Name\tROI code\tAxon area\tInner Myelin area\tOute
 run("ROI Manager...");
 setBatchMode(true);
 n=0;
+start=getTime();
 for (i=0; i<count; i++) {
 	name=substring(images[i], 0, lastIndexOf(images[i], "."));
 	
@@ -283,6 +284,13 @@ for (i=0; i<count; i++) {
 }
 setBatchMode(false);
 
+//timing
+elapsed=round((getTime()-start)/1000);
+print("\\Clear");
+print("End of process");
+print("Elapsed time "+hours_minutes_seconds(elapsed));
+
+
 //save results table
 getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
 dayOfMonth=d2s(dayOfMonth, 0);
@@ -304,3 +312,19 @@ while (lengthOf(minute) < 2) {
 }
 selectWindow(title1);
 saveAs("Text", dir+File.separator+title1+dayOfMonth+month+year+"_"+hour+minute+".csv");
+
+function hours_minutes_seconds(seconds) {
+	hours=seconds/3600;
+	hours_floor=floor(hours);
+	remaining_seconds=seconds-(hours_floor*3600);
+	remaining_minutes=remaining_seconds/60;
+	minutes_floor=floor(remaining_minutes);
+	remaining_seconds=remaining_seconds-(minutes_floor*60);
+	hours_floor=d2s(hours_floor, 0);
+	minutes_floor=d2s(minutes_floor, 0);
+	remaining_seconds=d2s(remaining_seconds, 0);
+	if (lengthOf(hours_floor) < 2) hours_floor="0"+hours_floor;
+	if (lengthOf(minutes_floor) < 2) minutes_floor="0"+minutes_floor;
+	if (lengthOf(remaining_seconds) < 2) remaining_seconds="0"+remaining_seconds;
+	return hours_floor+":"+minutes_floor+":"+remaining_seconds;
+}
