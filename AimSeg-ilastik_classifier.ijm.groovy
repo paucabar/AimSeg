@@ -10,7 +10,7 @@ import ij.gui.WaitForUserDialog
 installMacro()
 imp = importImage(imageFile, "/data", "tzyxc")
 
-// import the corresponding probability map
+// import the corresponding probability map and object prediction
 // IMPORTANT: must be in the parent folder
 File parentPath = imageFile.getParentFile()
 def fileList = []
@@ -18,10 +18,16 @@ parentPath.eachFile(FileType.FILES) {
 	fileList << it.name
 }
 String probNameWithoutExtension = imageFile.name.take(imageFile.name.lastIndexOf('.'))+"_Probabilities"
+String objNameWithoutExtension = imageFile.name.take(imageFile.name.lastIndexOf('.'))+"_Object Predictions"
 String probFilename = fileList.find {element -> element.contains(probNameWithoutExtension)}
+String objFilename = fileList.find {element -> element.contains(objNameWithoutExtension)}
 File probFile = new File (parentPath, probFilename)
+File objFile = new File (parentPath, objFilename)
 impProb = importImage(probFile, "/exported_data", "yxc")
 //impProb.hide()
+impObj = importImage(objFile, "/exported_data", "yxc")
+IJ.run(impObj, "glasbey inverted", "")
+//impObj.hide()
 
 // wait for user
 def wfu = new WaitForUserDialog("Title", "I'm waiting")
