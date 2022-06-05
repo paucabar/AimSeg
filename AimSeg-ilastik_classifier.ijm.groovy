@@ -40,7 +40,7 @@ wfu.show()
 
 def installMacro(){
 	String toolsetsPath = IJ.getDir("macros") + "toolsets"
-	String ijmPath = IJ.addSeparator(toolsetsPath)+"Toggle_ROI_color.ijm"
+	String ijmPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
 	IJ.run("Install...", "install=[${->ijmPath}]")
 }
 
