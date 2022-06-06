@@ -6,6 +6,8 @@ import ij.IJ
 import ij.io.Opener
 import ij.ImagePlus
 import groovy.io.FileType
+import ij.plugin.Duplicator
+import ij.process.ImageProcessor
 import ij.plugin.filter.ParticleAnalyzer
 import ij.measure.ResultsTable
 import ij.measure.Measurements
@@ -37,22 +39,31 @@ impObj = importImage(objFile, "/exported_data", "yxc")
 IJ.run(impObj, "glasbey inverted", "")
 impObj.hide()
 
+//////////////
 // STAGE 1
+//////////////
+
+// create myelin mask
 impProb.setPosition(1)
 def ipProb = impProb.getProcessor()
 ipProb.setThreshold (0.2, 1.0)
-def ipMyelinMask = ipProb.createMask()
-def impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask)
+def ipMyelinMask = ipProb.createMask() // image processor
+def impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask) // image plus
 //impMyelinMask.show()
 
+// duplicate and invert mask
+def dup = new Duplicator()
+def ipMyelinMaskInverted = ipMyelinMask.duplicate()
+ipMyelinMaskInverted.invert()
+def impMyelinMaskInverted = new ImagePlus("Myelin Inverted Mask", ipMyelinMaskInverted)
+
 // exclude edges
-// missing duplicate + invert
-options = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES + ParticleAnalyzer.INCLUDE_HOLES
-measurements = Measurements.AREA
-rt = new ResultsTable();
-pa = new ParticleAnalyzer(options, measurements, rt, 0, 99999)
-pa.analyze(impMyelinMask)
-impNoEdges = pa.getOutputImage()
+Integer options = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES
+Integer measurements = Measurements.AREA
+def rt = new ResultsTable();
+def pa = new ParticleAnalyzer(options, measurements, rt, 0, 999999)
+pa.analyze(impMyelinMaskInverted)
+def impNoEdges = pa.getOutputImage()
 //impNoEdges.show()
 
 // wait for user
