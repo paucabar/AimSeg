@@ -1,7 +1,7 @@
 #@ File(label="Image File", style="open") imageFile
 #@ Integer (label="Myelin Probability Channel", value=1, max=3, min=1, style="listBox") probChannel
 #@ String (label="Object Prediction Threshold", choices={"Below", "Above"}, value="Above", style="radioButtonHorizontal") objThr
-#@ Integer (label="Object Prediction Value", value=2, max=10, min=1, style="listBox") objValue
+#@ Integer (label="Object Prediction Label", value=2, max=10, min=1, style="listBox") objLabel
 #@ UpdateService updateService
 #@ UIService ui
 
@@ -21,6 +21,8 @@ boolean checkIlastik = isUpdateSiteActive("ilastik");
 
 // setup
 installMacro()
+
+// import EM image
 imp = importImage(imageFile, "/data", "tzyxc")
 
 // import the corresponding probability map and object prediction
@@ -42,6 +44,8 @@ impObj = importImage(objFile, "/exported_data", "yxc")
 IJ.run(impObj, "glasbey inverted", "")
 impObj.hide()
 
+
+
 //////////////
 // STAGE 1
 //////////////
@@ -54,7 +58,7 @@ def ipMyelinMask = ipProb.createMask() // image processor
 def impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask) // image plus
 //impMyelinMask.show()
 
-// duplicate and invert mask
+// duplicate and invert myelin mask
 def ipMyelinMaskInverted = ipMyelinMask.duplicate()
 ipMyelinMaskInverted.invert()
 def impMyelinMaskInverted = new ImagePlus("Myelin Inverted Mask", ipMyelinMaskInverted)
@@ -63,10 +67,14 @@ def impMyelinMaskInverted = new ImagePlus("Myelin Inverted Mask", ipMyelinMaskIn
 Integer options = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES
 Integer measurements = Measurements.AREA
 def rt = new ResultsTable();
-def pa = new ParticleAnalyzer(options, measurements, rt, 0, 999999)
+def pa = new ParticleAnalyzer(options, measurements, rt, 10000, 999999)
 pa.analyze(impMyelinMaskInverted)
 def impNoEdges = pa.getOutputImage()
-//impNoEdges.show()
+//impNoEdges.hide()
+
+// close and fill holes
+//IJ.run(impNoEdges, "Options...", "iterations=2 count=1 black do=Open");
+//IJ.run(impNoEdges, "Options...", "iterations=1 count=1 do=[Fill Holes]");
 
 // wait for user
 def wfu = new WaitForUserDialog("Title", "I'm waiting")
