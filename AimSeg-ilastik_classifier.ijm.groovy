@@ -6,6 +6,7 @@
 #@ UIService ui
 
 import ij.IJ
+import ij.Prefs
 import ij.io.Opener
 import ij.ImagePlus
 import groovy.io.FileType
@@ -21,6 +22,7 @@ boolean checkIlastik = isUpdateSiteActive("ilastik");
 
 // setup
 installMacro()
+Prefs.blackBackground=true
 
 // import EM image
 imp = importImage(imageFile, "/data", "tzyxc")
@@ -73,8 +75,8 @@ def impNoEdges = pa.getOutputImage()
 //impNoEdges.hide()
 
 // close and fill holes
-//IJ.run(impNoEdges, "Options...", "iterations=2 count=1 black do=Open");
-//IJ.run(impNoEdges, "Options...", "iterations=1 count=1 do=[Fill Holes]");
+IJ.run(impNoEdges, "Options...", "iterations=2 count=1 black do=Open");
+IJ.run(impNoEdges, "Options...", "iterations=1 count=1 do=[Fill Holes]");
 
 // wait for user
 def wfu = new WaitForUserDialog("Title", "I'm waiting")
