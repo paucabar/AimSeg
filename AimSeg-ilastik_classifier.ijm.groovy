@@ -1,4 +1,7 @@
 #@ File(label="Image File", style="open") imageFile
+#@ Integer (label="Myelin Probability Channel", value=1, max=3, min=1, style="listBox") probChannel
+#@ String (label="Object Prediction Threshold", choices={"Below", "Above"}, value="Above", style="radioButtonHorizontal") objThr
+#@ Integer (label="Object Prediction Value", value=2, max=10, min=1, style="listBox") objValue
 #@ UpdateService updateService
 #@ UIService ui
 
@@ -44,7 +47,7 @@ impObj.hide()
 //////////////
 
 // create myelin mask
-impProb.setPosition(1)
+impProb.setPosition(probChannel)
 def ipProb = impProb.getProcessor()
 ipProb.setThreshold (0.2, 1.0)
 def ipMyelinMask = ipProb.createMask() // image processor
@@ -52,7 +55,6 @@ def impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask) // image plus
 //impMyelinMask.show()
 
 // duplicate and invert mask
-def dup = new Duplicator()
 def ipMyelinMaskInverted = ipMyelinMask.duplicate()
 ipMyelinMaskInverted.invert()
 def impMyelinMaskInverted = new ImagePlus("Myelin Inverted Mask", ipMyelinMaskInverted)
