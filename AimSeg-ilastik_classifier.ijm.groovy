@@ -24,10 +24,18 @@ String objFilename = fileList.find {element -> element.contains(objNameWithoutEx
 File probFile = new File (parentPath, probFilename)
 File objFile = new File (parentPath, objFilename)
 impProb = importImage(probFile, "/exported_data", "yxc")
-//impProb.hide()
+impProb.hide()
 impObj = importImage(objFile, "/exported_data", "yxc")
 IJ.run(impObj, "glasbey inverted", "")
-//impObj.hide()
+impObj.hide()
+
+// STAGE 1
+impProb.setPosition(1)
+def ipProb = impProb.getProcessor()
+ipProb.setThreshold (0.2, 1.0)
+def ipBinaryMask = ipProb.createMask()
+def impBinaryMask = new ImagePlus("Cyt Mask", ipBinaryMask)
+impBinaryMask.show()
 
 // wait for user
 def wfu = new WaitForUserDialog("Title", "I'm waiting")
