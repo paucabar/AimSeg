@@ -6,6 +6,9 @@ import ij.IJ
 import ij.io.Opener
 import ij.ImagePlus
 import groovy.io.FileType
+import ij.plugin.filter.ParticleAnalyzer
+import ij.measure.ResultsTable
+import ij.measure.Measurements
 import ij.gui.WaitForUserDialog
 
 // check update sites
@@ -38,9 +41,19 @@ impObj.hide()
 impProb.setPosition(1)
 def ipProb = impProb.getProcessor()
 ipProb.setThreshold (0.2, 1.0)
-def ipBinaryMask = ipProb.createMask()
-def impBinaryMask = new ImagePlus("Cyt Mask", ipBinaryMask)
-impBinaryMask.show()
+def ipMyelinMask = ipProb.createMask()
+def impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask)
+//impMyelinMask.show()
+
+// exclude edges
+// missing duplicate + invert
+options = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES + ParticleAnalyzer.INCLUDE_HOLES
+measurements = Measurements.AREA
+rt = new ResultsTable();
+pa = new ParticleAnalyzer(options, measurements, rt, 0, 99999)
+pa.analyze(impMyelinMask)
+impNoEdges = pa.getOutputImage()
+//impNoEdges.show()
 
 // wait for user
 def wfu = new WaitForUserDialog("Title", "I'm waiting")
