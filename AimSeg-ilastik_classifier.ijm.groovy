@@ -1,10 +1,15 @@
 #@ File(label="Image File", style="open") imageFile
+#@ UpdateService updateService
+#@ UIService ui
 
 import ij.IJ
 import ij.io.Opener
 import ij.ImagePlus
 import groovy.io.FileType
 import ij.gui.WaitForUserDialog
+
+// check update sites
+boolean checkIlastik = isUpdateSiteActive("ilastik");
 
 // setup
 installMacro()
@@ -44,7 +49,14 @@ wfu.show()
 
 
 
-
+def isUpdateSiteActive (updateSite) {
+	checkUpdate = true
+	if (! updateService.getUpdateSite(updateSite).isActive()) {
+    	ui.showDialog "Please activate the $updateSite update site"
+    	checkUpdate = false
+	}
+	return checkUpdate
+}
 
 def installMacro(){
 	String toolsetsPath = IJ.getDir("macros") + "toolsets"
