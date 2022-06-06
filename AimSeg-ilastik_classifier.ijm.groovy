@@ -15,6 +15,7 @@ import ij.process.ImageProcessor
 import ij.plugin.filter.ParticleAnalyzer
 import ij.measure.ResultsTable
 import ij.measure.Measurements
+import ij.plugin.ImageCalculator
 import ij.gui.WaitForUserDialog
 
 // check update sites
@@ -64,8 +65,9 @@ def impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask) // image plus
 def ipMyelinMaskInverted = ipMyelinMask.duplicate()
 ipMyelinMaskInverted.invert()
 def impMyelinMaskInverted = new ImagePlus("Myelin Inverted Mask", ipMyelinMaskInverted)
+impMyelinMaskInverted.show()
 
-// exclude edges
+// exclude edges and big objects
 Integer options = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES
 Integer measurements = Measurements.AREA
 def rt = new ResultsTable();
@@ -77,6 +79,11 @@ def impNoEdges = pa.getOutputImage()
 // close and fill holes
 IJ.run(impNoEdges, "Options...", "iterations=2 count=1 black do=Open");
 IJ.run(impNoEdges, "Options...", "iterations=1 count=1 do=[Fill Holes]");
+
+// image calculator
+def ic = new ImageCalculator()
+def impXOR = ic.run(impMyelinMaskInverted, impNoEdges, "XOR create")
+impXOR.show()
 
 // wait for user
 def wfu = new WaitForUserDialog("Title", "I'm waiting")
