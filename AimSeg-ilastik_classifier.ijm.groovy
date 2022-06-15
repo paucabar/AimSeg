@@ -4,6 +4,8 @@
 #@ Integer (label="Object Prediction Label", value=2, max=10, min=1, style="listBox") objLabel
 #@ UpdateService updateService
 #@ UIService ui
+#@ LogService logService
+#@ StatusService statusService
 
 import ij.IJ
 import ij.Prefs
@@ -17,13 +19,15 @@ import ij.measure.ResultsTable
 import ij.measure.Measurements
 import ij.plugin.ImageCalculator
 import ij.gui.WaitForUserDialog
+import net.imglib2.img.display.imagej.ImageJFunctions
+import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
 
 // check update sites
 boolean checkIlastik = isUpdateSiteActive("ilastik");
 
 // setup
 installMacro()
-Prefs.blackBackground=true
+//Prefs.blackBackground=true
 
 // import EM image
 imp = importImage(imageFile, "/data", "tzyxc")
@@ -42,10 +46,10 @@ String objFilename = fileList.find {element -> element.contains(objNameWithoutEx
 File probFile = new File (parentPath, probFilename)
 File objFile = new File (parentPath, objFilename)
 impProb = importImage(probFile, "/exported_data", "yxc")
-impProb.hide()
+//impProb.hide()
 impObj = importImage(objFile, "/exported_data", "yxc")
 IJ.run(impObj, "glasbey inverted", "")
-impObj.hide()
+//impObj.hide()
 
 
 
@@ -59,7 +63,7 @@ def ipProb = impProb.getProcessor()
 ipProb.setThreshold (0.2, 1.0)
 def ipMyelinMask = ipProb.createMask() // image processor
 def impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask) // image plus
-//impMyelinMask.show()
+impMyelinMask.show()
 
 // duplicate and invert myelin mask
 def ipMyelinMaskInverted = ipMyelinMask.duplicate()
@@ -72,9 +76,9 @@ Integer options = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PA
 Integer measurements = Measurements.AREA
 def rt = new ResultsTable();
 def pa = new ParticleAnalyzer(options, measurements, rt, 10000, 999999)
+pa.setHideOutputImage(true)
 pa.analyze(impMyelinMaskInverted)
 def impNoEdges = pa.getOutputImage()
-//impNoEdges.hide()
 
 // close and fill holes
 IJ.run(impNoEdges, "Options...", "iterations=2 count=1 black do=Open");
@@ -107,7 +111,7 @@ def installMacro(){
 	IJ.run("Install...", "install=[${->ijmPath}]")
 }
 
-def importImage(File inputFile, String datasetname, String axisorder){
+def importImage(File inputFile, String datasetName, String axisOrder){
 	String imagePath = inputFile.getAbsolutePath()
 	if (!imagePath.endsWith(".h5")) {		
 		def opener = new Opener()
@@ -116,10 +120,14 @@ def importImage(File inputFile, String datasetname, String axisorder){
 		implus = opener.openImage(imagePath)
 		implus.show()
 	} else {
-		args = "select=[" + imagePath + "] datasetname=$datasetname axisorder=$axisorder"
 		println "Importing h5 file"
-		IJ.run("Import HDF5", args)
-		implus = IJ.getImage()
+		def imgPlus = new Hdf5DataSetReader<>(
+		                imagePath,
+		                datasetName,
+		                axisOrder.toLowerCase(),
+		                logService,
+		                statusService).read();
+		implus = ImageJFunctions.wrap(imgPlus, "Some title here")
 	}
 	return implus
 }
