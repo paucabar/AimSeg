@@ -7,6 +7,7 @@
 #@ LogService logService
 #@ StatusService statusService
 
+
 import ij.IJ
 import ij.Prefs
 import ij.io.Opener
@@ -22,6 +23,48 @@ import ij.gui.WaitForUserDialog
 import net.imglib2.img.display.imagej.ImageJFunctions
 import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
 
+
+def isUpdateSiteActive (updateSite) {
+	checkUpdate = true
+	if (! updateService.getUpdateSite(updateSite).isActive()) {
+    	ui.showDialog "Please activate the $updateSite update site"
+    	checkUpdate = false
+	}
+	return checkUpdate
+}
+
+def installMacro(){
+	String toolsetsPath = IJ.getDir("macros") + "toolsets"
+	String ijmPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
+	IJ.run("Install...", "install=[${->ijmPath}]")
+}
+
+def importImage(File inputFile, String datasetName, String axisOrder){
+	String imagePath = inputFile.getAbsolutePath()
+	if (!imagePath.endsWith(".h5")) {		
+		def opener = new Opener()
+		String extension = imagePath[imagePath.lastIndexOf('.')+1..-1]
+		println "Importing $extension file"
+		implus = opener.openImage(imagePath)
+	} else {
+		println "Importing h5 file"
+		def imgPlus = new Hdf5DataSetReader<>(
+		                imagePath,
+		                datasetName,
+		                axisOrder.toLowerCase(),
+		                logService,
+		                statusService).read();
+		implus = ImageJFunctions.wrap(imgPlus, "Some title here")
+	}
+	return implus
+}
+
+
+
+
+
+
+
 // check update sites
 boolean checkIlastik = isUpdateSiteActive("ilastik");
 
@@ -35,6 +78,7 @@ if (!pe) {
 
 // import EM image
 imp = importImage(imageFile, "/data", "tzyxc")
+imp.show()
 
 // import the corresponding probability map and object prediction
 // IMPORTANT: must be in the parent folder
@@ -96,42 +140,3 @@ impXOR.show()
 // wait for user
 def wfu = new WaitForUserDialog("Title", "I'm waiting")
 wfu.show()
-
-
-
-
-def isUpdateSiteActive (updateSite) {
-	checkUpdate = true
-	if (! updateService.getUpdateSite(updateSite).isActive()) {
-    	ui.showDialog "Please activate the $updateSite update site"
-    	checkUpdate = false
-	}
-	return checkUpdate
-}
-
-def installMacro(){
-	String toolsetsPath = IJ.getDir("macros") + "toolsets"
-	String ijmPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
-	IJ.run("Install...", "install=[${->ijmPath}]")
-}
-
-def importImage(File inputFile, String datasetName, String axisOrder){
-	String imagePath = inputFile.getAbsolutePath()
-	if (!imagePath.endsWith(".h5")) {		
-		def opener = new Opener()
-		String extension = imagePath[imagePath.lastIndexOf('.')+1..-1]
-		println "Importing $extension file"
-		implus = opener.openImage(imagePath)
-		implus.show()
-	} else {
-		println "Importing h5 file"
-		def imgPlus = new Hdf5DataSetReader<>(
-		                imagePath,
-		                datasetName,
-		                axisOrder.toLowerCase(),
-		                logService,
-		                statusService).read();
-		implus = ImageJFunctions.wrap(imgPlus, "Some title here")
-	}
-	return implus
-}
