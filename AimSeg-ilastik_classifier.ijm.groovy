@@ -28,6 +28,10 @@ boolean checkIlastik = isUpdateSiteActive("ilastik");
 // setup
 installMacro()
 //Prefs.blackBackground=true
+pe = Prefs.padEdges
+if (!pe) {
+	Prefs.padEdges = true
+}
 
 // import EM image
 imp = importImage(imageFile, "/data", "tzyxc")
