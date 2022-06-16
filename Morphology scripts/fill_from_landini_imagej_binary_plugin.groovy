@@ -1,7 +1,8 @@
 #@ ImagePlus imp
 
 import ij.*;
-import ij.process.*;
+import ij.process.ImageProcessor
+import ij.process.FloodFiller
 
 // Binary fill by Gabriel Landini, G.Landini at bham.ac.uk
 // 21/May/2008
