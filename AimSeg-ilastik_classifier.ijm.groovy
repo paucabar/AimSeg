@@ -64,7 +64,6 @@ def importImage(File inputFile, String datasetName, String axisOrder){
 
 
 
-
 // check update sites
 boolean checkIlastik = isUpdateSiteActive("ilastik");
 
@@ -140,3 +139,6 @@ impXOR.show()
 // wait for user
 def wfu = new WaitForUserDialog("Title", "I'm waiting")
 wfu.show()
+
+// reset Prefs.padEdges
+Prefs.padEdges = pe
