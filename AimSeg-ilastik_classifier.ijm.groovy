@@ -15,6 +15,7 @@ import ij.ImagePlus
 import groovy.io.FileType
 import ij.plugin.Duplicator
 import ij.process.ImageProcessor
+import ij.process.ByteProcessor
 import ij.plugin.filter.ParticleAnalyzer
 import ij.measure.ResultsTable
 import ij.measure.Measurements
@@ -59,7 +60,40 @@ def importImage(File inputFile, String datasetName, String axisOrder){
 	return implus
 }
 
+// Implements the Erode, Dilate, Open and Close commands in the Process/Binary submenu
+public void run (ImageProcessor ip, String arg, int iter, int cnt) {
+    int fg = Prefs.blackBackground ? 255 : 0;
+    foreground = ip.isInvertedLut() ? 255-fg : fg;
+    background = 255 - foreground;
+    ip.setSnapshotCopyMode(true);
 
+	if (arg.equals("erode") || arg.equals("dilate")) {
+        doIterations((ByteProcessor)ip, arg, iter, cnt);
+	} else if (arg.equals("open")) {
+        doIterations(ip, "erode", iter, cnt);
+        doIterations(ip, "dilate", iter, cnt);
+    } else if (arg.equals("close")) {
+        doIterations(ip, "dilate", iter, cnt);
+        doIterations(ip, "erode", iter, cnt);
+    }
+    ip.setSnapshotCopyMode(false);
+    ip.setBinaryThreshold();
+}
+
+void doIterations (ImageProcessor ip, String mode, int iterations, int count) {
+    for (int i=0; i<iterations; i++) {
+        if (Thread.currentThread().isInterrupted()) return;
+        if (IJ.escapePressed()) {
+            escapePressed = true;
+            ip.reset();
+            return;
+        }
+        if (mode.equals("erode"))
+            ((ByteProcessor)ip).erode(count, background);
+        else
+            ((ByteProcessor)ip).dilate(count, background);
+    }
+}
 
 
 
@@ -69,7 +103,7 @@ boolean checkIlastik = isUpdateSiteActive("ilastik");
 
 // setup
 installMacro()
-//Prefs.blackBackground=true
+Prefs.blackBackground=true
 pe = Prefs.padEdges
 if (!pe) {
 	Prefs.padEdges = true
@@ -93,10 +127,8 @@ String objFilename = fileList.find {element -> element.contains(objNameWithoutEx
 File probFile = new File (parentPath, probFilename)
 File objFile = new File (parentPath, objFilename)
 impProb = importImage(probFile, "/exported_data", "yxc")
-//impProb.hide()
 impObj = importImage(objFile, "/exported_data", "yxc")
 IJ.run(impObj, "glasbey inverted", "")
-//impObj.hide()
 
 
 
@@ -104,13 +136,14 @@ IJ.run(impObj, "glasbey inverted", "")
 // STAGE 1
 //////////////
 
+
 // create myelin mask
 impProb.setPosition(probChannel)
 def ipProb = impProb.getProcessor()
 ipProb.setThreshold (0.2, 1.0)
 def ipMyelinMask = ipProb.createMask() // image processor
 def impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask) // image plus
-impMyelinMask.show()
+//impMyelinMask.show()
 
 // duplicate and invert myelin mask
 def ipMyelinMaskInverted = ipMyelinMask.duplicate()
@@ -126,10 +159,13 @@ def pa = new ParticleAnalyzer(options, measurements, rt, 10000, 999999)
 pa.setHideOutputImage(true)
 pa.analyze(impMyelinMaskInverted)
 def impNoEdges = pa.getOutputImage()
+impNoEdges.show()
 
 // close and fill holes
-IJ.run(impNoEdges, "Options...", "iterations=2 count=1 black do=Open");
-IJ.run(impNoEdges, "Options...", "iterations=1 count=1 do=[Fill Holes]");
+ipNoEdges = impNoEdges.getProcessor()
+run(ipNoEdges, "close", 2, 1)
+//IJ.run(impNoEdges, "Options...", "iterations=1 count=1 do=[Fill Holes]");
+return
 
 // image calculator
 def ic = new ImageCalculator()
