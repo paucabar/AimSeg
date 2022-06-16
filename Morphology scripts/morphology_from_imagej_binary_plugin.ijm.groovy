@@ -1,20 +1,20 @@
 #@ ImagePlus imp
 #@ Integer (label="Iterations", value=1, max=99, min=1, style="listBox") iterations
 #@ Integer (label="Count", value=1, max=8, min=1, style="listBox") count  
-#@ String (label="Thresholding Method", choices={"erode", "dilate", "open", "close"}, value="erode", style="listBox") arg
+#@ String (label="Operation", choices={"erode", "dilate", "open", "close"}, value="erode", style="listBox") operation
 
 import ij.*;
-import ij.process.*;
+import ij.process.ImageProcessor
+import ij.process.ByteProcessor
 
 // Implements the Erode, Dilate, Open and Close commands in the Process/Binary submenu. 
 
-public void run (ImageProcessor ip) {
+public void run (ImageProcessor ip, String arg) {
     int fg = Prefs.blackBackground ? 255 : 0;
     foreground = ip.isInvertedLut() ? 255-fg : fg;
     background = 255 - foreground;
     ip.setSnapshotCopyMode(true);
-    
-    //String arg = "erode"
+
 	if (arg.equals("erode") || arg.equals("dilate")) {
         doIterations((ByteProcessor)ip, arg);
 	} else if (arg.equals("open")) {
@@ -45,4 +45,4 @@ void doIterations (ImageProcessor ip, String mode) {
 
 Prefs.padEdges = true
 impo = imp.getProcessor()
-run(impo)
+run(impo, operation)
