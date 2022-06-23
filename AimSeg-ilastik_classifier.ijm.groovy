@@ -191,7 +191,9 @@ def pa = new ParticleAnalyzer(options, measurements, rt, 10000, 999999)
 pa.setHideOutputImage(true)
 pa.analyze(impMyelinMaskInverted)
 def impNoEdges = pa.getOutputImage()
-IJ.run(impNoEdges, "Grays", "") // no inverted LUT
+if (impNoEdges.isInvertedLut()) {
+	IJ.run(impNoEdges, "Grays", "")
+}
 impNoEdges.show()
 
 // close and fill holes
