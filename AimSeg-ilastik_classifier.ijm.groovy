@@ -201,7 +201,7 @@ ipNoEdges = impNoEdges.getProcessor()
 run(ipNoEdges, "close", 2, 1)
 fill(ipNoEdges)
 
-// image calculator
+// image calculator XOR
 def ic = new ImageCalculator()
 def impXOR = ic.run(impMyelinMaskInverted, impNoEdges, "XOR create")
 impXOR.show()
@@ -216,6 +216,11 @@ if (impEdges.isInvertedLut()) {
 	IJ.run(impEdges, "Grays", "")
 }
 impEdges.show()
+
+// image calculator OR
+def impOR = ic.run(impNoEdges, impEdges, "OR create")
+impOR.show()
+
 return
 
 // wait for user
