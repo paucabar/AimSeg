@@ -3,7 +3,7 @@ macro "Toggle ROI group [q]" {
 	index=roiManager("index");
 	if(index >= 0){
 		group=Roi.getGroup;
-		if(color!=2){
+		if(group!=2){
 			Roi.setGroup(2);
 		} else {
 			Roi.setGroup(1);
