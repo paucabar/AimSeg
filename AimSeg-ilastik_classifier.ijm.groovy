@@ -204,7 +204,7 @@ fill(ipNoEdges)
 // image calculator XOR
 def ic = new ImageCalculator()
 def impXOR = ic.run(impMyelinMaskInverted, impNoEdges, "XOR create")
-impXOR.show()
+//impXOR.show()
 
 // get axons on edges
 Integer options_with_edges = ParticleAnalyzer.SHOW_MASKS
@@ -215,12 +215,22 @@ def impEdges = pa2.getOutputImage()
 if (impEdges.isInvertedLut()) {
 	IJ.run(impEdges, "Grays", "")
 }
-impEdges.show()
+//impEdges.show()
 
 // image calculator OR
 def impOR = ic.run(impNoEdges, impEdges, "OR create")
-impOR.show()
+//impOR.show()
 
+// get axons on edges
+Integer options_add_manager = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.ADD_TO_MANAGER
+def pa3 = new ParticleAnalyzer(options_add_manager, measurements, rt, 10000, 999999, 0.4, 1.0)
+pa3.setHideOutputImage(true)
+pa3.analyze(impOR)
+def innerMasks = pa3.getOutputImage()
+if (innerMasks.isInvertedLut()) {
+	IJ.run(innerMasks, "Grays", "")
+}
+//innerMasks.show()
 return
 
 // wait for user
