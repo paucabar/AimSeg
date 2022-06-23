@@ -181,32 +181,42 @@ def impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask) // image plus
 def ipMyelinMaskInverted = ipMyelinMask.duplicate()
 ipMyelinMaskInverted.invert()
 def impMyelinMaskInverted = new ImagePlus("Myelin Inverted Mask", ipMyelinMaskInverted)
-impMyelinMaskInverted.show()
+//impMyelinMaskInverted.show()
 
-// exclude edges and big objects
+// exclude edges
 Integer options = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES
 Integer measurements = Measurements.AREA
 def rt = new ResultsTable();
-def pa = new ParticleAnalyzer(options, measurements, rt, 10000, 999999)
+def pa = new ParticleAnalyzer(options, measurements, rt, 0, 999999)
 pa.setHideOutputImage(true)
 pa.analyze(impMyelinMaskInverted)
 def impNoEdges = pa.getOutputImage()
 if (impNoEdges.isInvertedLut()) {
 	IJ.run(impNoEdges, "Grays", "")
 }
-impNoEdges.show()
+//impNoEdges.show()
 
 // close and fill holes
 ipNoEdges = impNoEdges.getProcessor()
 run(ipNoEdges, "close", 2, 1)
-//IJ.run(impNoEdges, "Options...", "iterations=1 count=1 do=[Fill Holes]");
 fill(ipNoEdges)
-return
 
 // image calculator
 def ic = new ImageCalculator()
 def impXOR = ic.run(impMyelinMaskInverted, impNoEdges, "XOR create")
 impXOR.show()
+
+// get axons on edges
+Integer options_with_edges = ParticleAnalyzer.SHOW_MASKS
+def pa2 = new ParticleAnalyzer(options_with_edges, measurements, rt, 0, 999999, 0.3, 1.0)
+pa2.setHideOutputImage(true)
+pa2.analyze(impXOR)
+def impEdges = pa2.getOutputImage()
+if (impEdges.isInvertedLut()) {
+	IJ.run(impEdges, "Grays", "")
+}
+impEdges.show()
+return
 
 // wait for user
 def wfu = new WaitForUserDialog("Title", "I'm waiting")
