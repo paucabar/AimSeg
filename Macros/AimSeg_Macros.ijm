@@ -1,12 +1,12 @@
 // macro to switch the color of the selected ROI
-macro "Toggle ROI color [q]" {
+macro "Toggle ROI group [q]" {
 	index=roiManager("index");
 	if(index >= 0){
-		color=Roi.getStrokeColor;
-		if(color!="red"){
-			Roi.setStrokeColor("red");
+		group=Roi.getGroup;
+		if(color!=2){
+			Roi.setGroup(2);
 		} else {
-			Roi.setStrokeColor("yellow");
+			Roi.setGroup(1);
 		}
 	} else {
 		showMessage("No ROI selected");
