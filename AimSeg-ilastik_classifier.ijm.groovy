@@ -25,6 +25,7 @@ import ij.gui.WaitForUserDialog
 import net.imglib2.img.display.imagej.ImageJFunctions
 import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
 import ij.plugin.frame.RoiManager
+import ij.gui.Roi
 
 
 def isUpdateSiteActive (updateSite) {
@@ -235,14 +236,13 @@ if (innerMasks.isInvertedLut()) {
 }
 //innerMasks.show()
 
-// RoiManager set group 2 (red)
-def RM = new RoiManager()
-rm = RM.getRoiManager()
+// RoiManager set selected objects as group 2 (red ROIs)
+rm = RoiManager.getInstance()
 int roiCount = rm.getCount()
-println "$roiCount ROIs"
-for (int i in 0..roiCount-1) {
-	rm.select(i)
-	rm.setGroup(2)
+println "$roiCount selected ROIs"
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+    roi.setGroup(2)
+    roi.setStrokeWidth(5)
 }
 return
 
