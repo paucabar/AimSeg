@@ -24,6 +24,7 @@ import ij.plugin.ImageCalculator
 import ij.gui.WaitForUserDialog
 import net.imglib2.img.display.imagej.ImageJFunctions
 import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
+import ij.plugin.frame.RoiManager
 
 
 def isUpdateSiteActive (updateSite) {
@@ -135,7 +136,9 @@ boolean checkIlastik = isUpdateSiteActive("ilastik");
 
 // setup
 installMacro()
+
 Prefs.blackBackground=true
+
 pe = Prefs.padEdges
 if (!pe) {
 	Prefs.padEdges = true
@@ -221,7 +224,7 @@ if (impEdges.isInvertedLut()) {
 def impOR = ic.run(impNoEdges, impEdges, "OR create")
 //impOR.show()
 
-// get axons on edges
+// get inner masks
 Integer options_add_manager = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.ADD_TO_MANAGER
 def pa3 = new ParticleAnalyzer(options_add_manager, measurements, rt, 10000, 999999, 0.4, 1.0)
 pa3.setHideOutputImage(true)
@@ -231,6 +234,16 @@ if (innerMasks.isInvertedLut()) {
 	IJ.run(innerMasks, "Grays", "")
 }
 //innerMasks.show()
+
+// RoiManager set group 2 (red)
+def RM = new RoiManager()
+rm = RM.getRoiManager()
+int roiCount = rm.getCount()
+println "$roiCount ROIs"
+for (int i in 0..roiCount-1) {
+	rm.select(i)
+	rm.setGroup(2)
+}
 return
 
 // wait for user
