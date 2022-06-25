@@ -258,6 +258,25 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 def wfu = new WaitForUserDialog("Edit ROIs", "If necessary, use the \"ROI Manager\" to edit\nthe output. Click \"OK\" once you finish")
 wfu.show()
 
+// discard group 1 ROIs
+def roiDiscard = []
+int count = rm.getCount()
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+    if (roi.getGroup() == 1) {
+	    roiDiscard.add(index)
+    } else {
+    	roi.setGroup(0)
+    	roi.setStrokeWidth(0)
+    }
+}
+println "Discard ROIs $roiDiscard"
+def roiDiscardInt = roiDiscard as int[]
+rm.setSelectedIndexes(roiDiscardInt)
+rm.runCommand(imp,"Delete")
+
+// save ROI set
+rm.deselect()
+
 // reset Prefs.padEdges
 Prefs.padEdges = pe
 Prefs.blackBackground = bb
