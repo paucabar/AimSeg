@@ -242,10 +242,17 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 def allMasks = ic.run(innerMasks, impMyelinMaskInverted, "OR create")
 def otherMasks = ic.run(innerMasks, allMasks, "XOR create")
 otherMasksSizeFilter = analyzeParticles(otherMasks, options_add_manager, measurements_area, 10000, 500000, 0, 1)
-return
+
+// RoiManager set other objects as group 1 (blue ROIs)
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+    if (index > roiCount -1) {
+	    roi.setGroup(1)
+	    roi.setStrokeWidth(5)
+    }
+}
 
 // wait for user
-def wfu = new WaitForUserDialog("Title", "I'm waiting")
+def wfu = new WaitForUserDialog("Edit ROIs", "If necessary, use the \"ROI Manager\" to edit\nthe output. Click \"OK\" once you finish")
 wfu.show()
 
 // reset Prefs.padEdges
