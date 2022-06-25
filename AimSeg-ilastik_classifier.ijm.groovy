@@ -237,6 +237,10 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
     roi.setGroup(2)
     roi.setStrokeWidth(5)
 }
+
+// get other masks
+def allMasks = ic.run(innerMasks, impMyelinMaskInverted, "OR create")
+def otherMasks = ic.run(innerMasks, allMasks, "XOR create")
 return
 
 // wait for user
