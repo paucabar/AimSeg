@@ -209,21 +209,15 @@ impNoEdges = analyzeParticles(impMyelinMaskInverted, options_exclude_edges, meas
 ipNoEdges = impNoEdges.getProcessor()
 run(ipNoEdges, "close", 2, 1)
 fill(ipNoEdges)
-return
+
 // image calculator XOR
 def ic = new ImageCalculator()
 def impXOR = ic.run(impMyelinMaskInverted, impNoEdges, "XOR create")
 //impXOR.show()
 
 // get axons on edges
-Integer options_with_edges = ParticleAnalyzer.SHOW_MASKS
-def pa2 = new ParticleAnalyzer(options_with_edges, measurements, rt, 0, 999999, 0.3, 1.0)
-pa2.setHideOutputImage(true)
-pa2.analyze(impXOR)
-def impEdges = pa2.getOutputImage()
-if (impEdges.isInvertedLut()) {
-	IJ.run(impEdges, "Grays", "")
-}
+int options_with_edges = ParticleAnalyzer.SHOW_MASKS
+impEdges = analyzeParticles(impXOR, options_with_edges, measurements_area, 0, 999999, 0.3, 1)
 //impEdges.show()
 
 // image calculator OR
