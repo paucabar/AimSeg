@@ -8,6 +8,7 @@
 #@ StatusService statusService
 
 
+import java.io.File
 import ij.IJ
 import ij.Prefs
 import ij.io.Opener
@@ -171,8 +172,9 @@ def fileList = []
 parentPath.eachFile(FileType.FILES) {
 	fileList << it.name
 }
-String probNameWithoutExtension = imageFile.name.take(imageFile.name.lastIndexOf('.'))+"_Probabilities"
-String objNameWithoutExtension = imageFile.name.take(imageFile.name.lastIndexOf('.'))+"_Object Predictions"
+String impNameWithoutExtension = imageFile.name.take(imageFile.name.lastIndexOf('.'))
+String probNameWithoutExtension = impNameWithoutExtension+"_Probabilities"
+String objNameWithoutExtension = impNameWithoutExtension+"_Object Predictions"
 String probFilename = fileList.find {element -> element.contains(probNameWithoutExtension)}
 String objFilename = fileList.find {element -> element.contains(objNameWithoutExtension)}
 File probFile = new File (parentPath, probFilename)
@@ -274,8 +276,11 @@ def roiDiscardInt = roiDiscard as int[]
 rm.setSelectedIndexes(roiDiscardInt)
 rm.runCommand(imp,"Delete")
 
-// save ROI set
+// save ROI set IN
 rm.deselect()
+String parentPathS = imageFile.getParentFile()
+rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
+println "Save RoiSet_IN"
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
