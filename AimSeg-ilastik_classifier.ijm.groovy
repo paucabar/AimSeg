@@ -128,6 +128,18 @@ void fill(ImageProcessor ip) {
     }
 }
 
+def analyzeParticles(ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
+	def rt = new ResultsTable();
+	def pa = new ParticleAnalyzer(options, measurements, rt, minSize, maxSize, minCirc, maxCirc)
+	pa.setHideOutputImage(true)
+	pa.analyze(imp)
+	def impOutput = pa.getOutputImage()
+	if (impOutput.isInvertedLut()) {
+		IJ.run(impOutput, "Grays", "")
+	}
+	return impOutput
+}
+
 
 
 
@@ -188,23 +200,16 @@ def impMyelinMaskInverted = new ImagePlus("Myelin Inverted Mask", ipMyelinMaskIn
 //impMyelinMaskInverted.show()
 
 // exclude edges
-Integer options = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES
-Integer measurements = Measurements.AREA
-def rt = new ResultsTable();
-def pa = new ParticleAnalyzer(options, measurements, rt, 0, 999999)
-pa.setHideOutputImage(true)
-pa.analyze(impMyelinMaskInverted)
-def impNoEdges = pa.getOutputImage()
-if (impNoEdges.isInvertedLut()) {
-	IJ.run(impNoEdges, "Grays", "")
-}
+int options_exclude_edges = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES
+int measurements_area = Measurements.AREA
+impNoEdges = analyzeParticles(impMyelinMaskInverted, options_exclude_edges, measurements_area, 0, 999999, 0, 1)
 //impNoEdges.show()
 
 // close and fill holes
 ipNoEdges = impNoEdges.getProcessor()
 run(ipNoEdges, "close", 2, 1)
 fill(ipNoEdges)
-
+return
 // image calculator XOR
 def ic = new ImageCalculator()
 def impXOR = ic.run(impMyelinMaskInverted, impNoEdges, "XOR create")
