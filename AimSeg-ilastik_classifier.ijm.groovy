@@ -225,14 +225,8 @@ def impOR = ic.run(impNoEdges, impEdges, "OR create")
 //impOR.show()
 
 // get inner masks
-Integer options_add_manager = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.ADD_TO_MANAGER
-def pa3 = new ParticleAnalyzer(options_add_manager, measurements, rt, 10000, 999999, 0.4, 1.0)
-pa3.setHideOutputImage(true)
-pa3.analyze(impOR)
-def innerMasks = pa3.getOutputImage()
-if (innerMasks.isInvertedLut()) {
-	IJ.run(innerMasks, "Grays", "")
-}
+int options_add_manager = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.ADD_TO_MANAGER
+innerMasks = analyzeParticles(impOR, options_add_manager, measurements_area, 10000, 999999, 0.4, 1)
 //innerMasks.show()
 
 // RoiManager set selected objects as group 2 (red ROIs)
