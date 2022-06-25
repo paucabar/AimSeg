@@ -150,7 +150,10 @@ boolean checkIlastik = isUpdateSiteActive("ilastik");
 // setup
 installMacro()
 
-Prefs.blackBackground=true
+bb = Prefs.blackBackground
+if (!bb) {
+	Prefs.blackBackground=true
+}
 
 pe = Prefs.padEdges
 if (!pe) {
@@ -257,3 +260,4 @@ wfu.show()
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
+Prefs.blackBackground = bb
