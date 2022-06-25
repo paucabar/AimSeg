@@ -241,6 +241,7 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 // get other masks
 def allMasks = ic.run(innerMasks, impMyelinMaskInverted, "OR create")
 def otherMasks = ic.run(innerMasks, allMasks, "XOR create")
+otherMasksSizeFilter = analyzeParticles(otherMasks, options_add_manager, measurements_area, 10000, 500000, 0, 1)
 return
 
 // wait for user
