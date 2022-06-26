@@ -284,6 +284,15 @@ String parentPathS = imageFile.getParentFile()
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 println "Save RoiSet_IN"
 
+// create IN final mask
+rm.deselect()
+rm.runCommand(imp,"Combine")
+ByteProcessor mask = imp.createRoiMask()
+maskImp = new ImagePlus("IN Mask", mask);
+rm.runCommand(imp,"Delete")
+//rm.close()
+imp.hide()
+
 // reset Prefs.padEdges
 Prefs.padEdges = pe
 Prefs.blackBackground = bb
