@@ -233,7 +233,7 @@ def impOR = ic.run(impNoEdges, impEdges, "OR create")
 
 // get inner masks
 int options_add_manager = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.ADD_TO_MANAGER
-innerMasks = analyzeParticles(impOR, options_add_manager, measurements_area, 10000, 999999, 0.4, 1)
+innerMasks = analyzeParticles(impOR, options_add_manager, measurements_area, 3000, 999999, 0.4, 1)
 //innerMasks.show()
 
 // RoiManager set selected objects as group 2 (red ROIs)
@@ -248,7 +248,7 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 // get other masks
 def allMasks = ic.run(innerMasks, impMyelinMaskInverted, "OR create")
 def otherMasks = ic.run(innerMasks, allMasks, "XOR create")
-otherMasksSizeFilter = analyzeParticles(otherMasks, options_add_manager, measurements_area, 10000, 500000, 0, 1)
+otherMasksSizeFilter = analyzeParticles(otherMasks, options_add_manager, measurements_area, 3000, 500000, 0, 1)
 
 // RoiManager set other objects as group 1 (blue ROIs)
 rm.getRoisAsArray().eachWithIndex { roi, index ->
