@@ -285,6 +285,7 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 println "Save RoiSet_IN"
 
 // create IN final mask
+IJ.run(imp, "Select None", "");
 rm.deselect()
 rm.runCommand(imp,"Combine")
 ByteProcessor mask = imp.createRoiMask()

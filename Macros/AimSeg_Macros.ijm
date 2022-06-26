@@ -15,6 +15,10 @@ macro "Toggle ROI group [q]" {
 
 macro "Add ROI [a]" {
 	roiManager("Add");
+	count=roiManager("count");
+	roiManager("select", count-1);
+	RoiManager.setGroup(2);
+	roiManager("Set Line Width", 5);
 }
 
 macro "Delete ROI [d]" {
