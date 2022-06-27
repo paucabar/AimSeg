@@ -27,6 +27,7 @@ import net.imglib2.img.display.imagej.ImageJFunctions
 import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
 import ij.plugin.frame.RoiManager
 import ij.gui.Roi
+import ij.plugin.RGBStackMerge
 
 
 def isUpdateSiteActive (updateSite) {
@@ -289,10 +290,16 @@ IJ.run(imp, "Select None", "");
 rm.deselect()
 rm.runCommand(imp,"Combine")
 ByteProcessor mask = imp.createRoiMask()
-maskImp = new ImagePlus("IN Mask", mask);
+maskIn = new ImagePlus("IN Mask", mask);
 rm.runCommand(imp,"Delete")
 //rm.close()
 imp.hide()
+
+// merge channels to display
+ImagePlus[] impMergeIN = [imp, maskIn]
+def rgbSMerge = new RGBStackMerge()
+ImagePlus compositeIN = rgbSMerge.mergeChannels(impMergeIN, true)
+compositeIN.show()
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
