@@ -28,6 +28,9 @@ import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
 import ij.plugin.frame.RoiManager
 import ij.gui.Roi
 import ij.plugin.RGBStackMerge
+import ij.CompositeImage
+import ij.process.LUT
+import java.awt.Color
 
 
 def isUpdateSiteActive (updateSite) {
@@ -192,7 +195,6 @@ IJ.run(impObj, "glasbey inverted", "")
 // STAGE 1
 //////////////
 
-
 // create myelin mask
 impProb.setPosition(probChannel)
 def ipProb = impProb.getProcessor()
@@ -285,6 +287,10 @@ String parentPathS = imageFile.getParentFile()
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 println "Save RoiSet_IN"
 
+//////////////
+// PRE-STAGE 2
+//////////////
+
 // create IN final mask
 IJ.run(imp, "Select None", "");
 rm.deselect()
@@ -299,7 +305,21 @@ imp.hide()
 ImagePlus[] impMergeIN = [imp, maskIn]
 def rgbSMerge = new RGBStackMerge()
 ImagePlus compositeIN = rgbSMerge.mergeChannels(impMergeIN, true)
+//println compositeIN.getClass()
+
+// set composite LUTs
+luts = compositeIN.getLuts()
+luts[0] = LUT.createLutFromColor(Color.GRAY)
+luts[1] = LUT.createLutFromColor(Color.MAGENTA)
+compositeIN.setLuts(luts)
+compositeIN.updateAndDraw()
 compositeIN.show()
+
+//////////////
+// STAGE 2
+//////////////
+
+
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
