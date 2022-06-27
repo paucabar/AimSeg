@@ -33,6 +33,7 @@ import ij.CompositeImage
 import ij.process.LUT
 import java.awt.Color
 import ij.plugin.Duplicator
+import inra.ijpb.watershed.MarkerControlledWatershedTransform2D
 
 
 def isUpdateSiteActive (updateSite) {
@@ -147,6 +148,13 @@ def analyzeParticles(ImagePlus imp, int options, int measurements, double minSiz
 		IJ.run(impOutput, "Grays", "")
 	}
 	return impOutput
+}
+
+def runMarkerControlledWatershed(ImagePlus input, ImagePlus labels, ImagePlus mask, int connectivity) {
+	mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
+	result = mcwt.applyWithPriorityQueue()
+	ImagePlus impResult = new ImagePlus("Out_to_count", result)
+	return impResult
 }
 
 
@@ -334,6 +342,25 @@ IJ.run(impVoronoi, "Voronoi", "")
 impVoronoi.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
 impVoronoi.setProcessor(impVoronoi.getProcessor().createMask())
 impVoronoi.getProcessor().invert()
+run (impVoronoi.getProcessor(), "erode", 2, 1)
+
+// get initial axon masks
+ImagePlus myelinFirst = ic.run(impMyelinMask, maskIn, "AND create")
+ImagePlus myelinClean = ic.run(myelinFirst, impMyelinMask, "XOR create")
+ImagePlus myelinOutlines = ic.run(myelinClean, impVoronoi, "AND create")
+fill(myelinOutlines.getProcessor())
+ImagePlus impInToCount = analyzeParticles(maskIn, options_exclude_edges, measurements_area, 0, 999999, 0, 1)
+run (myelinOutlines.getProcessor(), "open", 20, 1)
+IJ.run(myelinOutlines, "Watershed", "")
+//ImagePlus impOutToCount = dup.run(impInToCount, 1, 1, 1, 1, 1, 1);
+//String moTitle = myelinOutlines.getTitle()
+//String itcTitle = impOutToCount.getTitle()
+//IJ.run(myelinOutlines, "BinaryReconstruct ", "mask=[$moTitle] seed=[$itcTitle] white")
+ImagePlus myelinOutlines2 = runMarkerControlledWatershed(myelinOutlines, impInToCount, impInToCount, 8)
+myelinOutlines2.show()
+return
+run (impOutToCount.getProcessor(), "close", 1, 1)
+ImagePlus impOutMasks = analyzeParticles(impOutToCount, options_add_manager, measurements_area, 0, 999999, 0, 1)
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
