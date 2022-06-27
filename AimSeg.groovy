@@ -32,6 +32,7 @@ import ij.plugin.RGBStackConverter
 import ij.CompositeImage
 import ij.process.LUT
 import java.awt.Color
+import ij.plugin.Duplicator
 
 
 def isUpdateSiteActive (updateSite) {
@@ -297,7 +298,7 @@ IJ.run(imp, "Select None", "");
 rm.deselect()
 rm.runCommand(imp,"Combine")
 ByteProcessor mask = imp.createRoiMask()
-maskIn = new ImagePlus("IN Mask", mask);
+ImagePlus maskIn = new ImagePlus("IN Mask", mask);
 rm.runCommand(imp,"Delete")
 //rm.close()
 imp.hide()
@@ -324,7 +325,15 @@ compositeIN.show()
 // STAGE 2
 //////////////
 
+// duplicate IN final mask
+def dup = new Duplicator()
+ImagePlus impVoronoi = dup.run(maskIn, 1, 1, 1, 1, 1, 1);
 
+// get voronoi masks
+IJ.run(impVoronoi, "Voronoi", "")
+impVoronoi.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
+impVoronoi.setProcessor(impVoronoi.getProcessor().createMask())
+impVoronoi.getProcessor().invert()
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
