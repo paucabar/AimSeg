@@ -28,6 +28,7 @@ import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
 import ij.plugin.frame.RoiManager
 import ij.gui.Roi
 import ij.plugin.RGBStackMerge
+import ij.plugin.RGBStackConverter
 import ij.CompositeImage
 import ij.process.LUT
 import java.awt.Color
@@ -313,6 +314,10 @@ luts[0] = LUT.createLutFromColor(Color.GRAY)
 luts[1] = LUT.createLutFromColor(Color.MAGENTA)
 compositeIN.setLuts(luts)
 compositeIN.updateAndDraw()
+
+// convert to RGB
+def rgbSConverter = new RGBStackConverter()
+rgbSConverter.convertToRGB(compositeIN)
 compositeIN.show()
 
 //////////////
