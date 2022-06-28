@@ -360,6 +360,14 @@ myelinOutlines2.setProcessor(myelinOutlines2.getProcessor().createMask())
 run (myelinOutlines2.getProcessor(), "close", 1, 1)
 ImagePlus impOutMasks = analyzeParticles(myelinOutlines2, options_add_manager, measurements_area, 0, 999999, 0, 1)
 
+// RoiManager set selected objects as group 2 (red ROIs)
+roiCount = rm.getCount()
+println "$roiCount selected ROIs"
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+    roi.setGroup(2)
+    roi.setStrokeWidth(5)
+}
+
 // wait for user
 wfu.show()
 
