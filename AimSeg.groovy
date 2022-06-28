@@ -192,7 +192,8 @@ ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labe
 //////////////
 
 // check update sites
-boolean checkIlastik = isUpdateSiteActive("ilastik");
+boolean checkIlastik = isUpdateSiteActive("ilastik")
+boolean checkMorphoLibJ = isUpdateSiteActive("IJPB-plugins")
 
 // setup
 installMacro()
