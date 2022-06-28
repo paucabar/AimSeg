@@ -406,14 +406,12 @@ rm.runCommand(compositeIN,"Delete")
 compositeIN.hide()
 
 // get myelin to count
-ImagePlus myelinOutlines2Labels = analyzeParticles(myelinOutlines2, options_count_masks, measurements_area, 0, 999999, 0, 1)
-ImagePlus impInToCountCor= runMarkerControlledWatershed(impInToCount.getProcessor(), myelinOutlines2Labels.getProcessor(), impInToCount.getProcessor(), 8)
+ImagePlus maskOutLabels = analyzeParticles(maskOut, options_count_masks, measurements_area, 0, 999999, 0, 1)
+ImagePlus impInToCountCor= runMarkerControlledWatershed(impInToCount.getProcessor(), maskOutLabels.getProcessor(), impInToCount.getProcessor(), 8)
 impInToCountCor.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
 impInToCountCor.setProcessor(impInToCountCor.getProcessor().createMask())
-ImagePlus myelinToCount = ic.run(impInToCountCor, myelinOutlines2, "XOR create")
+ImagePlus myelinToCount = ic.run(impInToCountCor, maskOut, "XOR create")
 myelinToCount.show()
-
-
 
 
 
