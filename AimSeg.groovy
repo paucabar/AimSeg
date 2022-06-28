@@ -150,6 +150,25 @@ def analyzeParticles(ImagePlus imp, int options, int measurements, double minSiz
 	return impOutput
 }
 
+void cleanRoiSet(RoiManager RoMa) {
+	def roiDiscard = []
+	int count = RoMa.getCount()
+	RoMa.getRoisAsArray().eachWithIndex { roi, index ->
+	    if (roi.getGroup() == 1) {
+		    roiDiscard.add(index)
+	    } else {
+	    	roi.setGroup(0)
+	    	roi.setStrokeWidth(0)
+	    }
+	}
+	if (roiDiscard.size > 0) {
+		println "Discard ROIs $roiDiscard"
+		int[] roiDiscardInt = roiDiscard as int[]
+		RoMa.setSelectedIndexes(roiDiscardInt)
+		RoMa.runCommand(imp,"Delete")
+	}
+}
+
 ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
 	mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
 	ImageProcessor result = mcwt.applyWithPriorityQueue()
@@ -159,7 +178,9 @@ ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labe
 
 
 
-
+//////////////
+// START
+//////////////
 
 // check update sites
 boolean checkIlastik = isUpdateSiteActive("ilastik");
@@ -275,28 +296,16 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 def wfu = new WaitForUserDialog("Edit ROIs", "If necessary, use the \"ROI Manager\" to edit\nthe output. Click \"OK\" once you finish")
 wfu.show()
 
-// discard group 1 ROIs
-def roiDiscard = []
-int count = rm.getCount()
-rm.getRoisAsArray().eachWithIndex { roi, index ->
-    if (roi.getGroup() == 1) {
-	    roiDiscard.add(index)
-    } else {
-    	roi.setGroup(0)
-    	roi.setStrokeWidth(0)
-    }
-}
-println "Discard ROIs $roiDiscard"
-def roiDiscardInt = roiDiscard as int[]
-rm.setSelectedIndexes(roiDiscardInt)
-rm.runCommand(imp,"Delete")
+// discard group 1 ROIs and set group 2 ROIs as 0
+// set stroke width as 0
+cleanRoiSet(rm)
 
 // save ROI set IN
 rm.deselect()
 String parentPathS = imageFile.getParentFile()
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 println "Save RoiSet_IN"
-
+ 
 //////////////
 // PRE-STAGE 2
 //////////////
@@ -370,6 +379,15 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 
 // wait for user
 wfu.show()
+
+// discard group 1 ROIs and set group 2 ROIs as 0
+// set stroke width as 0
+cleanRoiSet(rm)
+
+// save ROI set OUT
+rm.deselect()
+rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
+println "Save RoiSet_OUT"
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
