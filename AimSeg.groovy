@@ -150,7 +150,7 @@ def analyzeParticles(ImagePlus imp, int options, int measurements, double minSiz
 	return impOutput
 }
 
-def runMarkerControlledWatershed(ImagePlus input, ImagePlus labels, ImagePlus mask, int connectivity) {
+def runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
 	mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
 	result = mcwt.applyWithPriorityQueue()
 	ImagePlus impResult = new ImagePlus("Out_to_count", result)
@@ -344,7 +344,7 @@ impVoronoi.setProcessor(impVoronoi.getProcessor().createMask())
 impVoronoi.getProcessor().invert()
 run (impVoronoi.getProcessor(), "erode", 2, 1)
 
-// get initial axon masks
+// get initial OUT masks
 ImagePlus myelinFirst = ic.run(impMyelinMask, maskIn, "AND create")
 ImagePlus myelinClean = ic.run(myelinFirst, impMyelinMask, "XOR create")
 ImagePlus myelinOutlines = ic.run(myelinClean, impVoronoi, "AND create")
@@ -352,15 +352,14 @@ fill(myelinOutlines.getProcessor())
 ImagePlus impInToCount = analyzeParticles(maskIn, options_exclude_edges, measurements_area, 0, 999999, 0, 1)
 run (myelinOutlines.getProcessor(), "open", 20, 1)
 IJ.run(myelinOutlines, "Watershed", "")
-//ImagePlus impOutToCount = dup.run(impInToCount, 1, 1, 1, 1, 1, 1);
-//String moTitle = myelinOutlines.getTitle()
-//String itcTitle = impOutToCount.getTitle()
-//IJ.run(myelinOutlines, "BinaryReconstruct ", "mask=[$moTitle] seed=[$itcTitle] white")
-ImagePlus myelinOutlines2 = runMarkerControlledWatershed(myelinOutlines, impInToCount, impInToCount, 8)
-myelinOutlines2.show()
-return
-run (impOutToCount.getProcessor(), "close", 1, 1)
-ImagePlus impOutMasks = analyzeParticles(impOutToCount, options_add_manager, measurements_area, 0, 999999, 0, 1)
+int options_count_masks = ParticleAnalyzer.SHOW_ROI_MASKS
+ImagePlus impInToCountLabels = analyzeParticles(impInToCount, options_count_masks, measurements_area, 0, 999999, 0, 1)
+ImagePlus myelinOutlines2 = runMarkerControlledWatershed(myelinOutlines.getProcessor(), impInToCountLabels.getProcessor(), myelinOutlines.getProcessor(), 8)
+myelinOutlines2.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
+myelinOutlines2.setProcessor(myelinOutlines2.getProcessor().createMask())
+run (myelinOutlines2.getProcessor(), "close", 1, 1)
+ImagePlus impOutMasks = analyzeParticles(myelinOutlines2, options_add_manager, measurements_area, 0, 999999, 0, 1)
+
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
