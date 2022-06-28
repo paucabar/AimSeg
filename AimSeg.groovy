@@ -411,7 +411,26 @@ ImagePlus impInToCountCor= runMarkerControlledWatershed(impInToCount.getProcesso
 impInToCountCor.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
 impInToCountCor.setProcessor(impInToCountCor.getProcessor().createMask())
 ImagePlus myelinToCount = ic.run(impInToCountCor, maskOut, "XOR create")
-myelinToCount.show()
+
+// merge channels to display
+ImagePlus[] impMergeMyelin = [imp, myelinToCount]
+ImagePlus compositeMyelin = rgbSMerge.mergeChannels(impMergeMyelin, true)
+//println compositeIN.getClass()
+
+// set composite LUTs
+lutsM = compositeMyelin.getLuts()
+lutsM[0] = LUT.createLutFromColor(Color.GRAY)
+lutsM[1] = LUT.createLutFromColor(Color.MAGENTA)
+compositeMyelin.setLuts(lutsM)
+compositeMyelin.updateAndDraw()
+
+// convert to RGB
+rgbSConverter.convertToRGB(compositeMyelin)
+compositeMyelin.show()
+
+//////////////
+// STAGE 3
+//////////////
 
 
 
