@@ -150,9 +150,9 @@ def analyzeParticles(ImagePlus imp, int options, int measurements, double minSiz
 	return impOutput
 }
 
-def runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
+ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
 	mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
-	result = mcwt.applyWithPriorityQueue()
+	ImageProcessor result = mcwt.applyWithPriorityQueue()
 	ImagePlus impResult = new ImagePlus("Out_to_count", result)
 	return impResult
 }
