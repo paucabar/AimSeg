@@ -169,6 +169,15 @@ void cleanRoiSet(RoiManager RoMa) {
 	}
 }
 
+ImagePlus createRoiMask(ImagePlus imp, RoiManager rm) {
+	IJ.run(imp, "Select None", "");
+	rm.deselect()
+	rm.runCommand(imp,"Combine")
+	ByteProcessor mask = imp.createRoiMask()
+	ImagePlus impMask = new ImagePlus("Mask", mask);
+	return impMask
+}
+
 ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
 	mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
 	ImageProcessor result = mcwt.applyWithPriorityQueue()
@@ -311,11 +320,7 @@ println "Save RoiSet_IN"
 //////////////
 
 // create IN final mask
-IJ.run(imp, "Select None", "");
-rm.deselect()
-rm.runCommand(imp,"Combine")
-ByteProcessor mask = imp.createRoiMask()
-ImagePlus maskIn = new ImagePlus("IN Mask", mask);
+ImagePlus maskIn = createRoiMask(imp, rm)
 rm.runCommand(imp,"Delete")
 //rm.close()
 imp.hide()
@@ -388,6 +393,16 @@ cleanRoiSet(rm)
 rm.deselect()
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 println "Save RoiSet_OUT"
+
+//////////////
+// PRE-STAGE 3
+//////////////
+
+// create OUT final mask
+ImagePlus maskOut = createRoiMask(compositeIN, rm)
+rm.runCommand(compositeIN,"Delete")
+//rm.close()
+compositeIN.hide()
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
