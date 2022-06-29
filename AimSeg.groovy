@@ -258,9 +258,8 @@ impNoEdges = analyzeParticles(impMyelinMaskInverted, options_exclude_edges, meas
 //impNoEdges.show()
 
 // close and fill holes
-ipNoEdges = impNoEdges.getProcessor()
-run(ipNoEdges, "close", 2, 1)
-fill(ipNoEdges)
+run(impNoEdges.getProcessor(), "close", 2, 1)
+fill(impNoEdges.getProcessor())
 
 // image calculator XOR
 def ic = new ImageCalculator()
@@ -278,7 +277,7 @@ def impOR = ic.run(impNoEdges, impEdges, "OR create")
 
 // get inner masks
 int options_add_manager = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.ADD_TO_MANAGER
-innerMasks = analyzeParticles(impOR, options_add_manager, measurements_area, 3000, 999999, 0.4, 1)
+innerMasks = analyzeParticles(impOR, options_add_manager, measurements_area, 10000, 999999, 0.4, 1)
 //innerMasks.show()
 
 // RoiManager set selected objects as group 2 (red ROIs)
