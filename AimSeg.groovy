@@ -34,6 +34,7 @@ import ij.process.LUT
 import java.awt.Color
 import ij.plugin.Duplicator
 import inra.ijpb.watershed.MarkerControlledWatershedTransform2D
+import ij.plugin.Commands
 
 
 def isUpdateSiteActive (updateSite) {
@@ -478,6 +479,13 @@ cleanRoiSet(compositeMyelin, rm)
 rm.deselect()
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 println "Save RoiSet_AXON"
+
+// close all
+rm.deselect()
+rm.runCommand(compositeMyelin,"Delete")
+rm.close()
+Commands cmd = new Commands()
+cmd.closeAll()
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
