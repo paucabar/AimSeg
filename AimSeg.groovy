@@ -136,14 +136,14 @@ void fill(ImageProcessor ip) {
     }
 }
 
-def analyzeParticles(ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
+ImagePlus analyzeParticles(ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
 	def rt = new ResultsTable();
 	def pa = new ParticleAnalyzer(options, measurements, rt, minSize, maxSize, minCirc, maxCirc)
 	ip = imp.getProcessor()
 	ip.setBinaryThreshold()
 	pa.setHideOutputImage(true)
 	pa.analyze(imp, ip)
-	def impOutput = pa.getOutputImage()
+	ImagePlus impOutput = pa.getOutputImage()
 	if (impOutput.isInvertedLut()) {
 		IJ.run(impOutput, "Grays", "")
 	}
@@ -432,6 +432,7 @@ compositeMyelin.show()
 // STAGE 3
 //////////////
 
+// segment object predictions
 
 
 // reset Prefs.padEdges
