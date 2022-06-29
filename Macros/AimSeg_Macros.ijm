@@ -31,6 +31,14 @@ macro "Update ROI [u]" {
 }
 
 macro "Split ROI [z]" {
+	count1=roiManager("count");
 	roiManager("Split");
 	roiManager("Delete");
+	count2=roiManager("count");
+	for (i = count1-1; i < count2; i++) {
+		roiManager("select", i);
+		RoiManager.setGroup(2);
+		roiManager("Set Line Width", 5);
+		roiManager("deselect");
+	}
 }
