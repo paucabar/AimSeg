@@ -433,7 +433,13 @@ compositeMyelin.show()
 //////////////
 
 // segment object predictions
-
+ImagePlus impAxonMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
+impAxonMasks.getProcessor().setThreshold(1, 2, ImageProcessor.NO_LUT_UPDATE)
+impAxonMasks.setProcessor(impAxonMasks.getProcessor().createMask())
+run (impAxonMasks.getProcessor(), "close", 5, 1)
+fill(impAxonMasks.getProcessor())
+ImagePlus impAxonMasksFiltered = ic.run(impAxonMasks, maskOut, "AND create")
+ImagePlus sameMasks = analyzeParticles(impAxonMasksFiltered, options_add_manager, measurements_area, 0, 999999, 0, 1)
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
