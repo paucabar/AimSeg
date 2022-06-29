@@ -47,6 +47,8 @@ macro "Convex Hull [c]" {
 	index=roiManager("index");
 	run("Convex Hull");
 	roiManager("add");
+	count=roiManager("count");
+	roiManager("select", count-1);
 	RoiManager.setGroup(2);
 	roiManager("Set Line Width", 5);
 	roiManager("select", index);
