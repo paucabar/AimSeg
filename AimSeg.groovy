@@ -150,11 +150,11 @@ ImagePlus analyzeParticles(ImagePlus imp, int options, int measurements, double 
 	return impOutput
 }
 
-void cleanRoiSet(RoiManager RoMa) {
+void cleanRoiSet(ImagePlus imp, RoiManager RoMa) {
 	def roiDiscard = []
 	int count = RoMa.getCount()
 	RoMa.getRoisAsArray().eachWithIndex { roi, index ->
-	    if (roi.getGroup() == 1) {
+	    if (roi.getGroup() != 2) {
 		    roiDiscard.add(index)
 	    } else {
 	    	roi.setGroup(0)
@@ -308,7 +308,7 @@ wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
 // set stroke width as 0
-cleanRoiSet(rm)
+cleanRoiSet(imp, rm)
 
 // save ROI set IN
 rm.deselect()
@@ -388,7 +388,7 @@ wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
 // set stroke width as 0
-cleanRoiSet(rm)
+cleanRoiSet(compositeIN, rm)
 
 // save ROI set OUT
 rm.deselect()
@@ -469,6 +469,15 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 
 // wait for user
 wfu.show()
+
+// discard group 1 ROIs and set group 2 ROIs as 0
+// set stroke width as 0
+cleanRoiSet(compositeMyelin, rm)
+
+// save ROI set AXON
+rm.deselect()
+rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
+println "Save RoiSet_AXON"
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
