@@ -432,14 +432,32 @@ compositeMyelin.show()
 // STAGE 3
 //////////////
 
-// segment object predictions
+// segment object predictions: select class
 ImagePlus impAxonMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
 impAxonMasks.getProcessor().setThreshold(1, 2, ImageProcessor.NO_LUT_UPDATE)
 impAxonMasks.setProcessor(impAxonMasks.getProcessor().createMask())
 run (impAxonMasks.getProcessor(), "close", 5, 1)
 fill(impAxonMasks.getProcessor())
 ImagePlus impAxonMasksFiltered = ic.run(impAxonMasks, maskOut, "AND create")
-ImagePlus sameMasks = analyzeParticles(impAxonMasksFiltered, options_add_manager, measurements_area, 0, 999999, 0, 1)
+ImagePlus dupAxonMasksFiltered = analyzeParticles(impAxonMasksFiltered, options_add_manager, measurements_area, 0, 999999, 0, 1)
+
+// RoiManager set selected objects as group 2 (red ROIs)
+// get ROIs convex hull
+roiCount = rm.getCount()
+println "$roiCount selected ROIs"
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+    roi.setGroup(2)
+    roi.setStrokeWidth(5)
+}
+
+// segment object predictions: reject class
+ImagePlus impRejectMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
+impRejectMasks.getProcessor().setThreshold(3, 4, ImageProcessor.NO_LUT_UPDATE)
+impRejectMasks.setProcessor(impRejectMasks.getProcessor().createMask())
+run (impRejectMasks.getProcessor(), "close", 5, 1)
+ImagePlus impRejectMasksFiltered = ic.run(impRejectMasks, maskOut, "AND create")
+fill(impRejectMasksFiltered.getProcessor())
+
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
