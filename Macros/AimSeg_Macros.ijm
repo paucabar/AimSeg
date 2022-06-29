@@ -42,3 +42,14 @@ macro "Split ROI [z]" {
 		roiManager("deselect");
 	}
 }
+
+macro "Convex Hull [c]" {
+	index=roiManager("index");
+	run("Convex Hull");
+	roiManager("add");
+	RoiManager.setGroup(2);
+	roiManager("Set Line Width", 5);
+	roiManager("select", index);
+	roiManager("delete");
+	run("Select None");
+}
