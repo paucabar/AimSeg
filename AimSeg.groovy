@@ -457,7 +457,18 @@ impRejectMasks.setProcessor(impRejectMasks.getProcessor().createMask())
 run (impRejectMasks.getProcessor(), "close", 5, 1)
 ImagePlus impRejectMasksFiltered = ic.run(impRejectMasks, maskOut, "AND create")
 fill(impRejectMasksFiltered.getProcessor())
+impRejectMasksFiltered = analyzeParticles(impRejectMasksFiltered, options_add_manager, measurements_area, 0, 999999, 0, 1)
 
+// RoiManager set other objects as group 1 (blue ROIs)
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+    if (index > roiCount -1) {
+	    roi.setGroup(1)
+	    roi.setStrokeWidth(5)
+    }
+}
+
+// wait for user
+wfu.show()
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
