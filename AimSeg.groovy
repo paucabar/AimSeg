@@ -35,6 +35,8 @@ import java.awt.Color
 import ij.plugin.Duplicator
 import inra.ijpb.watershed.MarkerControlledWatershedTransform2D
 import ij.plugin.Commands
+import ij.process.FloatPolygon
+import ij.gui.PolygonRoi
 
 
 def isUpdateSiteActive (updateSite) {
@@ -468,6 +470,9 @@ run (impAxonMasks.getProcessor(), "close", 5, 1)
 fill(impAxonMasks.getProcessor())
 ImagePlus impAxonMasksFiltered = ic.run(impAxonMasks, maskOut, "AND create")
 ImagePlus dupAxonMasksFiltered = analyzeParticles(impAxonMasksFiltered, options_add_manager, measurements_area, 0, 999999, 0, 1)
+
+// get convex hull from ROIs
+convexHull(compositeMyelin, rm)
 
 // RoiManager set selected objects as group 2 (red ROIs)
 // get ROIs convex hull
