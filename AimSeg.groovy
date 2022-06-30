@@ -39,7 +39,7 @@ import ij.process.FloatPolygon
 import ij.gui.PolygonRoi
 
 
-def isUpdateSiteActive (updateSite) {
+def boolean isUpdateSiteActive (updateSite) {
 	checkUpdate = true
 	if (! updateService.getUpdateSite(updateSite).isActive()) {
     	ui.showDialog "Please activate the $updateSite update site"
@@ -48,30 +48,30 @@ def isUpdateSiteActive (updateSite) {
 	return checkUpdate
 }
 
-def installMacro(){
+void installMacro(){
 	String toolsetsPath = IJ.getDir("macros") + "toolsets"
 	String ijmPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
 	IJ.run("Install...", "install=[${->ijmPath}]")
 }
 
-def importImage(File inputFile, String datasetName, String axisOrder){
+def ImagePlus importImage(File inputFile, String datasetName, String axisOrder){
 	String imagePath = inputFile.getAbsolutePath()
 	if (!imagePath.endsWith(".h5")) {		
 		def opener = new Opener()
 		String extension = imagePath[imagePath.lastIndexOf('.')+1..-1]
 		println "Importing $extension file"
-		implus = opener.openImage(imagePath)
+		result = opener.openImage(imagePath)
 	} else {
 		println "Importing h5 file"
-		def imgPlus = new Hdf5DataSetReader<>(
+		def imp = new Hdf5DataSetReader<>(
 		                imagePath,
 		                datasetName,
 		                axisOrder.toLowerCase(),
 		                logService,
-		                statusService).read();
-		implus = ImageJFunctions.wrap(imgPlus, "Some title here")
+		                statusService).read()
+		result = ImageJFunctions.wrap(imp, "Some title here")
 	}
-	return implus
+	return result
 }
 
 // Implements the Erode, Dilate, Open and Close commands in the Process/Binary submenu
@@ -139,7 +139,7 @@ void fill(ImageProcessor ip) {
     }
 }
 
-ImagePlus analyzeParticles(ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
+def ImagePlus analyzeParticles(ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
 	def rt = new ResultsTable();
 	def pa = new ParticleAnalyzer(options, measurements, rt, minSize, maxSize, minCirc, maxCirc)
 	ip = imp.getProcessor()
@@ -172,7 +172,7 @@ void cleanRoiSet(ImagePlus imp, RoiManager RoMa) {
 	}
 }
 
-ImagePlus createRoiMask(ImagePlus imp, RoiManager rm) {
+def ImagePlus createRoiMask(ImagePlus imp, RoiManager rm) {
 	IJ.run(imp, "Select None", "");
 	rm.deselect()
 	rm.runCommand(imp,"Combine")
@@ -181,7 +181,7 @@ ImagePlus createRoiMask(ImagePlus imp, RoiManager rm) {
 	return impMask
 }
 
-ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
+def ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
 	mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
 	ImageProcessor result = mcwt.applyWithPriorityQueue()
 	ImagePlus impResult = new ImagePlus("Out_to_count", result)
