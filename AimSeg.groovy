@@ -226,6 +226,11 @@ private static void convexHull(ImagePlus imp, RoiManager rm) {
 boolean checkIlastik = isUpdateSiteActive("ilastik")
 boolean checkMorphoLibJ = isUpdateSiteActive("IJPB-plugins")
 
+// exit if any update site is missing
+if (!checkIlastik || !checkMorphoLibJ) {
+	return
+}
+
 // setup
 installMacro()
 
