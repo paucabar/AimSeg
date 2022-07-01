@@ -5,6 +5,7 @@
 * [Fiji](https://fiji.sc/)
 * [ilastik](https://www.ilastik.org/) 1.3.3
 * _ilastik_ update site (Fiji). Once added, it is important to configure the ilastik executable location within the Fiji's plugin.
+* _IJPB-plugins_ update site (Fiji)
 * _Morphology_ update site (Fiji)
 
 How to [follow an update site](https://imagej.net/Following_an_update_site) in Fiji
