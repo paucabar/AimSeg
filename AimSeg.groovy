@@ -474,6 +474,10 @@ ImagePlus dupAxonMasksFiltered = analyzeParticles(impAxonMasksFiltered, options_
 // get convex hull from ROIs
 convexHull(compositeMyelin, rm)
 
+// create convex hull mask
+ImagePlus convexHullMask = createRoiMask(compositeMyelin, rm)
+rm.runCommand(compositeMyelin,"Delete")
+
 // RoiManager set selected objects as group 2 (red ROIs)
 // get ROIs convex hull
 roiCount = rm.getCount()
