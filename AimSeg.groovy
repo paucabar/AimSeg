@@ -478,6 +478,10 @@ convexHull(compositeMyelin, rm)
 ImagePlus convexHullMask = createRoiMask(compositeMyelin, rm)
 rm.runCommand(compositeMyelin,"Delete")
 
+// correct convex hull and get ROIs
+ImagePlus convexHullMaskCorrected = ic.run(convexHullMask, impInToCountCor, "AND create")
+convexHullMaskCorrected = analyzeParticles(convexHullMaskCorrected, options_add_manager, measurements_area, 0, 999999, 0, 1)
+
 // RoiManager set selected objects as group 2 (red ROIs)
 // get ROIs convex hull
 roiCount = rm.getCount()
