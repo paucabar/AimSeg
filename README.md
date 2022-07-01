@@ -63,30 +63,43 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 7. Load the prediction maps files (sorted to match the raw data list)
 8. Click on _Process all files_
 
-### G-Ratio Aide
+### AimSeg
 
-1. Run the **G-ratio Aide** macro (Plugins>AimSeg>G-Ratio Aide)
+*Run AimSeg
+
+1. Run the **AimSeg** script (Plugins>AimSeg>AimSeg)
 2. Select the directory containing the image dataset and the ilastik output (both probability maps and object predictions)
-3. Select an image to be annotated
+3. Set the myelin probability channel and the threshold to segment the object prediction image
 4. The pre-processing step may take a few seconds
 
 *Stage 1: Myelin inner boundary*
 
-* The macro will display the raw elecron microscopy image merged with two additional channels. The red channel corresponds to the selected objects, whereas the blue channel corresponds to the rejected objects
-* It is possible to edit the ROI selection using the Fiji selection tools. Additionally, the wand tool can be used to select blue, rejected regions with a single click
+* The raw elecron microscopy image will pop up and the objects will be detected as ROIs. The red ROIs correspond to the selected objects, whereas the blue ROIs corresponds to the rejected objects
+* It is possible to edit the ROI selection using the Fiji selection tools (please see the **ROI edition** section below)
 * Click ok to proceed to the next stage
 
 *Stage 2: Fibre*
 
-* The macro will display the raw elecron microscopy image merged with an additional magenta channel corresponding to the Stage 1 selection
-* It is possible to edit the ROI selection using the Fiji selection tools
+* The raw elecron microscopy image merged with an additional magenta channel corresponding to the Stage 1 selection will pop up
+* It is possible to edit the ROI selection
 * Click ok to proceed to the next stage
 
 *Stage 3: Axoplasm*
 
-* The macro will display the raw elecron microscopy image merged with two additional channels. The magenta channel corresponds to the selected myelin (Stage 1 XOR Stage 2), whereas the blue channel corresponds to the potencial axoplasm objects rejected by the classifier (i.e., labeled as inner tongue)
-* It is possible to edit the ROI selection using the Fiji selection tools. Additionally, the wand tool can be used to select blue, rejected regions with a single click
+* Fiji will display the raw elecron microscopy image merged with an additional magenta channel corresponding to the selected myelin. The red ROIs correspond to the selected objects, whereas the blue ROIs corresponds to the rejected objects
+* It is possible to edit the ROI selection
 * Click ok to finish the annotation process
+
+*ROI edition*
+
+It is possible to edit the ROIs using the Fiji selection tools during the 3 AimSeg stages. Additionally, stage 1 and 3 generate blue ROIs correponding to rejected objects. The user can toggle ROIs between selected (red) and rejected (blue). Below are listed the AimSeg shortcuts for ROI edition:
+
+* <kbd>q</kbd> Toggle ROI mode (red/blue)
+* <kbd>a</kbd> Add ROI (note that those ROIs added using the Fiji default <kbd>t</kbd> shortcut will be ignored by AimSeg)
+* <kbd>d</kbd> Delete ROI
+* <kbd>u</kbd> Update ROI (edit the ROI before updating. E.g., hold <kbd>Shift</kbd> key while drawing a region to be added to the selected ROI. Conversely, <kbd>Alt</kbd>  while drawing a hole or region to be removed from the selected ROI)
+* <kbd>z</kbd> Split ROI (will split a ROI made of multiple selection into different ROIs)
+* <kbd>c</kbd> Get convex hull
 
 ### Results Table
 
