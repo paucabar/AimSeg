@@ -36,7 +36,7 @@ Download an example [image dataset](https://drive.google.com/drive/folders/1DEFt
 
 Please note that ilastik only supports a series of file formats (check [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, it may be necessary to transform the image dataset into a format supported by ilastik. Moreover, in order to reuse an ilastik project in different datasets, it will be necessary to use the same settings in the format transformation step to pre-process the input data.
 
-1. Run the **Format transformation** macro (Plugins>AimSeg>Format Transformation)
+1. Run the **Format transformation** macro (<code>Plugins>AimSeg>Format Transformation</code>)
 2. Select the directory containing the image dataset to be transformed
 3. It is possible to convert the images into 8-bit or to normalize the data
 4. It is possible to export the images as TIF or HDF5 files
@@ -48,26 +48,26 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 
 1. Load a pre-trained pixel classifier in ilastik
 2. Go to the Batch Processing applet
-3. Click on _Select Raw Data Files..._
+3. Click on <code>Select Raw Data Files...</code>
 4. Load the raw data files
-5. Click on _Process all files_
+5. Click on <code>Process all files</code>
 
 ### Object classification
 
 1. Load a pre-trained object classifier in ilastik
 2. Go to the Batch Processing applet
-3. Click on _Select Raw Data Files..._
+3. Click on <code>Select Raw Data Files...</code>
 4. Load the raw data files
-5. Switch to the _Prediction Maps_ tab
-6. Click on _Select Prediction Maps Files..._
+5. Switch to the <code>Prediction Maps</code> tab
+6. Click on <code>Select Prediction Maps Files...</code>
 7. Load the prediction maps files (sorted to match the raw data list)
-8. Click on _Process all files_
+8. Click on <code>Process all files</code>
 
 ### AimSeg
 
-*Run AimSeg
+*Run AimSeg*
 
-1. Run the **AimSeg** script (Plugins>AimSeg>AimSeg)
+1. Run the **AimSeg** script (<code>Plugins>AimSeg>AimSeg</code>)
 2. Select the directory containing the image dataset and the ilastik output (both probability maps and object predictions)
 3. Set the myelin probability channel and the threshold to segment the object prediction image
 4. The pre-processing step may take a few seconds
@@ -103,6 +103,6 @@ It is possible to edit the ROIs using the Fiji selection tools during the 3 AimS
 
 ### Results Table
 
-1. Run the **Results Table** macro (Plugins>AimSeg>Results Table)
+1. Run the **Results Table** macro (<code>Plugins>AimSeg>Results Table</code>)
 2. Select the directory containing the image dataset, the ilastik output and the ROI files 
 3. The macro will automatically analyze all the complete ROI sets 
