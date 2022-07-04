@@ -497,8 +497,15 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 }
 
 // segment object predictions: reject class
+if (objThr == "Above") {
+	minObj=objLabel+1
+	maxObj=255
+} else {
+	minObj=0
+	maxObj=objLabel-1
+}
 ImagePlus impRejectMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
-impRejectMasks.getProcessor().setThreshold(3, 4, ImageProcessor.NO_LUT_UPDATE)
+impRejectMasks.getProcessor().setThreshold(minObj, maxObj, ImageProcessor.NO_LUT_UPDATE)
 impRejectMasks.setProcessor(impRejectMasks.getProcessor().createMask())
 run (impRejectMasks.getProcessor(), "close", 5, 1)
 ImagePlus impRejectMasksFiltered = ic.run(impRejectMasks, maskOut, "AND create")
