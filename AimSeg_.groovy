@@ -272,6 +272,9 @@ IJ.run(impObj, "glasbey inverted", "")
 // STAGE 1
 //////////////
 
+// timing
+println "Stage 1 (t0) " + System.currentTimeMillis()
+
 // create myelin mask
 impProb.setPosition(probChannel)
 def ipProb = impProb.getProcessor()
@@ -352,7 +355,10 @@ rm.deselect()
 String parentPathS = imageFile.getParentFile()
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 println "Save RoiSet_IN"
- 
+
+// timing
+println "Stage 1 (t1) " + System.currentTimeMillis()
+
 //////////////
 // PRE-STAGE 2
 //////////////
@@ -384,6 +390,9 @@ compositeIN.show()
 //////////////
 // STAGE 2
 //////////////
+
+// timing
+println "Stage 2 (t0) " + System.currentTimeMillis()
 
 // duplicate IN final mask
 def dup = new Duplicator()
@@ -432,6 +441,9 @@ rm.deselect()
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 println "Save RoiSet_OUT"
 
+// timing
+println "Stage 2 (t1) " + System.currentTimeMillis()
+
 //////////////
 // PRE-STAGE 3
 //////////////
@@ -468,6 +480,9 @@ compositeMyelin.show()
 //////////////
 // STAGE 3
 //////////////
+
+// timing
+println "Stage 3 (t0) " + System.currentTimeMillis()
 
 // segment object predictions: select class
 ImagePlus impAxonMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
@@ -533,6 +548,13 @@ cleanRoiSet(compositeMyelin, rm)
 rm.deselect()
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 println "Save RoiSet_AXON"
+
+// timing
+println "Stage 3 (t1) " + System.currentTimeMillis()
+
+//////////////
+// RESET
+//////////////
 
 // close all
 rm.deselect()
