@@ -2,6 +2,7 @@
 #@ Integer (label="Myelin Probability Channel", value=1, max=3, min=1, style="listBox") probChannel
 #@ String (label="Object Prediction Threshold", choices={"Below", "Above"}, value="Above", style="radioButtonHorizontal") objThr
 #@ Integer (label="Object Prediction Label", value=2, max=10, min=1, style="listBox") objLabel
+#@ boolean (label="Automated", value=true, persist=false) automated
 #@ UpdateService updateService
 #@ UIService ui
 #@ LogService logService
@@ -344,7 +345,8 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 
 // wait for user
 def wfu = new WaitForUserDialog("Edit ROIs", "If necessary, use the \"ROI Manager\" to edit\nthe output. Click \"OK\" once you finish")
-wfu.show()
+if (!automated) wfu.show()
+
 
 // discard group 1 ROIs and set group 2 ROIs as 0
 // set stroke width as 0
@@ -430,7 +432,7 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 }
 
 // wait for user
-wfu.show()
+if (!automated) wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
 // set stroke width as 0
@@ -538,7 +540,7 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 }
 
 // wait for user
-wfu.show()
+if (!automated) wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
 // set stroke width as 0
@@ -566,4 +568,5 @@ cmd.closeAll()
 // reset Prefs.padEdges
 Prefs.padEdges = pe
 Prefs.blackBackground = bb
+println "Processing finished"
 return
