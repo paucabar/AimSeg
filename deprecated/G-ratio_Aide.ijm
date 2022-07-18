@@ -92,14 +92,24 @@ if (count==0) {
 
 Dialog.create("Field of view");
 Dialog.addChoice("Process", images);
+Dialog.addCheckbox("Automated", false);
 Dialog.show();
 imageName=Dialog.getChoice();
+automated = Dialog.getCheckbox();
 
 run("Colors...", "foreground=white background=black selection=yellow");
 open(dir+File.separator+imageName);
 run("8-bit");
 run("Import HDF5", "select=["+dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+probabilitiesTag+"] datasetname=[/exported_data: (4096, 4096, 3) float32] axisorder=yxc");
 rename("3-channels");
+
+//////////////
+// STAGE 1
+//////////////
+
+// timing
+s1t0=getTime();
+
 run("Duplicate...", "title=Myelin duplicate channels=1");
 setThreshold(0.2000, 1000000000000000000000000000000.0000);
 setOption("BlackBackground", false);
@@ -139,10 +149,21 @@ setTool("wand");
 run("Channels Tool...");
 roiManager("Show All");
 titleWFU="Edit ROIs";
-msgWFU="If necessary, use the \"ROI Manager\" to edit\nthe output. Click \"OK\" once you finish";
-waitForUser(titleWFU, msgWFU);
+
+if (!automated) {
+	msgWFU="If necessary, use the \"ROI Manager\" to edit\nthe output. Click \"OK\" once you finish";
+	waitForUser(titleWFU, msgWFU);
+}
 
 roiManager("Save", dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+"_RoiSet_IN.zip");
+
+// timing
+s1t1=getTime();
+
+//////////////
+// PRE-STAGE 2
+//////////////
+
 roiManager("Deselect");
 roiManager("Combine");
 run("Create Mask");
@@ -153,6 +174,18 @@ if (isOpen("ROI Manager")) {
 	selectWindow("ROI Manager");
 	run("Close");
 }
+
+run("Merge Channels...", "c4="+imageName+" c6="+name+" create keep");
+rename("Composite_in_out");
+
+
+//////////////
+// STAGE 2
+//////////////
+
+// timing
+s2t0=getTime();
+
 selectImage(name);
 run("Duplicate...", "title=Separators");
 run("Voronoi");
@@ -179,8 +212,7 @@ run("BinaryReconstruct ", "mask=Myelin_outlines seed=Inner_to_count create white
 rename("Outlines_to_count");
 run("Options...", "iterations=1 count=1 pad do=Close");
 run("Analyze Particles...", "  circularity=0-Infinity show=Nothing add");
-run("Merge Channels...", "c4="+imageName+" c6="+name+" create keep");
-rename("Composite_in_out");
+selectWindow("Composite_in_out");
 roiManager("Show All");
 roiManager("Save", dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+"_RoiSet_OUT.zip");
 setTool("freehand");
@@ -190,10 +222,18 @@ close("Myelin");
 close("Myelin_inverted");
 close("Myelin_clean");
 close("Myelin_outlines");
-waitForUser(titleWFU, msgWFU);
+if (!automated) {
+	waitForUser(titleWFU, msgWFU);
+}
 close("Composite_in_out");
 roiManager("Save", dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+"_RoiSet_OUT.zip");
 
+// timing
+s2t1=getTime();
+
+//////////////
+// PRE-STAGE 3
+//////////////
 
 roiManager("Deselect");
 roiManager("Combine");
@@ -210,6 +250,14 @@ close("Inner_to_count");
 //close("Outlines_to_count");
 open(dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+objectTag);
 rename(objectTag);
+
+//////////////
+// STAGE 3
+//////////////
+
+// timing
+s3t0=getTime();
+
 run("Duplicate...", "title=axon_class");
 rename("axon_class");
 setThreshold(1, 2);
@@ -266,8 +314,23 @@ close(imageName);
 close(name);
 
 //Edition, save and close all
-waitForUser(titleWFU, msgWFU);
+if (!automated) {
+	waitForUser(titleWFU, msgWFU);
+}
 roiManager("Save", dir+File.separator+substring(imageName, 0, indexOf(imageName, "."))+"_RoiSet_AXON.zip");
+
+// timing
+s3t1=getTime();
+
+// print timing
+print(s1t1-s1t0);
+print(s2t1-s2t0);
+print(s3t1-s3t0);
+
+//////////////
+// RESET
+//////////////
+
 run("Close All");
 if (isOpen("ROI Manager")) {
 	selectWindow("ROI Manager");
