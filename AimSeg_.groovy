@@ -287,7 +287,7 @@ IJ.run(impObj, "glasbey inverted", "")
 //////////////
 
 // timing
-println "Stage 1 (t0) " + System.currentTimeMillis()
+def int t0 = System.currentTimeMillis()
 
 // create myelin mask
 impProb.setPosition(probChannel)
@@ -372,7 +372,8 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 println "Save RoiSet_IN"
 
 // timing
-println "Stage 1 (t1) " + System.currentTimeMillis()
+def int t1 = System.currentTimeMillis()
+println t1-t0
 
 //////////////
 // PRE-STAGE 2
@@ -407,7 +408,7 @@ compositeIN.show()
 //////////////
 
 // timing
-println "Stage 2 (t0) " + System.currentTimeMillis()
+t0 = System.currentTimeMillis()
 
 // duplicate IN final mask
 def dup = new Duplicator()
@@ -459,7 +460,8 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 println "Save RoiSet_OUT"
 
 // timing
-println "Stage 2 (t1) " + System.currentTimeMillis()
+t1 = System.currentTimeMillis()
+println t1-t0
 
 //////////////
 // PRE-STAGE 3
@@ -501,7 +503,7 @@ compositeMyelin.show()
 //////////////
 
 // timing
-println "Stage 3 (t0) " + System.currentTimeMillis()
+t0 = System.currentTimeMillis()
 
 // segment object predictions: select class
 ImagePlus impAxonMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
@@ -569,7 +571,8 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 println "Save RoiSet_AXON"
 
 // timing
-println "Stage 3 (t1) " + System.currentTimeMillis()
+t1 = System.currentTimeMillis()
+println t1-t0
 
 //////////////
 // RESET
