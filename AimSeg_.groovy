@@ -193,7 +193,7 @@ def ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor 
 // reconstruction on seed image
 void runBinaryReconstruct(ImagePlus imp1, ImagePlus imp2) {
 	BinaryReconstruct_ br = new BinaryReconstruct_()
-	Object[] result = br.exec(img1, img2, null, false, true, false )
+	Object[] result = br.exec(imp1, imp2, null, false, true, false )
 	//parameters above are: mask ImagePlus, seed ImagePlus, name, create new image, white particles, connect4
 	if (null != result) {
 	  String name = (String) result[0]
@@ -428,13 +428,15 @@ fill(myelinOutlines.getProcessor())
 ImagePlus impInToCount = analyzeParticles(maskIn, options_exclude_edges, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 run (myelinOutlines.getProcessor(), "open", 20, 1)
 IJ.run(myelinOutlines, "Watershed", "")
-int options_count_masks = ParticleAnalyzer.SHOW_ROI_MASKS
-ImagePlus impInToCountLabels = analyzeParticles(impInToCount, options_count_masks, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
-ImagePlus myelinOutlines2 = runMarkerControlledWatershed(myelinOutlines.getProcessor(), impInToCountLabels.getProcessor(), myelinOutlines.getProcessor(), 8)
-myelinOutlines2.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
-myelinOutlines2.setProcessor(myelinOutlines2.getProcessor().createMask())
-run (myelinOutlines2.getProcessor(), "close", 1, 1)
-ImagePlus impOutMasks = analyzeParticles(myelinOutlines2, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+// int options_count_masks = ParticleAnalyzer.SHOW_ROI_MASKS
+// ImagePlus impInToCountLabels = analyzeParticles(impInToCount, options_count_masks, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+// ImagePlus myelinOutlines2 = runMarkerControlledWatershed(myelinOutlines.getProcessor(), impInToCountLabels.getProcessor(), myelinOutlines.getProcessor(), 8)
+//myelinOutlines2.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
+//myelinOutlines2.setProcessor(myelinOutlines2.getProcessor().createMask())
+def ImagePlus impMyelinOutlines2 = impInToCount.duplicate()
+runBinaryReconstruct(myelinOutlines, impMyelinOutlines2)
+run (impMyelinOutlines2.getProcessor(), "close", 1, 1)
+ImagePlus impOutMasks = analyzeParticles(impMyelinOutlines2, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 
 // RoiManager set selected objects as group 2 (red ROIs)
 roiCount = rm.getCount()
@@ -470,10 +472,12 @@ rm.runCommand(compositeIN,"Delete")
 compositeIN.hide()
 
 // get myelin to count
-ImagePlus maskOutLabels = analyzeParticles(maskOut, options_count_masks, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
-ImagePlus impInToCountCor= runMarkerControlledWatershed(impInToCount.getProcessor(), maskOutLabels.getProcessor(), impInToCount.getProcessor(), 8)
-impInToCountCor.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
-impInToCountCor.setProcessor(impInToCountCor.getProcessor().createMask())
+def ImagePlus impInToCountCor = maskOut.duplicate()
+runBinaryReconstruct(impInToCount, impInToCountCor)
+//ImagePlus maskOutLabels = analyzeParticles(maskOut, options_count_masks, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+//ImagePlus impInToCountCor= runMarkerControlledWatershed(impInToCount.getProcessor(), maskOutLabels.getProcessor(), impInToCount.getProcessor(), 8)
+//impInToCountCor.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
+//impInToCountCor.setProcessor(impInToCountCor.getProcessor().createMask())
 ImagePlus myelinToCount = ic.run(impInToCountCor, maskOut, "XOR create")
 
 // merge channels to display
@@ -516,7 +520,7 @@ ImagePlus convexHullMask = createRoiMask(compositeMyelin, rm)
 rm.runCommand(compositeMyelin,"Delete")
 
 // correct convex hull and get ROIs
-ImagePlus convexHullMaskCorrected = ic.run(convexHullMask, impInToCountCor, "AND create")
+ImagePlus convexHullMaskCorrected = ic.run(convexHullMask, impInToCount, "AND create")
 convexHullMaskCorrected = analyzeParticles(convexHullMaskCorrected, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 
 // RoiManager set selected objects as group 2 (red ROIs)
