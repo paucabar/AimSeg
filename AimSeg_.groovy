@@ -189,6 +189,18 @@ def ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor 
 	return impResult
 }
 
+// binary reconstruct by Landini
+// reconstruction on seed image
+void runBinaryReconstruct(ImagePlus imp1, ImagePlus imp2) {
+	BinaryReconstruct_ br = new BinaryReconstruct_()
+	Object[] result = br.exec(img1, img2, null, false, true, false )
+	//parameters above are: mask ImagePlus, seed ImagePlus, name, create new image, white particles, connect4
+	if (null != result) {
+	  String name = (String) result[0]
+	  ImagePlus recons = (ImagePlus) result[1]
+	}
+}
+
 private static void transferProperties(Roi roi1, Roi roi2) {
 	if (roi1==null || roi2==null)
 		return;
