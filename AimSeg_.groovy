@@ -409,24 +409,24 @@ imp.hide()
 // merge channels to display
 ImagePlus[] impMergeIN = [imp, maskIn]
 def rgbSMerge = new RGBStackMerge()
-ImagePlus compositeIN = rgbSMerge.mergeChannels(impMergeIN, true)
-//println compositeIN.getClass()
+ImagePlus maskOverlayIN = rgbSMerge.mergeChannels(impMergeIN, true)
+//println maskOverlayIN.getClass()
 
 // set composite LUTs
-luts = compositeIN.getLuts()
+luts = maskOverlayIN.getLuts()
 luts[0] = LUT.createLutFromColor(Color.GRAY)
 luts[1] = LUT.createLutFromColor(Color.MAGENTA)
-compositeIN.setLuts(luts)
-compositeIN.updateAndDraw()
+maskOverlayIN.setLuts(luts)
+maskOverlayIN.updateAndDraw()
 
 // convert to RGB
 def rgbSConverter = new RGBStackConverter()
-rgbSConverter.convertToRGB(compositeIN)
-compositeIN.show()
+rgbSConverter.convertToRGB(maskOverlayIN)
+maskOverlayIN.show()
 */
 
-def ImagePlus compositeIN = setMaskOverlay(imp, maskIn, 127)
-compositeIN.show()
+def ImagePlus maskOverlayIN = setMaskOverlay(imp, maskIn, 127)
+maskOverlayIN.show()
 
 //////////////
 // STAGE 2
@@ -477,7 +477,7 @@ if (!automated) wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
 // set stroke width as 0
-cleanRoiSet(compositeIN, rm)
+cleanRoiSet(maskOverlayIN, rm)
 
 // save ROI set OUT
 rm.deselect()
@@ -493,10 +493,10 @@ println t1-t0
 //////////////
 
 // create OUT final mask
-ImagePlus maskOut = createRoiMask(compositeIN, rm)
-rm.runCommand(compositeIN,"Delete")
+ImagePlus maskOut = createRoiMask(maskOverlayIN, rm)
+rm.runCommand(maskOverlayIN,"Delete")
 //rm.close()
-compositeIN.hide()
+maskOverlayIN.hide()
 
 // get myelin to count
 def ImagePlus impInToCountCor = maskOut.duplicate()
@@ -510,7 +510,7 @@ ImagePlus myelinToCount = ic.run(impInToCountCor, maskOut, "XOR create")
 // merge channels to display
 ImagePlus[] impMergeMyelin = [imp, myelinToCount]
 ImagePlus compositeMyelin = rgbSMerge.mergeChannels(impMergeMyelin, true)
-//println compositeIN.getClass()
+//println maskOverlayIN.getClass()
 
 // set composite LUTs
 lutsM = compositeMyelin.getLuts()
