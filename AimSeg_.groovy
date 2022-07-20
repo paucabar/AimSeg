@@ -510,23 +510,23 @@ ImagePlus myelinToCount = ic.run(impInToCountCor, maskOut, "XOR create")
 /*
 // merge channels to display
 ImagePlus[] impMergeMyelin = [imp, myelinToCount]
-ImagePlus compositeMyelin = rgbSMerge.mergeChannels(impMergeMyelin, true)
+ImagePlus maskOverlayMyelin = rgbSMerge.mergeChannels(impMergeMyelin, true)
 //println maskOverlayIN.getClass()
 
 // set composite LUTs
-lutsM = compositeMyelin.getLuts()
+lutsM = maskOverlayMyelin.getLuts()
 lutsM[0] = LUT.createLutFromColor(Color.GRAY)
 lutsM[1] = LUT.createLutFromColor(Color.MAGENTA)
-compositeMyelin.setLuts(lutsM)
-compositeMyelin.updateAndDraw()
+maskOverlayMyelin.setLuts(lutsM)
+maskOverlayMyelin.updateAndDraw()
 
 // convert to RGB
-rgbSConverter.convertToRGB(compositeMyelin)
-compositeMyelin.show()
+rgbSConverter.convertToRGB(maskOverlayMyelin)
+maskOverlayMyelin.show()
 */
 
-def ImagePlus compositeMyelin = setMaskOverlay(imp, myelinToCount, 127)
-compositeMyelin.show()
+def ImagePlus maskOverlayMyelin = setMaskOverlay(imp, myelinToCount, 127)
+maskOverlayMyelin.show()
 
 //////////////
 // STAGE 3
@@ -545,11 +545,11 @@ ImagePlus impAxonMasksFiltered = ic.run(impAxonMasks, maskOut, "AND create")
 ImagePlus dupAxonMasksFiltered = analyzeParticles(impAxonMasksFiltered, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 
 // get convex hull from ROIs
-convexHull(compositeMyelin, rm)
+convexHull(maskOverlayMyelin, rm)
 
 // create convex hull mask
-ImagePlus convexHullMask = createRoiMask(compositeMyelin, rm)
-rm.runCommand(compositeMyelin,"Delete")
+ImagePlus convexHullMask = createRoiMask(maskOverlayMyelin, rm)
+rm.runCommand(maskOverlayMyelin,"Delete")
 
 // correct convex hull and get ROIs
 ImagePlus convexHullMaskCorrected = ic.run(convexHullMask, impInToCount, "AND create")
@@ -593,7 +593,7 @@ if (!automated) wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
 // set stroke width as 0
-cleanRoiSet(compositeMyelin, rm)
+cleanRoiSet(maskOverlayMyelin, rm)
 
 // save ROI set AXON
 rm.deselect()
@@ -610,7 +610,7 @@ println t1-t0
 
 // close all
 rm.deselect()
-rm.runCommand(compositeMyelin,"Delete")
+rm.runCommand(maskOverlayMyelin,"Delete")
 rm.close()
 Commands cmd = new Commands()
 cmd.closeAll()
