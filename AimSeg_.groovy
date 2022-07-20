@@ -28,6 +28,8 @@ import net.imglib2.img.display.imagej.ImageJFunctions
 import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
 import ij.plugin.frame.RoiManager
 import ij.gui.Roi
+import ij.gui.Overlay
+import ij.plugin.filter.ThresholdToSelection
 import ij.plugin.RGBStackMerge
 import ij.plugin.RGBStackConverter
 import ij.CompositeImage
@@ -180,6 +182,24 @@ def ImagePlus createRoiMask(ImagePlus imp, RoiManager rm) {
 	ByteProcessor mask = imp.createRoiMask()
 	ImagePlus impMask = new ImagePlus("Mask", mask);
 	return impMask
+}
+
+def ImagePlus setMaskOverlay(ImagePlus imp, ImagePlus impMask, int alpha) {
+	ImageProcessor ip = impMask.getProcessor()
+	ip.setThreshold (255, 255)
+	def tts = new ThresholdToSelection()
+	Roi roi = tts.convert(ip)
+	
+	def ovl = new Overlay(roi)
+	ovl.setFillColor(new Color(255,0,255,alpha))
+	
+	imp.setOverlay(ovl)
+	def ImagePlus impFlatten = imp.flatten()
+	
+	ovl.clear()
+	imp.setOverlay(ovl)
+	
+	return impFlatten
 }
 
 def ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
@@ -385,6 +405,7 @@ rm.runCommand(imp,"Delete")
 //rm.close()
 imp.hide()
 
+/*
 // merge channels to display
 ImagePlus[] impMergeIN = [imp, maskIn]
 def rgbSMerge = new RGBStackMerge()
@@ -401,6 +422,10 @@ compositeIN.updateAndDraw()
 // convert to RGB
 def rgbSConverter = new RGBStackConverter()
 rgbSConverter.convertToRGB(compositeIN)
+compositeIN.show()
+*/
+
+def ImagePlus compositeIN = setMaskOverlay(imp, maskIn, 127)
 compositeIN.show()
 
 //////////////
