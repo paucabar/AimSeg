@@ -30,10 +30,6 @@ import ij.plugin.frame.RoiManager
 import ij.gui.Roi
 import ij.gui.Overlay
 import ij.plugin.filter.ThresholdToSelection
-import ij.plugin.RGBStackMerge
-import ij.plugin.RGBStackConverter
-import ij.CompositeImage
-import ij.process.LUT
 import java.awt.Color
 import ij.plugin.Duplicator
 import inra.ijpb.watershed.MarkerControlledWatershedTransform2D
@@ -41,6 +37,12 @@ import ij.plugin.Commands
 import ij.process.FloatPolygon
 import ij.gui.PolygonRoi
 
+/*
+import ij.plugin.RGBStackMerge
+import ij.plugin.RGBStackConverter
+import ij.CompositeImage
+import ij.process.LUT
+*/
 
 def boolean isUpdateSiteActive (updateSite) {
 	checkUpdate = true
