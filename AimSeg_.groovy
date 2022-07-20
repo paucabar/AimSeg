@@ -507,6 +507,7 @@ runBinaryReconstruct(impInToCount, impInToCountCor)
 //impInToCountCor.setProcessor(impInToCountCor.getProcessor().createMask())
 ImagePlus myelinToCount = ic.run(impInToCountCor, maskOut, "XOR create")
 
+/*
 // merge channels to display
 ImagePlus[] impMergeMyelin = [imp, myelinToCount]
 ImagePlus compositeMyelin = rgbSMerge.mergeChannels(impMergeMyelin, true)
@@ -521,6 +522,10 @@ compositeMyelin.updateAndDraw()
 
 // convert to RGB
 rgbSConverter.convertToRGB(compositeMyelin)
+compositeMyelin.show()
+*/
+
+def ImagePlus compositeMyelin = setMaskOverlay(imp, myelinToCount, 127)
 compositeMyelin.show()
 
 //////////////
