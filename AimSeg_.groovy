@@ -118,8 +118,8 @@ void doIterations (ImageProcessor ip, String mode, int iterations, int count) {
 // 21/May/2008
 void fill(ImageProcessor ip) {
     int fg = Prefs.blackBackground ? 255 : 0;
-    foreground = ip.isInvertedLut() ? 255-fg : fg;
-    background = 255 - foreground;
+    int foreground = ip.isInvertedLut() ? 255-fg : fg;
+    int background = 255 - foreground;
     ip.setSnapshotCopyMode(true);
     
     int width = ip.getWidth();
@@ -147,11 +147,11 @@ void fill(ImageProcessor ip) {
 def ImagePlus analyzeParticles(ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
 	def rt = new ResultsTable();
 	def pa = new ParticleAnalyzer(options, measurements, rt, minSize, maxSize, minCirc, maxCirc)
-	ip = imp.getProcessor()
+	def ImageProcessor ip = imp.getProcessor()
 	ip.setBinaryThreshold()
 	pa.setHideOutputImage(true)
 	pa.analyze(imp, ip)
-	ImagePlus impOutput = pa.getOutputImage()
+	def ImagePlus impOutput = pa.getOutputImage()
 	if (impOutput.isInvertedLut()) {
 		IJ.run(impOutput, "Grays", "")
 	}
@@ -181,16 +181,16 @@ def ImagePlus createRoiMask(ImagePlus imp, RoiManager rm) {
 	IJ.run(imp, "Select None", "");
 	rm.deselect()
 	rm.runCommand(imp,"Combine")
-	ByteProcessor mask = imp.createRoiMask()
-	ImagePlus impMask = new ImagePlus("Mask", mask);
+	def ByteProcessor mask = imp.createRoiMask()
+	def ImagePlus impMask = new ImagePlus("Mask", mask)
 	return impMask
 }
 
 def ImagePlus setMaskOverlay(ImagePlus imp, ImagePlus impMask, int alpha) {
-	ImageProcessor ip = impMask.getProcessor()
+	def ImageProcessor ip = impMask.getProcessor()
 	ip.setThreshold (255, 255)
 	def tts = new ThresholdToSelection()
-	Roi roi = tts.convert(ip)
+	def Roi roi = tts.convert(ip)
 	
 	def ovl = new Overlay(roi)
 	ovl.setFillColor(new Color(255,0,255,alpha))
@@ -206,20 +206,20 @@ def ImagePlus setMaskOverlay(ImagePlus imp, ImagePlus impMask, int alpha) {
 
 def ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
 	mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
-	ImageProcessor result = mcwt.applyWithPriorityQueue()
-	ImagePlus impResult = new ImagePlus("Out_to_count", result)
+	def ImageProcessor result = mcwt.applyWithPriorityQueue()
+	def ImagePlus impResult = new ImagePlus("Out_to_count", result)
 	return impResult
 }
 
 // binary reconstruct by Landini
 // reconstruction on seed image
 void runBinaryReconstruct(ImagePlus imp1, ImagePlus imp2) {
-	BinaryReconstruct_ br = new BinaryReconstruct_()
+	def BinaryReconstruct_ br = new BinaryReconstruct_()
 	Object[] result = br.exec(imp1, imp2, null, false, true, false )
 	//parameters above are: mask ImagePlus, seed ImagePlus, name, create new image, white particles, connect4
 	if (null != result) {
 	  String name = (String) result[0]
-	  ImagePlus recons = (ImagePlus) result[1]
+	  def ImagePlus recons = (ImagePlus) result[1]
 	}
 }
 
