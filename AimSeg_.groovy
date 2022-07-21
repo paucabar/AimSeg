@@ -181,22 +181,22 @@ ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
 	IJ.run(imp, "Select None", "");
 	rm.deselect()
 	rm.runCommand(imp,"Combine")
-	def ByteProcessor mask = imp.createRoiMask()
-	def ImagePlus impMask = new ImagePlus("Mask", mask)
+	ByteProcessor mask = imp.createRoiMask()
+	ImagePlus impMask = new ImagePlus("Mask", mask)
 	return impMask
 }
 
 ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
-	def ImageProcessor ip = impMask.getProcessor()
+	ImageProcessor ip = impMask.getProcessor()
 	ip.setThreshold (255, 255)
 	def tts = new ThresholdToSelection()
-	def Roi roi = tts.convert(ip)
+	Roi roi = tts.convert(ip)
 	
 	def ovl = new Overlay(roi)
 	ovl.setFillColor(new Color(255,0,255,alpha))
 	
 	imp.setOverlay(ovl)
-	def ImagePlus impFlatten = imp.flatten()
+	ImagePlus impFlatten = imp.flatten()
 	
 	ovl.clear()
 	imp.setOverlay(ovl)
@@ -206,8 +206,8 @@ ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
 
 ImagePlus runMarkerControlledWatershed (ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
 	def mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
-	def ImageProcessor result = mcwt.applyWithPriorityQueue()
-	def ImagePlus impResult = new ImagePlus("Out_to_count", result)
+	ImageProcessor result = mcwt.applyWithPriorityQueue()
+	ImagePlus impResult = new ImagePlus("Out_to_count", result)
 	return impResult
 }
 
@@ -219,7 +219,7 @@ def runBinaryReconstruct (ImagePlus imp1, ImagePlus imp2) {
 	//parameters above are: mask ImagePlus, seed ImagePlus, name, create new image, white particles, connect4
 	if (null != result) {
 	  String name = (String) result[0]
-	  def ImagePlus recons = (ImagePlus) result[1]
+	  ImagePlus recons = (ImagePlus) result[1]
 	}
 }
 
