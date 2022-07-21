@@ -44,8 +44,8 @@ import ij.CompositeImage
 import ij.process.LUT
 */
 
-def boolean isUpdateSiteActive (updateSite) {
-	checkUpdate = true
+boolean isUpdateSiteActive (updateSite) {
+	boolean checkUpdate = true
 	if (! updateService.getUpdateSite(updateSite).isActive()) {
     	ui.showDialog "Please activate the $updateSite update site"
     	checkUpdate = false
@@ -53,13 +53,13 @@ def boolean isUpdateSiteActive (updateSite) {
 	return checkUpdate
 }
 
-void installMacro(){
+def installMacro () {
 	String toolsetsPath = IJ.getDir("macros") + "toolsets"
 	String ijmPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
 	IJ.run("Install...", "install=[${->ijmPath}]")
 }
 
-def ImagePlus importImage(File inputFile, String datasetName, String axisOrder){
+ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
 	String imagePath = inputFile.getAbsolutePath()
 	if (!imagePath.endsWith(".h5")) {		
 		def opener = new Opener()
@@ -80,88 +80,88 @@ def ImagePlus importImage(File inputFile, String datasetName, String axisOrder){
 }
 
 // Implements the Erode, Dilate, Open and Close commands in the Process/Binary submenu
-public void run (ImageProcessor ip, String arg, int iter, int cnt) {
-    int fg = Prefs.blackBackground ? 255 : 0;
-    foreground = ip.isInvertedLut() ? 255-fg : fg;
-    background = 255 - foreground;
-    ip.setSnapshotCopyMode(true);
+def run (ImageProcessor ip, String arg, int iter, int cnt) {
+    int fg = Prefs.blackBackground ? 255 : 0
+    foreground = ip.isInvertedLut() ? 255-fg : fg
+    background = 255 - foreground
+    ip.setSnapshotCopyMode(true)
 
 	if (arg.equals("erode") || arg.equals("dilate")) {
-        doIterations((ByteProcessor)ip, arg, iter, cnt);
+        doIterations((ByteProcessor)ip, arg, iter, cnt)
 	} else if (arg.equals("open")) {
-        doIterations(ip, "erode", iter, cnt);
-        doIterations(ip, "dilate", iter, cnt);
+        doIterations(ip, "erode", iter, cnt)
+        doIterations(ip, "dilate", iter, cnt)
     } else if (arg.equals("close")) {
-        doIterations(ip, "dilate", iter, cnt);
-        doIterations(ip, "erode", iter, cnt);
+        doIterations(ip, "dilate", iter, cnt)
+        doIterations(ip, "erode", iter, cnt)
     }
-    ip.setSnapshotCopyMode(false);
-    ip.setBinaryThreshold();
+    ip.setSnapshotCopyMode(false)
+    ip.setBinaryThreshold()
 }
 
-void doIterations (ImageProcessor ip, String mode, int iterations, int count) {
+def doIterations (ImageProcessor ip, String mode, int iterations, int count) {
     for (int i=0; i<iterations; i++) {
-        if (Thread.currentThread().isInterrupted()) return;
+        if (Thread.currentThread().isInterrupted()) return
         if (IJ.escapePressed()) {
-            escapePressed = true;
-            ip.reset();
-            return;
+            boolean escapePressed = true
+            ip.reset()
+            return
         }
         if (mode.equals("erode"))
-            ((ByteProcessor)ip).erode(count, background);
+            ((ByteProcessor)ip).erode(count, background)
         else
-            ((ByteProcessor)ip).dilate(count, background);
+            ((ByteProcessor)ip).dilate(count, background)
     }
 }
 
 // Binary fill by Gabriel Landini, G.Landini at bham.ac.uk
 // 21/May/2008
-void fill(ImageProcessor ip) {
-    int fg = Prefs.blackBackground ? 255 : 0;
-    int foreground = ip.isInvertedLut() ? 255-fg : fg;
-    int background = 255 - foreground;
-    ip.setSnapshotCopyMode(true);
+def fill (ImageProcessor ip) {
+    int fg = Prefs.blackBackground ? 255 : 0
+    int foreground = ip.isInvertedLut() ? 255-fg : fg
+    int background = 255 - foreground
+    ip.setSnapshotCopyMode(true)
     
-    int width = ip.getWidth();
-    int height = ip.getHeight();
-    FloodFiller ff = new FloodFiller(ip);
-    ip.setColor(127);
+    int width = ip.getWidth()
+    int height = ip.getHeight()
+    def FloodFiller ff = new FloodFiller(ip)
+    ip.setColor(127)
     for (int y=0; y<height; y++) {
-        if (ip.getPixel(0,y)==background) ff.fill(0, y);
-        if (ip.getPixel(width-1,y)==background) ff.fill(width-1, y);
+        if (ip.getPixel(0,y)==background) ff.fill(0, y)
+        if (ip.getPixel(width-1,y)==background) ff.fill(width-1, y)
     }
-    for (int x=0; x<width; x++){
-        if (ip.getPixel(x,0)==background) ff.fill(x, 0);
-        if (ip.getPixel(x,height-1)==background) ff.fill(x, height-1);
+    for (int x=0; x<width; x++) {
+        if (ip.getPixel(x,0)==background) ff.fill(x, 0)
+        if (ip.getPixel(x,height-1)==background) ff.fill(x, height-1)
     }
-    byte[] pixels = (byte[])ip.getPixels();
-    int n = width*height;
+    byte[] pixels = (byte[])ip.getPixels()
+    int n = width*height
     for (int i=0; i<n; i++) {
     if (pixels[i]==127)
-        pixels[i] = (byte)background;
+        pixels[i] = (byte)background
     else
-        pixels[i] = (byte)foreground;
+        pixels[i] = (byte)foreground
     }
 }
 
-def ImagePlus analyzeParticles(ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
-	def rt = new ResultsTable();
+ImagePlus analyzeParticles (ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
+	def rt = new ResultsTable()
 	def pa = new ParticleAnalyzer(options, measurements, rt, minSize, maxSize, minCirc, maxCirc)
-	def ImageProcessor ip = imp.getProcessor()
+	ImageProcessor ip = imp.getProcessor()
 	ip.setBinaryThreshold()
 	pa.setHideOutputImage(true)
 	pa.analyze(imp, ip)
-	def ImagePlus impOutput = pa.getOutputImage()
+	ImagePlus impOutput = pa.getOutputImage()
 	if (impOutput.isInvertedLut()) {
 		IJ.run(impOutput, "Grays", "")
 	}
 	return impOutput
 }
 
-void cleanRoiSet(ImagePlus imp, RoiManager RoMa) {
+def cleanRoiSet (ImagePlus imp, RoiManager rm) {
 	def roiDiscard = []
-	int count = RoMa.getCount()
-	RoMa.getRoisAsArray().eachWithIndex { roi, index ->
+	int count = rm.getCount()
+	rm.getRoisAsArray().eachWithIndex { roi, index ->
 	    if (roi.getGroup() != 2) {
 		    roiDiscard.add(index)
 	    } else {
@@ -172,12 +172,12 @@ void cleanRoiSet(ImagePlus imp, RoiManager RoMa) {
 	if (roiDiscard.size > 0) {
 		println "Discard ROIs $roiDiscard"
 		int[] roiDiscardInt = roiDiscard as int[]
-		RoMa.setSelectedIndexes(roiDiscardInt)
-		RoMa.runCommand(imp,"Delete")
+		rm.setSelectedIndexes(roiDiscardInt)
+		rm.runCommand(imp,"Delete")
 	}
 }
 
-def ImagePlus createRoiMask(ImagePlus imp, RoiManager rm) {
+ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
 	IJ.run(imp, "Select None", "");
 	rm.deselect()
 	rm.runCommand(imp,"Combine")
@@ -186,7 +186,7 @@ def ImagePlus createRoiMask(ImagePlus imp, RoiManager rm) {
 	return impMask
 }
 
-def ImagePlus setMaskOverlay(ImagePlus imp, ImagePlus impMask, int alpha) {
+ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
 	def ImageProcessor ip = impMask.getProcessor()
 	ip.setThreshold (255, 255)
 	def tts = new ThresholdToSelection()
@@ -204,8 +204,8 @@ def ImagePlus setMaskOverlay(ImagePlus imp, ImagePlus impMask, int alpha) {
 	return impFlatten
 }
 
-def ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
-	mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
+ImagePlus runMarkerControlledWatershed (ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
+	def mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
 	def ImageProcessor result = mcwt.applyWithPriorityQueue()
 	def ImagePlus impResult = new ImagePlus("Out_to_count", result)
 	return impResult
@@ -213,7 +213,7 @@ def ImagePlus runMarkerControlledWatershed(ImageProcessor input, ImageProcessor 
 
 // binary reconstruct by Landini
 // reconstruction on seed image
-void runBinaryReconstruct(ImagePlus imp1, ImagePlus imp2) {
+def runBinaryReconstruct (ImagePlus imp1, ImagePlus imp2) {
 	def BinaryReconstruct_ br = new BinaryReconstruct_()
 	Object[] result = br.exec(imp1, imp2, null, false, true, false )
 	//parameters above are: mask ImagePlus, seed ImagePlus, name, create new image, white particles, connect4
@@ -223,27 +223,27 @@ void runBinaryReconstruct(ImagePlus imp1, ImagePlus imp2) {
 	}
 }
 
-private static void transferProperties(Roi roi1, Roi roi2) {
+def transferProperties (Roi roi1, Roi roi2) {
 	if (roi1==null || roi2==null)
-		return;
-	roi2.setStrokeColor(roi1.getStrokeColor());
+		return
+		roi2.setStrokeColor(roi1.getStrokeColor())
 	if (roi1.getStroke()!=null)
-		roi2.setStroke(roi1.getStroke());
-	roi2.setDrawOffset(roi1.getDrawOffset());
+		roi2.setStroke(roi1.getStroke())
+		roi2.setDrawOffset(roi1.getDrawOffset())
 	if (roi1.getGroup()!=null)
-		roi2.setGroup(roi1.getGroup());
+		roi2.setGroup(roi1.getGroup())
 }
 
-private static void convexHull(ImagePlus imp, RoiManager rm) {
+def convexHull (ImagePlus imp, RoiManager rm) {
 	int roiCount = rm.getCount()
 	println "$roiCount selected ROIs"
 	for (i in 0..roiCount-1) {
 		rm.select(0)
 		Roi roi = imp.getRoi()
-		FloatPolygon p = roi.getFloatConvexHull();
+		FloatPolygon p = roi.getFloatConvexHull()
 			if (p!=null) {
-				Roi roi2 = new PolygonRoi(p, Roi.POLYGON);
-				transferProperties(roi, roi2);
+				Roi roi2 = new PolygonRoi(p, Roi.POLYGON)
+				transferProperties(roi, roi2)
 				rm.addRoi(roi2)
 				rm.select(0)
 				rm.runCommand(imp,"Delete")
