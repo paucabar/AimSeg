@@ -395,7 +395,7 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 println "Save RoiSet_IN"
 
 // timing
-def int t1 = System.currentTimeMillis()
+int t1 = System.currentTimeMillis()
 println t1-t0
 
 //////////////
@@ -428,7 +428,7 @@ rgbSConverter.convertToRGB(maskOverlayIN)
 maskOverlayIN.show()
 */
 
-def ImagePlus maskOverlayIN = setMaskOverlay(imp, maskIn, 127)
+ImagePlus maskOverlayIN = setMaskOverlay(imp, maskIn, 127)
 maskOverlayIN.show()
 
 //////////////
@@ -462,7 +462,7 @@ IJ.run(myelinOutlines, "Watershed", "")
 // ImagePlus myelinOutlines2 = runMarkerControlledWatershed(myelinOutlines.getProcessor(), impInToCountLabels.getProcessor(), myelinOutlines.getProcessor(), 8)
 //myelinOutlines2.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
 //myelinOutlines2.setProcessor(myelinOutlines2.getProcessor().createMask())
-def ImagePlus impMyelinOutlines2 = impInToCount.duplicate()
+ImagePlus impMyelinOutlines2 = impInToCount.duplicate()
 runBinaryReconstruct(myelinOutlines, impMyelinOutlines2)
 run (impMyelinOutlines2.getProcessor(), "close", 1, 1)
 ImagePlus impOutMasks = analyzeParticles(impMyelinOutlines2, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
@@ -502,7 +502,7 @@ rm.runCommand(maskOverlayIN,"Delete")
 maskOverlayIN.hide()
 
 // get myelin to count
-def ImagePlus impInToCountCor = maskOut.duplicate()
+ImagePlus impInToCountCor = maskOut.duplicate()
 runBinaryReconstruct(impInToCount, impInToCountCor)
 //ImagePlus maskOutLabels = analyzeParticles(maskOut, options_count_masks, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 //ImagePlus impInToCountCor= runMarkerControlledWatershed(impInToCount.getProcessor(), maskOutLabels.getProcessor(), impInToCount.getProcessor(), 8)
@@ -528,7 +528,7 @@ rgbSConverter.convertToRGB(maskOverlayMyelin)
 maskOverlayMyelin.show()
 */
 
-def ImagePlus maskOverlayMyelin = setMaskOverlay(imp, myelinToCount, 127)
+ImagePlus maskOverlayMyelin = setMaskOverlay(imp, myelinToCount, 127)
 maskOverlayMyelin.show()
 
 //////////////
