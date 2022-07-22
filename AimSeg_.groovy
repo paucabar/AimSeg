@@ -285,7 +285,12 @@ imp = importImage(imageFile, "/data", "tzyxc")
 imp.show()
 
 // import the corresponding probability map and object prediction
-// IMPORTANT: must be in the parent folder
+// IMPORTANT:
+// 		* files must be stored in the imp parent folder
+// 		* files must be named after the imp filename, adding a tag as a suffix
+//		* default tags work for default ilastik output
+//		* tag for probability map = _Probabilities
+//		* tag for object predictions = _Object Predictions
 File parentPath = imageFile.getParentFile()
 def fileList = []
 parentPath.eachFile(FileType.FILES) {
