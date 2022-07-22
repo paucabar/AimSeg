@@ -47,8 +47,8 @@ import ij.process.LUT
 boolean isUpdateSiteActive (updateSite) {
 	boolean checkUpdate = true
 	if (! updateService.getUpdateSite(updateSite).isActive()) {
-    	ui.showDialog "Please activate the $updateSite update site"
-    	checkUpdate = false
+		ui.showDialog "Please activate the $updateSite update site"
+		checkUpdate = false
 	}
 	return checkUpdate
 }
@@ -87,31 +87,31 @@ def run (ImageProcessor ip, String arg, int iter, int cnt) {
     ip.setSnapshotCopyMode(true)
 
 	if (arg.equals("erode") || arg.equals("dilate")) {
-        doIterations((ByteProcessor)ip, arg, iter, cnt)
+		doIterations((ByteProcessor)ip, arg, iter, cnt)
 	} else if (arg.equals("open")) {
-        doIterations(ip, "erode", iter, cnt)
-        doIterations(ip, "dilate", iter, cnt)
+		doIterations(ip, "erode", iter, cnt)
+		doIterations(ip, "dilate", iter, cnt)
     } else if (arg.equals("close")) {
-        doIterations(ip, "dilate", iter, cnt)
-        doIterations(ip, "erode", iter, cnt)
+		doIterations(ip, "dilate", iter, cnt)
+		doIterations(ip, "erode", iter, cnt)
     }
     ip.setSnapshotCopyMode(false)
     ip.setBinaryThreshold()
 }
 
 def doIterations (ImageProcessor ip, String mode, int iterations, int count) {
-    for (int i=0; i<iterations; i++) {
-        if (Thread.currentThread().isInterrupted()) return
-        if (IJ.escapePressed()) {
-            boolean escapePressed = true
-            ip.reset()
-            return
-        }
-        if (mode.equals("erode"))
-            ((ByteProcessor)ip).erode(count, background)
-        else
-            ((ByteProcessor)ip).dilate(count, background)
-    }
+	for (int i=0; i<iterations; i++) {
+		if (Thread.currentThread().isInterrupted()) return
+		if (IJ.escapePressed()) {
+			boolean escapePressed = true
+			ip.reset()
+			return
+		}
+		if (mode.equals("erode"))
+			((ByteProcessor)ip).erode(count, background)
+		else
+			((ByteProcessor)ip).dilate(count, background)
+	}
 }
 
 // Binary fill by Gabriel Landini, G.Landini at bham.ac.uk
