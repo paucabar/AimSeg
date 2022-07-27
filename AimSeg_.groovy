@@ -319,9 +319,10 @@ int t0 = System.currentTimeMillis()
 // create myelin mask
 impProb.setPosition(probChannel)
 ImageProcessor ipProb = impProb.getProcessor()
-ipProb.setThreshold (0.2, 1.0)
+ipProb.setThreshold (0.2, 1.0, ImageProcessor.NO_LUT_UPDATE)
 ImageProcessor ipMyelinMask = ipProb.createMask() // image processor
 ImagePlus impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask) // image processor to image plus
+impProb.close()
 //impMyelinMask.show()
 
 // duplicate and invert myelin mask
@@ -550,7 +551,9 @@ impAxonMasks.setProcessor(impAxonMasks.getProcessor().createMask())
 run (impAxonMasks.getProcessor(), "close", 5, 1)
 fill(impAxonMasks.getProcessor())
 ImagePlus impAxonMasksFiltered = ic.run(impAxonMasks, maskOut, "AND create")
-ImagePlus dupAxonMasksFiltered = analyzeParticles(impAxonMasksFiltered, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+impAxonMasksFiltered = analyzeParticles(impAxonMasksFiltered, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+impAxonMasks.close()
+impAxonMasksFiltered.close()
 
 // get convex hull from ROIs
 convexHull(maskOverlayMyelin, rm)
@@ -587,6 +590,9 @@ run (impRejectMasks.getProcessor(), "close", 5, 1)
 ImagePlus impRejectMasksFiltered = ic.run(impRejectMasks, maskOut, "AND create")
 fill(impRejectMasksFiltered.getProcessor())
 impRejectMasksFiltered = analyzeParticles(impRejectMasksFiltered, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+impObj.close()
+impRejectMasks.close()
+impRejectMasksFiltered.close()
 
 // RoiManager set other objects as group 1 (blue ROIs)
 rm.getRoisAsArray().eachWithIndex { roi, index ->
