@@ -412,7 +412,6 @@ println t1-t0
 // create IN final mask
 ImagePlus maskIn = createRoiMask(imp, rm)
 rm.runCommand(imp,"Delete")
-//rm.close()
 imp.hide()
 
 /*
@@ -463,6 +462,7 @@ impMyelinMask.close()
 ImagePlus myelinOutlines = ic.run(myelinClean, impVoronoi, "AND create")
 fill(myelinOutlines.getProcessor())
 ImagePlus impInToCount = analyzeParticles(maskIn, options_exclude_edges, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+maskIn.close()
 run (myelinOutlines.getProcessor(), "open", 20, 1)
 IJ.run(myelinOutlines, "Watershed", "")
 // int options_count_masks = ParticleAnalyzer.SHOW_ROI_MASKS
@@ -507,7 +507,7 @@ println t1-t0
 ImagePlus maskOut = createRoiMask(maskOverlayIN, rm)
 rm.runCommand(maskOverlayIN,"Delete")
 //rm.close()
-maskOverlayIN.hide()
+maskOverlayIN.close()
 
 // get myelin to count
 ImagePlus impInToCountCor = maskOut.duplicate()
