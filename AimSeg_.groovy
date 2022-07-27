@@ -81,25 +81,25 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
 
 // Implements the Erode, Dilate, Open and Close commands in the Process/Binary submenu
 def run (ImageProcessor ip, String arg, int iter, int cnt) {
-    int fg = Prefs.blackBackground ? 255 : 0
-    foreground = ip.isInvertedLut() ? 255-fg : fg
-    background = 255 - foreground
-    ip.setSnapshotCopyMode(true)
+	int fg = Prefs.blackBackground ? 255 : 0
+	int foreground = ip.isInvertedLut() ? 255-fg : fg
+	int background = 255 - foreground
+	ip.setSnapshotCopyMode(true)
 
 	if (arg.equals("erode") || arg.equals("dilate")) {
-		doIterations((ByteProcessor)ip, arg, iter, cnt)
+		doIterations((ByteProcessor)ip, arg, iter, cnt, background)
 	} else if (arg.equals("open")) {
-		doIterations(ip, "erode", iter, cnt)
-		doIterations(ip, "dilate", iter, cnt)
+		doIterations(ip, "erode", iter, cnt, background)
+		doIterations(ip, "dilate", iter, cnt, background)
     } else if (arg.equals("close")) {
-		doIterations(ip, "dilate", iter, cnt)
-		doIterations(ip, "erode", iter, cnt)
+		doIterations(ip, "dilate", iter, cnt, background)
+		doIterations(ip, "erode", iter, cnt, background)
     }
     ip.setSnapshotCopyMode(false)
     ip.setBinaryThreshold()
 }
 
-def doIterations (ImageProcessor ip, String mode, int iterations, int count) {
+def doIterations (ImageProcessor ip, String mode, int iterations, int count, int background) {
 	for (int i=0; i<iterations; i++) {
 		if (Thread.currentThread().isInterrupted()) return
 		if (IJ.escapePressed()) {
