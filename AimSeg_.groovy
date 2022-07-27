@@ -323,19 +323,16 @@ ipProb.setThreshold (0.2, 1.0, ImageProcessor.NO_LUT_UPDATE)
 ImageProcessor ipMyelinMask = ipProb.createMask() // image processor
 ImagePlus impMyelinMask = new ImagePlus("Myelin Mask", ipMyelinMask) // image processor to image plus
 impProb.close()
-//impMyelinMask.show()
 
 // duplicate and invert myelin mask
 ImageProcessor ipMyelinMaskInverted = ipMyelinMask.duplicate()
 ipMyelinMaskInverted.invert()
 ImagePlus impMyelinMaskInverted = new ImagePlus("Myelin Inverted Mask", ipMyelinMaskInverted) // image processor to image plus
-//impMyelinMaskInverted.show()
 
 // exclude edges
 int options_exclude_edges = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES
 int measurements_area = Measurements.AREA
 ImagePlus impNoEdges = analyzeParticles(impMyelinMaskInverted, options_exclude_edges, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
-//impNoEdges.show()
 
 // close and fill holes
 Prefs.padEdges = false
@@ -346,22 +343,22 @@ fill(impNoEdges.getProcessor())
 // image calculator XOR
 def ic = new ImageCalculator()
 ImagePlus impXOR = ic.run(impMyelinMaskInverted, impNoEdges, "XOR create")
-//impXOR.show()
 
 // get axons on edges
 int options_with_edges = ParticleAnalyzer.SHOW_MASKS
 ImagePlus impEdges = analyzeParticles(impXOR, options_with_edges, measurements_area, 0, Double.POSITIVE_INFINITY, 0.3, 1)
-//impEdges.show()
+impXOR.close()
 
 // image calculator OR
 ImagePlus impOR = ic.run(impNoEdges, impEdges, "OR create")
-//impOR.show()
+impNoEdges.close()
+impEdges.close()
 
 // get inner masks
 int inMinArea = 10000 // min size to filter IN particles
 int options_add_manager = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.ADD_TO_MANAGER
 ImagePlus innerMasks = analyzeParticles(impOR, options_add_manager, measurements_area, inMinArea, Double.POSITIVE_INFINITY, 0.4, 1)
-//innerMasks.show()
+impOR.close()
 
 // RoiManager set selected objects as group 2 (red ROIs)
 RoiManager rm = RoiManager.getInstance()
@@ -374,8 +371,12 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 
 // get other masks
 ImagePlus allMasks = ic.run(innerMasks, impMyelinMaskInverted, "OR create")
+impMyelinMaskInverted.close()
 ImagePlus otherMasks = ic.run(innerMasks, allMasks, "XOR create")
-ImagePlus otherMasksSizeFilter = analyzeParticles(otherMasks, options_add_manager, measurements_area, 3000, 500000, 0, 1)
+innerMasks.close()
+allMasks.close()
+otherMasks = analyzeParticles(otherMasks, options_add_manager, measurements_area, 3000, 500000, 0, 1)
+otherMasks.close()
 
 // RoiManager set other objects as group 1 (blue ROIs)
 rm.getRoisAsArray().eachWithIndex { roi, index ->
@@ -458,6 +459,7 @@ run (impVoronoi.getProcessor(), "erode", 2, 1)
 // get initial OUT masks
 ImagePlus myelinFirst = ic.run(impMyelinMask, maskIn, "AND create")
 ImagePlus myelinClean = ic.run(myelinFirst, impMyelinMask, "XOR create")
+impMyelinMask.close()
 ImagePlus myelinOutlines = ic.run(myelinClean, impVoronoi, "AND create")
 fill(myelinOutlines.getProcessor())
 ImagePlus impInToCount = analyzeParticles(maskIn, options_exclude_edges, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
