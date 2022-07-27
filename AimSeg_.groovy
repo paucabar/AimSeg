@@ -542,6 +542,7 @@ impMaskOverlayMyelin.show()
 
 ImagePlus impMaskOverlayMyelin = setMaskOverlay(imp, impMyelinToCount, 127)
 impMyelinToCount.close()
+imp.close()
 impMaskOverlayMyelin.show()
 
 //////////////
@@ -557,22 +558,22 @@ impAxonMasks.getProcessor().setThreshold(1, 2, ImageProcessor.NO_LUT_UPDATE)
 impAxonMasks.setProcessor(impAxonMasks.getProcessor().createMask())
 run (impAxonMasks.getProcessor(), "close", 5, 1)
 fill(impAxonMasks.getProcessor())
-ImagePlus impAxonMasksFiltered = ic.run(impAxonMasks, impMaskOut, "AND create")
-impAxonMasksFiltered = analyzeParticles(impAxonMasksFiltered, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+impAxonMasks = ic.run(impAxonMasks, impMaskOut, "AND create")
+impAxonMasks = analyzeParticles(impAxonMasks, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 impAxonMasks.close()
-impAxonMasksFiltered.close()
 
 // get convex hull from ROIs
 convexHull(impMaskOverlayMyelin, rm)
 
 // create convex hull mask
-ImagePlus convexHullMask = createRoiMask(impMaskOverlayMyelin, rm)
+ImagePlus impConvexHullMask = createRoiMask(impMaskOverlayMyelin, rm)
 rm.runCommand(impMaskOverlayMyelin,"Delete")
 
 // correct convex hull and get ROIs
-ImagePlus convexHullMaskCorrected = ic.run(convexHullMask, impInToCount, "AND create")
+impConvexHullMask = ic.run(impConvexHullMask, impInToCount, "AND create")
 impInToCount.close()
-convexHullMaskCorrected = analyzeParticles(convexHullMaskCorrected, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+impConvexHullMask = analyzeParticles(impConvexHullMask, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+impConvexHullMask.close()
 
 // RoiManager set selected objects as group 2 (red ROIs)
 // get ROIs convex hull
@@ -595,13 +596,12 @@ ImagePlus impRejectMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
 impRejectMasks.getProcessor().setThreshold(minObj, maxObj, ImageProcessor.NO_LUT_UPDATE)
 impRejectMasks.setProcessor(impRejectMasks.getProcessor().createMask())
 run (impRejectMasks.getProcessor(), "close", 5, 1)
-ImagePlus impRejectMasksFiltered = ic.run(impRejectMasks, impMaskOut, "AND create")
+impRejectMasks = ic.run(impRejectMasks, impMaskOut, "AND create")
 impMaskOut.close()
-fill(impRejectMasksFiltered.getProcessor())
-impRejectMasksFiltered = analyzeParticles(impRejectMasksFiltered, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+fill(impRejectMasks.getProcessor())
+impRejectMasks = analyzeParticles(impRejectMasks, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 impObj.close()
 impRejectMasks.close()
-impRejectMasksFiltered.close()
 
 // RoiManager set other objects as group 1 (blue ROIs)
 rm.getRoisAsArray().eachWithIndex { roi, index ->
