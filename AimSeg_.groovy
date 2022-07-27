@@ -542,7 +542,6 @@ impMaskOverlayMyelin.show()
 
 ImagePlus impMaskOverlayMyelin = setMaskOverlay(imp, impMyelinToCount, 127)
 impMyelinToCount.close()
-imp.close()
 impMaskOverlayMyelin.show()
 
 //////////////
@@ -622,18 +621,25 @@ cleanRoiSet(impMaskOverlayMyelin, rm)
 rm.deselect()
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 println "Save RoiSet_AXON"
+rm.deselect()
+rm.runCommand(impMaskOverlayMyelin,"Delete")
+impMaskOverlayMyelin.close()
 
 // timing
 t1 = System.currentTimeMillis()
 println t1-t0
 
 //////////////
+// POST-PROCESSING
+//////////////
+
+//////////////
 // RESET
 //////////////
 
 // close all
-rm.deselect()
-rm.runCommand(impMaskOverlayMyelin,"Delete")
+//rm.deselect()
+//rm.runCommand(imp,"Delete")
 rm.close()
 Commands cmd = new Commands()
 cmd.closeAll()
