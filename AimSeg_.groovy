@@ -418,24 +418,24 @@ imp.hide()
 // merge channels to display
 ImagePlus[] impMergeIN = [imp, maskIn]
 def rgbSMerge = new RGBStackMerge()
-ImagePlus maskOverlayIN = rgbSMerge.mergeChannels(impMergeIN, true)
-//println maskOverlayIN.getClass()
+ImagePlus impMaskOverlayIN = rgbSMerge.mergeChannels(impMergeIN, true)
+//println impMaskOverlayIN.getClass()
 
 // set composite LUTs
-luts = maskOverlayIN.getLuts()
+luts = impMaskOverlayIN.getLuts()
 luts[0] = LUT.createLutFromColor(Color.GRAY)
 luts[1] = LUT.createLutFromColor(Color.MAGENTA)
-maskOverlayIN.setLuts(luts)
-maskOverlayIN.updateAndDraw()
+impMaskOverlayIN.setLuts(luts)
+impMaskOverlayIN.updateAndDraw()
 
 // convert to RGB
 def rgbSConverter = new RGBStackConverter()
-rgbSConverter.convertToRGB(maskOverlayIN)
-maskOverlayIN.show()
+rgbSConverter.convertToRGB(impMaskOverlayIN)
+impMaskOverlayIN.show()
 */
 
-ImagePlus maskOverlayIN = setMaskOverlay(imp, maskIn, 127)
-maskOverlayIN.show()
+ImagePlus impMaskOverlayIN = setMaskOverlay(imp, maskIn, 127)
+impMaskOverlayIN.show()
 
 //////////////
 // STAGE 2
@@ -491,7 +491,7 @@ if (!automated) wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
 // set stroke width as 0
-cleanRoiSet(maskOverlayIN, rm)
+cleanRoiSet(impMaskOverlayIN, rm)
 
 // save ROI set OUT
 rm.deselect()
@@ -507,40 +507,42 @@ println t1-t0
 //////////////
 
 // create OUT final mask
-ImagePlus maskOut = createRoiMask(maskOverlayIN, rm)
-rm.runCommand(maskOverlayIN,"Delete")
+ImagePlus impMaskOut = createRoiMask(impMaskOverlayIN, rm)
+rm.runCommand(impMaskOverlayIN,"Delete")
 //rm.close()
-maskOverlayIN.close()
+impMaskOverlayIN.close()
 
 // get myelin to count
-ImagePlus impInToCountCor = maskOut.duplicate()
+ImagePlus impInToCountCor = impMaskOut.duplicate()
 runBinaryReconstruct(impInToCount, impInToCountCor)
-//ImagePlus maskOutLabels = analyzeParticles(maskOut, options_count_masks, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
-//ImagePlus impInToCountCor= runMarkerControlledWatershed(impInToCount.getProcessor(), maskOutLabels.getProcessor(), impInToCount.getProcessor(), 8)
+//ImagePlus impMaskOutLabels = analyzeParticles(impMaskOut, options_count_masks, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+//ImagePlus impInToCountCor= runMarkerControlledWatershed(impInToCount.getProcessor(), impMaskOutLabels.getProcessor(), impInToCount.getProcessor(), 8)
 //impInToCountCor.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
 //impInToCountCor.setProcessor(impInToCountCor.getProcessor().createMask())
-ImagePlus myelinToCount = ic.run(impInToCountCor, maskOut, "XOR create")
+ImagePlus impMyelinToCount = ic.run(impInToCountCor, impMaskOut, "XOR create")
+impInToCountCor.close()
 
 /*
 // merge channels to display
-ImagePlus[] impMergeMyelin = [imp, myelinToCount]
-ImagePlus maskOverlayMyelin = rgbSMerge.mergeChannels(impMergeMyelin, true)
-//println maskOverlayIN.getClass()
+ImagePlus[] impMergeMyelin = [imp, impMyelinToCount]
+ImagePlus impMaskOverlayMyelin = rgbSMerge.mergeChannels(impMergeMyelin, true)
+//println impMaskOverlayIN.getClass()
 
 // set composite LUTs
-lutsM = maskOverlayMyelin.getLuts()
+lutsM = impMaskOverlayMyelin.getLuts()
 lutsM[0] = LUT.createLutFromColor(Color.GRAY)
 lutsM[1] = LUT.createLutFromColor(Color.MAGENTA)
-maskOverlayMyelin.setLuts(lutsM)
-maskOverlayMyelin.updateAndDraw()
+impMaskOverlayMyelin.setLuts(lutsM)
+impMaskOverlayMyelin.updateAndDraw()
 
 // convert to RGB
-rgbSConverter.convertToRGB(maskOverlayMyelin)
-maskOverlayMyelin.show()
+rgbSConverter.convertToRGB(impMaskOverlayMyelin)
+impMaskOverlayMyelin.show()
 */
 
-ImagePlus maskOverlayMyelin = setMaskOverlay(imp, myelinToCount, 127)
-maskOverlayMyelin.show()
+ImagePlus impMaskOverlayMyelin = setMaskOverlay(imp, impMyelinToCount, 127)
+impMyelinToCount.close()
+impMaskOverlayMyelin.show()
 
 //////////////
 // STAGE 3
@@ -555,17 +557,17 @@ impAxonMasks.getProcessor().setThreshold(1, 2, ImageProcessor.NO_LUT_UPDATE)
 impAxonMasks.setProcessor(impAxonMasks.getProcessor().createMask())
 run (impAxonMasks.getProcessor(), "close", 5, 1)
 fill(impAxonMasks.getProcessor())
-ImagePlus impAxonMasksFiltered = ic.run(impAxonMasks, maskOut, "AND create")
+ImagePlus impAxonMasksFiltered = ic.run(impAxonMasks, impMaskOut, "AND create")
 impAxonMasksFiltered = analyzeParticles(impAxonMasksFiltered, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 impAxonMasks.close()
 impAxonMasksFiltered.close()
 
 // get convex hull from ROIs
-convexHull(maskOverlayMyelin, rm)
+convexHull(impMaskOverlayMyelin, rm)
 
 // create convex hull mask
-ImagePlus convexHullMask = createRoiMask(maskOverlayMyelin, rm)
-rm.runCommand(maskOverlayMyelin,"Delete")
+ImagePlus convexHullMask = createRoiMask(impMaskOverlayMyelin, rm)
+rm.runCommand(impMaskOverlayMyelin,"Delete")
 
 // correct convex hull and get ROIs
 ImagePlus convexHullMaskCorrected = ic.run(convexHullMask, impInToCount, "AND create")
@@ -593,7 +595,8 @@ ImagePlus impRejectMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
 impRejectMasks.getProcessor().setThreshold(minObj, maxObj, ImageProcessor.NO_LUT_UPDATE)
 impRejectMasks.setProcessor(impRejectMasks.getProcessor().createMask())
 run (impRejectMasks.getProcessor(), "close", 5, 1)
-ImagePlus impRejectMasksFiltered = ic.run(impRejectMasks, maskOut, "AND create")
+ImagePlus impRejectMasksFiltered = ic.run(impRejectMasks, impMaskOut, "AND create")
+impMaskOut.close()
 fill(impRejectMasksFiltered.getProcessor())
 impRejectMasksFiltered = analyzeParticles(impRejectMasksFiltered, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 impObj.close()
@@ -613,7 +616,7 @@ if (!automated) wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
 // set stroke width as 0
-cleanRoiSet(maskOverlayMyelin, rm)
+cleanRoiSet(impMaskOverlayMyelin, rm)
 
 // save ROI set AXON
 rm.deselect()
@@ -630,7 +633,7 @@ println t1-t0
 
 // close all
 rm.deselect()
-rm.runCommand(maskOverlayMyelin,"Delete")
+rm.runCommand(impMaskOverlayMyelin,"Delete")
 rm.close()
 Commands cmd = new Commands()
 cmd.closeAll()
