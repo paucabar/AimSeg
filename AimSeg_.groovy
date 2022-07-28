@@ -37,12 +37,6 @@ import ij.plugin.Commands
 import ij.process.FloatPolygon
 import ij.gui.PolygonRoi
 
-/*
-import ij.plugin.RGBStackMerge
-import ij.plugin.RGBStackConverter
-import ij.CompositeImage
-import ij.process.LUT
-*/
 
 boolean isUpdateSiteActive (updateSite) {
 	boolean checkUpdate = true
@@ -413,27 +407,6 @@ println t1-t0
 ImagePlus maskIn = createRoiMask(imp, rm)
 rm.runCommand(imp,"Delete")
 imp.hide()
-
-/*
-// merge channels to display
-ImagePlus[] impMergeIN = [imp, maskIn]
-def rgbSMerge = new RGBStackMerge()
-ImagePlus impMaskOverlayIN = rgbSMerge.mergeChannels(impMergeIN, true)
-//println impMaskOverlayIN.getClass()
-
-// set composite LUTs
-luts = impMaskOverlayIN.getLuts()
-luts[0] = LUT.createLutFromColor(Color.GRAY)
-luts[1] = LUT.createLutFromColor(Color.MAGENTA)
-impMaskOverlayIN.setLuts(luts)
-impMaskOverlayIN.updateAndDraw()
-
-// convert to RGB
-def rgbSConverter = new RGBStackConverter()
-rgbSConverter.convertToRGB(impMaskOverlayIN)
-impMaskOverlayIN.show()
-*/
-
 ImagePlus impMaskOverlayIN = setMaskOverlay(imp, maskIn, 127)
 impMaskOverlayIN.show()
 
@@ -466,11 +439,6 @@ ImagePlus impInToCount = analyzeParticles(maskIn, options_exclude_edges, measure
 maskIn.close()
 run (impMyelinOutlines.getProcessor(), "open", 20, 1)
 IJ.run(impMyelinOutlines, "Watershed", "")
-// int options_count_masks = ParticleAnalyzer.SHOW_ROI_MASKS
-// ImagePlus impInToCountLabels = analyzeParticles(impInToCount, options_count_masks, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
-// ImagePlus impMyelinOutlines2 = runMarkerControlledWatershed(impMyelinOutlines.getProcessor(), impInToCountLabels.getProcessor(), impMyelinOutlines.getProcessor(), 8)
-//impMyelinOutlines2.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
-//impMyelinOutlines2.setProcessor(impMyelinOutlines2.getProcessor().createMask())
 ImagePlus impMyelinOutlines2 = impInToCount.duplicate()
 runBinaryReconstruct(impMyelinOutlines, impMyelinOutlines2)
 run (impMyelinOutlines2.getProcessor(), "close", 1, 1)
@@ -515,31 +483,8 @@ impMaskOverlayIN.close()
 // get myelin to count
 ImagePlus impInToCountCor = impMaskOut.duplicate()
 runBinaryReconstruct(impInToCount, impInToCountCor)
-//ImagePlus impMaskOutLabels = analyzeParticles(impMaskOut, options_count_masks, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
-//ImagePlus impInToCountCor= runMarkerControlledWatershed(impInToCount.getProcessor(), impMaskOutLabels.getProcessor(), impInToCount.getProcessor(), 8)
-//impInToCountCor.getProcessor().setThreshold(1, 255, ImageProcessor.NO_LUT_UPDATE)
-//impInToCountCor.setProcessor(impInToCountCor.getProcessor().createMask())
 ImagePlus impMyelinToCount = ic.run(impInToCountCor, impMaskOut, "XOR create")
 impInToCountCor.close()
-
-/*
-// merge channels to display
-ImagePlus[] impMergeMyelin = [imp, impMyelinToCount]
-ImagePlus impMaskOverlayMyelin = rgbSMerge.mergeChannels(impMergeMyelin, true)
-//println impMaskOverlayIN.getClass()
-
-// set composite LUTs
-lutsM = impMaskOverlayMyelin.getLuts()
-lutsM[0] = LUT.createLutFromColor(Color.GRAY)
-lutsM[1] = LUT.createLutFromColor(Color.MAGENTA)
-impMaskOverlayMyelin.setLuts(lutsM)
-impMaskOverlayMyelin.updateAndDraw()
-
-// convert to RGB
-rgbSConverter.convertToRGB(impMaskOverlayMyelin)
-impMaskOverlayMyelin.show()
-*/
-
 ImagePlus impMaskOverlayMyelin = setMaskOverlay(imp, impMyelinToCount, 127)
 impMyelinToCount.close()
 impMaskOverlayMyelin.show()
