@@ -189,6 +189,7 @@ def cleanRoiSet (ImagePlus imp, RoiManager rm) {
 	}
 }
 
+// Creates a binary with th ROI Manager
 ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
 	IJ.run(imp, "Select None", "");
 	rm.deselect()
@@ -198,6 +199,9 @@ ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
 	return impMask
 }
 
+// Created an RGB image adding a binary mask as an overlay to the EM image
+// The overlay is filled with a specific color and alpha (transparency, 8-bit)
+// The output is a flatten image to save memory
 ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
 	ImageProcessor ip = impMask.getProcessor()
 	ip.setThreshold (255, 255)
@@ -216,6 +220,10 @@ ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
 	return impFlatten
 }
 
+// Implements MorphoLibJ's Marker Controlled Watershed
+// Requires an input (grayscale) image, a labeled image (seeds) and a binary image to restrict the flooding
+// For 2D images, it is possible to activate diagonal connectivity (8) or not (4)
+// Returns a labeled, 32-bit image
 ImagePlus runMarkerControlledWatershed (ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
 	def mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
 	ImageProcessor result = mcwt.applyWithPriorityQueue()
@@ -223,8 +231,11 @@ ImagePlus runMarkerControlledWatershed (ImageProcessor input, ImageProcessor lab
 	return impResult
 }
 
-// binary reconstruct by Landini
-// reconstruction on seed image
+// Implements binary reconstruct by Landini
+// It requires two ImagePlus, a mask (imp1) and a seed (imp2)
+// The method is set to not show a new image
+// Insted, reconstruction is performed on seed image
+// To create a new image change name (null) by a string and set create image true
 def runBinaryReconstruct (ImagePlus imp1, ImagePlus imp2) {
 	def BinaryReconstruct_ br = new BinaryReconstruct_()
 	Object[] result = br.exec(imp1, imp2, null, false, true, false )
@@ -235,6 +246,7 @@ def runBinaryReconstruct (ImagePlus imp1, ImagePlus imp2) {
 	}
 }
 
+// Transfer properties from ROI 1 to ROI 2
 def transferProperties (Roi roi1, Roi roi2) {
 	if (roi1==null || roi2==null)
 		return
@@ -246,6 +258,9 @@ def transferProperties (Roi roi1, Roi roi2) {
 		roi2.setGroup(roi1.getGroup())
 }
 
+// Replaces the original ROIs by their convex hull ROIs
+// Always select ROI index 0, as it is deleted at the end of the loop
+// New ROIs are added at the the end of the list
 def convexHull (ImagePlus imp, RoiManager rm) {
 	int roiCount = rm.getCount()
 	println "$roiCount selected ROIs"
