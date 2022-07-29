@@ -48,12 +48,16 @@ boolean isUpdateSiteActive (String updateSite) {
 	return checkUpdate
 }
 
+// Installs the AimSeg macro that contains the shortcuts for the user edition
 def installMacro () {
 	String toolsetsPath = IJ.getDir("macros") + "toolsets"
 	String ijmPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
 	IJ.run("Install...", "install=[${->ijmPath}]")
 }
 
+// Opens an image file
+// If the file extension is h5, the image is imported using the ilastik's importer
+// Otherwise, the file is imported using ImageJ's opener
 ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
 	String imagePath = inputFile.getAbsolutePath()
 	if (!imagePath.endsWith(".h5")) {		
@@ -74,7 +78,8 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
 	return result
 }
 
-// Implements the Erode, Dilate, Open and Close commands in the Process/Binary submenu
+// Implements the Erode, Dilate, Open and Close commands
+// This method is modified from the original method in the ImageJ's Process/Binary submenu
 def run (ImageProcessor ip, String arg, int iter, int cnt) {
 	int fg = Prefs.blackBackground ? 255 : 0
 	int foreground = ip.isInvertedLut() ? 255-fg : fg
