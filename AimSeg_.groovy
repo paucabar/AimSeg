@@ -37,8 +37,9 @@ import ij.plugin.Commands
 import ij.process.FloatPolygon
 import ij.gui.PolygonRoi
 
-
-boolean isUpdateSiteActive (updateSite) {
+// Checks if an update site is active
+// If the update site is not active, shows a dialog asking the user to activate it
+boolean isUpdateSiteActive (String updateSite) {
 	boolean checkUpdate = true
 	if (! updateService.getUpdateSite(updateSite).isActive()) {
 		ui.showDialog "Please activate the $updateSite update site"
