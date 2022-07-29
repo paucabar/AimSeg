@@ -148,6 +148,11 @@ def fill (ImageProcessor ip) {
     }
 }
 
+// Implements ImageJ' Particle Analyzer
+// The method will always return an ImagePlus
+// options is defined as an integer using ParticleAnalyzer fields
+// options is defined as an integer using Interface Measurements fields
+// results table is not given as an argument because the method is never used to measure
 ImagePlus analyzeParticles (ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
 	def rt = new ResultsTable()
 	def pa = new ParticleAnalyzer(options, measurements, rt, minSize, maxSize, minCirc, maxCirc)
@@ -157,11 +162,14 @@ ImagePlus analyzeParticles (ImagePlus imp, int options, int measurements, double
 	pa.analyze(imp, ip)
 	ImagePlus impOutput = pa.getOutputImage()
 	if (impOutput.isInvertedLut()) {
-		IJ.run(impOutput, "Grays", "")
+		IJ.run(impOutput, "Grays", "") // get the non-inverted LUT
 	}
 	return impOutput
 }
 
+// Checks the group of each ROI
+// If the ROI group is not the specified, the ROI index is added to a list
+// All the ROIs in the list are deleted at the same time to avoid problems with index reordering
 def cleanRoiSet (ImagePlus imp, RoiManager rm) {
 	def roiDiscard = []
 	int count = rm.getCount()
