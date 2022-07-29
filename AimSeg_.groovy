@@ -78,8 +78,8 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
 	return result
 }
 
-// Implements the Erode, Dilate, Open and Close commands
-// This method is modified from the original method in the ImageJ's Process/Binary submenu
+// Implements the Erode, Dilate, Open and Close operations using the doIterations method (see below)
+// This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
 def run (ImageProcessor ip, String operation, int iterations, int count) {
 	int fg = Prefs.blackBackground ? 255 : 0
 	int foreground = ip.isInvertedLut() ? 255-fg : fg
@@ -99,6 +99,8 @@ def run (ImageProcessor ip, String operation, int iterations, int count) {
     ip.setBinaryThreshold()
 }
 
+// Implements the Erode and Dilate operations
+// This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
 def doIterations (ImageProcessor ip, String operation, int iterations, int count, int background) {
 	for (int i=0; i<iterations; i++) {
 		if (Thread.currentThread().isInterrupted()) return
@@ -114,7 +116,9 @@ def doIterations (ImageProcessor ip, String operation, int iterations, int count
 	}
 }
 
-// Binary fill by Gabriel Landini, G.Landini at bham.ac.uk
+// Implements the Binary fill operation
+// This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
+// Contributed by Gabriel Landini, G.Landini at bham.ac.uk
 // 21/May/2008
 def fill (ImageProcessor ip) {
     int fg = Prefs.blackBackground ? 255 : 0
