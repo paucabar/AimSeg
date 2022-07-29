@@ -47,7 +47,7 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 ### Pixel classification
 
 1. Load a pre-trained pixel classifier in ilastik
-2. Go to the Batch Processing applet
+2. Go to the <code>Batch Processing</code> applet
 3. Click on <code>Select Raw Data Files...</code>
 4. Load the raw data files
 5. Click on <code>Process all files</code>
@@ -55,7 +55,7 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 ### Object classification
 
 1. Load a pre-trained object classifier in ilastik
-2. Go to the Batch Processing applet
+2. Go to the <code>Batch Processing</code> applet
 3. Click on <code>Select Raw Data Files...</code>
 4. Load the raw data files
 5. Switch to the <code>Prediction Maps</code> tab
