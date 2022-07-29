@@ -80,26 +80,26 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
 
 // Implements the Erode, Dilate, Open and Close commands
 // This method is modified from the original method in the ImageJ's Process/Binary submenu
-def run (ImageProcessor ip, String arg, int iter, int cnt) {
+def run (ImageProcessor ip, String operation, int iterations, int count) {
 	int fg = Prefs.blackBackground ? 255 : 0
 	int foreground = ip.isInvertedLut() ? 255-fg : fg
 	int background = 255 - foreground
 	ip.setSnapshotCopyMode(true)
 
-	if (arg.equals("erode") || arg.equals("dilate")) {
-		doIterations((ByteProcessor)ip, arg, iter, cnt, background)
-	} else if (arg.equals("open")) {
-		doIterations(ip, "erode", iter, cnt, background)
-		doIterations(ip, "dilate", iter, cnt, background)
-    } else if (arg.equals("close")) {
-		doIterations(ip, "dilate", iter, cnt, background)
-		doIterations(ip, "erode", iter, cnt, background)
+	if (operation.equals("erode") || operation.equals("dilate")) {
+		doIterations((ByteProcessor)ip, operation, iterations, count, background)
+	} else if (operation.equals("open")) {
+		doIterations(ip, "erode", iterations, count, background)
+		doIterations(ip, "dilate", iterations, count, background)
+    } else if (operation.equals("close")) {
+		doIterations(ip, "dilate", iterations, count, background)
+		doIterations(ip, "erode", iterations, count, background)
     }
     ip.setSnapshotCopyMode(false)
     ip.setBinaryThreshold()
 }
 
-def doIterations (ImageProcessor ip, String mode, int iterations, int count, int background) {
+def doIterations (ImageProcessor ip, String operation, int iterations, int count, int background) {
 	for (int i=0; i<iterations; i++) {
 		if (Thread.currentThread().isInterrupted()) return
 		if (IJ.escapePressed()) {
@@ -107,7 +107,7 @@ def doIterations (ImageProcessor ip, String mode, int iterations, int count, int
 			ip.reset()
 			return
 		}
-		if (mode.equals("erode"))
+		if (operation.equals("erode"))
 			((ByteProcessor)ip).erode(count, background)
 		else
 			((ByteProcessor)ip).dilate(count, background)
