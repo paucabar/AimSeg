@@ -262,20 +262,17 @@ def transferProperties (Roi roi1, Roi roi2) {
 // Replaces the original ROIs by their convex hull ROIs
 // Always select ROI index 0, as it is deleted at the end of the loop
 // New ROIs are added at the the end of the list
-def convexHull (ImagePlus imp, RoiManager rm) {
+def convexHull (RoiManager rm) {
 	int roiCount = rm.getCount()
 	println "$roiCount selected ROIs"
-	for (i in 0..roiCount-1) {
-		rm.select(0)
-		Roi roi = imp.getRoi()
-		FloatPolygon p = roi.getFloatConvexHull()
-			if (p!=null) {
-				Roi roi2 = new PolygonRoi(p, Roi.POLYGON)
-				transferProperties(roi, roi2)
-				rm.addRoi(roi2)
-				rm.select(0)
-				rm.runCommand(imp,"Delete")
-			}
+	rm.getRoisAsArray().eachWithIndex { roi, index ->
+		if (roi != null) {
+			rm.select(index)
+			FloatPolygon p = roi.getFloatConvexHull()
+			Roi roi2 = new PolygonRoi(p, Roi.POLYGON)
+			transferProperties(roi, roi2)
+			rm.setRoi(roi2, index)
+		}
 	}
 }
 
@@ -559,7 +556,7 @@ impAxonMasks = analyzeParticles(impAxonMasks, options_add_manager, measurements_
 impAxonMasks.close()
 
 // get convex hull from ROIs
-convexHull(impMaskOverlayMyelin, rm)
+convexHull(rm)
 
 // create convex hull mask
 ImagePlus impConvexHullMask = createRoiMask(impMaskOverlayMyelin, rm)
