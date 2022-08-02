@@ -630,7 +630,12 @@ println t1-t0
 // POST-PROCESSING
 //////////////
 
-
+// replace ShapeRois from RoiSet_IN
+imp.show()
+rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
+rm = rm.getInstance()
+replaceShapeRois(rm)
+return
 
 //////////////
 // RESET
