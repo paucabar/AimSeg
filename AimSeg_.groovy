@@ -149,7 +149,7 @@ def fill (ImageProcessor ip) {
     }
 }
 
-// Implements ImageJ' Particle Analyzer
+// Implements ImageJ's Particle Analyzer
 // The method will always return an ImagePlus
 // options is defined as an integer using ParticleAnalyzer fields
 // options is defined as an integer using Interface Measurements fields
@@ -190,7 +190,7 @@ def cleanRoiSet (ImagePlus imp, RoiManager rm) {
 	}
 }
 
-// Creates a binary with th ROI Manager
+// Creates a binary from the ROI Manager
 ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
 	IJ.run(imp, "Select None", "");
 	rm.deselect()
@@ -200,7 +200,7 @@ ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
 	return impMask
 }
 
-// Created an RGB image adding a binary mask as an overlay to the EM image
+// Creates an RGB image adding a binary mask as an overlay to the EM image
 // The overlay is filled with a specific color and alpha (transparency, 8-bit)
 // The output is a flatten image to save memory
 ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
@@ -232,7 +232,7 @@ ImagePlus runMarkerControlledWatershed (ImageProcessor input, ImageProcessor lab
 	return impResult
 }
 
-// Implements binary reconstruct by Landini
+// Implements Morphology's Binary Reconstruct, by Landini
 // It requires two ImagePlus, a mask (imp1) and a seed (imp2)
 // The method is set to not show a new image
 // Insted, reconstruction is performed on seed image
@@ -247,7 +247,8 @@ def runBinaryReconstruct (ImagePlus imp1, ImagePlus imp2) {
 	}
 }
 
-// Transfer properties from ROI 1 to ROI 2
+// Transfers properties from ROI 1 to ROI 2
+// Used in convexHull method
 def transferProperties (Roi roi1, Roi roi2) {
 	if (roi1==null || roi2==null)
 		return
@@ -276,7 +277,7 @@ def convexHull (RoiManager rm) {
 	}
 }
 
-// Replaces composite ROIs (ShapeRois) by the larges ROI in the ShapeRoi instance
+// Replaces composite ROIs (ShapeRois) by the largest ROI within the ShapeRoi instance
 def replaceShapeRois(RoiManager rm) {
 	rm.getRoisAsArray().eachWithIndex { roi, index ->
 		if (roi instanceof ShapeRoi) {
