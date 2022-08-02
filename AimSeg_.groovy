@@ -36,6 +36,7 @@ import inra.ijpb.watershed.MarkerControlledWatershedTransform2D
 import ij.plugin.Commands
 import ij.process.FloatPolygon
 import ij.gui.PolygonRoi
+import ij.gui.ShapeRoi
 
 // Checks if an update site is active
 // If the update site is not active, shows a dialog asking the user to activate it
@@ -278,6 +279,24 @@ def convexHull (ImagePlus imp, RoiManager rm) {
 	}
 }
 
+// Replaces composite ROIs (ShapeRois) by the larges ROI in the ShapeRoi instance
+def replaceShapeRois(RoiManager rm) {
+	rm.getRoisAsArray().eachWithIndex { roi, index ->
+		if (roi instanceof ShapeRoi) {
+		    // Split the shape ROI
+		    def rois = ((ShapeRoi)roi).getRois()
+		    if (rois.size() > 1) {
+		        // Get the areas of all ROIs and find the largest
+		        def areas = rois.collect(r -> r.getStatistics().area)
+		        int indLargest = areas.indexOf(areas.max())
+		        assert indLargest >= 0 // Must happen or something has gone wrong (float comparison)
+		        def roiLargest = rois[indLargest]
+		        // replace the ShapeRoi by the largest Roi in the composite selection, removing the smaller ones
+				rm.setRoi(rois[indLargest], index)
+		    }
+		}
+	}
+}
 
 
 //////////////
@@ -610,6 +629,8 @@ println t1-t0
 //////////////
 // POST-PROCESSING
 //////////////
+
+
 
 //////////////
 // RESET
