@@ -1,8 +1,18 @@
-#@ ImagePlus imp
+#@ File(label="Image File", style="directory") dir
 
 import ij.IJ
 import ij.process.ImageConverter
+import ij.io.Opener
 import ij.ImagePlus
+import java.io.File
+import groovy.io.FileType
+
+ImagePlus importImage (File inputFile) {
+	String imagePath = inputFile.getAbsolutePath()
+	def opener = new Opener()
+	result = opener.openImage(imagePath)
+	return result
+}
 
 def preProcessing(ImagePlus imp, float saturatedPixels) {
 	int bitDepth = imp.getBitDepth()
@@ -13,4 +23,10 @@ def preProcessing(ImagePlus imp, float saturatedPixels) {
 	IJ.run(imp, "Enhance Contrast...", "saturated=$saturatedPixels update")
 }
 
+def fileList = []
+dir.eachFile(FileType.FILES) {
+	fileList << it.name
+}
+println fileList
+return
 preProcessing(imp, 0.3)
