@@ -1,4 +1,4 @@
-#@ File(label="Image File", style="directory") dir
+#@ File(label="Select directory", style="directory") dir
 
 import ij.IJ
 import ij.process.ImageConverter
@@ -27,6 +27,9 @@ def fileList = []
 dir.eachFile(FileType.FILES) {
 	fileList << it.name
 }
-println fileList
-return
-preProcessing(imp, 0.3)
+
+for (i=0; i<fileList.size(); i++) {
+	File file = new File (dir, fileList[i])
+	ImagePlus imp = importImage(file)
+	preProcessing(imp, 0.3)
+}
