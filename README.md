@@ -32,36 +32,44 @@ Download an example [image dataset](https://drive.google.com/drive/folders/1DEFt
 
 ## Usage
 
-### Pre-processing
+### Pre-processing (Fiji)
 
 Please note that ilastik only supports a series of file formats (check [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, it may be necessary to transform the image dataset into a format supported by ilastik. Moreover, in order to reuse an ilastik project in different datasets, it will be necessary to use the same settings in the format transformation step to pre-process the input data.
 
-1. Run the *Pre-processing** script (<code>Plugins>AimSeg>Pre-processing</code>)
+1. Run the **Pre-processing** script (<code>Plugins>AimSeg>Pre-processing</code>)
 2. Select the directory containing the image dataset to be transformed
 3. Run
 
-The pre-processed dataset will be stored in a new folder named after the selected folder adding the postfix *_normalized*. The original images are converted to 8-bit, normalized using Fiji's Enhance Contrast command (0.3 % sat pixels) and saved as tif files.
+The pre-processed dataset will be stored in a new folder named after the selected folder adding the postfix  *_normalized*. The original images are converted to 8-bit, normalized using Fiji's Enhance Contrast command (0.3 % sat pixels) and saved as tif files.
 
-### Pixel classification
+### Pixel classification (ilastik)
 
-1. Load a pre-trained pixel classifier in ilastik
-2. Go to the <code>Batch Processing</code> applet
-3. Click on <code>Select Raw Data Files...</code>
-4. Load the raw data files
-5. Click on <code>Process all files</code>
+1. Click on <code>Browse Files</code> (Open Project... submenu)
+2. Select a pre-trained pixel classifier
+3. Go to the <code>Batch Processing</code> applet
+4. Click on <code>Select Raw Data Files...</code>
+5. Load the raw data files
+6. Click on <code>Process all files</code>
 
-### Object classification
+![pc1](https://user-images.githubusercontent.com/39589980/186393550-d30c133c-d275-4104-a467-8bb1d56910f1.png)
 
-1. Load a pre-trained object classifier in ilastik
-2. Go to the <code>Batch Processing</code> applet
-3. Click on <code>Select Raw Data Files...</code>
-4. Load the raw data files
-5. Switch to the <code>Prediction Maps</code> tab
-6. Click on <code>Select Prediction Maps Files...</code>
-7. Load the prediction maps files (sorted to match the raw data list)
-8. Click on <code>Process all files</code>
+By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the same folder.
 
-### AimSeg
+### Object classification (ilastik)
+
+1. Click on <code>Browse Files</code> (Open Project... submenu)
+2. Select a pre-trained object classifier
+3. Go to the <code>Batch Processing</code> applet
+4. Click on <code>Select Raw Data Files...</code>
+5. Load the raw data files
+6. Switch to the <code>Prediction Maps</code> tab
+7. Click on <code>Select Prediction Maps Files...</code>
+8. Load the prediction maps files (sorted to match the raw data list)
+9. Click on <code>Process all files</code>
+
+By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the same folder.
+
+### AimSeg (Fiji)
 
 *Run AimSeg*
 
@@ -99,7 +107,7 @@ It is possible to edit the ROIs using the Fiji selection tools during the 3 AimS
 * <kbd>z</kbd> Split ROI (will split a ROI made of multiple selection into different ROIs)
 * <kbd>c</kbd> Get convex hull
 
-### Results Table
+### Results Table (Fiji)
 
 1. Run the **Results Table** macro (<code>Plugins>AimSeg>Results Table</code>)
 2. Select the directory containing the image dataset, the ilastik output and the ROI files 
