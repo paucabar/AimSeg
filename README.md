@@ -32,17 +32,15 @@ Download an example [image dataset](https://drive.google.com/drive/folders/1DEFt
 
 ## Usage
 
-### Format Transformation
+### Pre-processing
 
 Please note that ilastik only supports a series of file formats (check [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, it may be necessary to transform the image dataset into a format supported by ilastik. Moreover, in order to reuse an ilastik project in different datasets, it will be necessary to use the same settings in the format transformation step to pre-process the input data.
 
-1. Run the **Format transformation** macro (<code>Plugins>AimSeg>Format Transformation</code>)
+1. Run the *Pre-processing** script (<code>Plugins>AimSeg>Pre-processing</code>)
 2. Select the directory containing the image dataset to be transformed
-3. It is possible to convert the images into 8-bit or to normalize the data
-4. It is possible to export the images as TIF or HDF5 files
-5. Type the extension of the files to be transformed. Files with a different extension will be ignored
-6. Type a postfix (a new folder will be named after the original folder adding the postfix separated by an underscore)
-7. Run
+3. Run
+
+The pre-processed dataset will be stored in a new folder named after the selected folder adding the postfix *_normalized*. The original images are converted to 8-bit, normalized using Fiji's Enhance Contrast command (0.3 % sat pixels) and saved as tif files.
 
 ### Pixel classification
 
