@@ -67,6 +67,8 @@ By default, ilastik will store the output files together with the input files. P
 8. Load the prediction maps files (sorted to match the raw data list)
 9. Click on <code>Process all files</code>
 
+![pc2](https://user-images.githubusercontent.com/39589980/186394567-8c6c5a3c-80f0-4e1b-b810-071d8183ecbb.png)
+
 By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the same folder.
 
 ### AimSeg (Fiji)
