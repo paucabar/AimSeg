@@ -23,20 +23,25 @@ def preProcessing(ImagePlus imp, float saturatedPixels) {
 	IJ.run(imp, "Enhance Contrast...", "saturated=$saturatedPixels update")
 }
 
+// create file list
 def fileList = []
 dir.eachFile(FileType.FILES) {
 	fileList << it.name
 }
 
 // create output folder
-File f = new File(dir.getParentFile(), dir.getName()+'_pre-processed');
-if (f.getParentFile() != null) {
-  f.mkdirs();
+File outDir = new File(dir.getParentFile(), dir.getName()+'_pre-processed');
+if (outDir.getParentFile() != null) {
+  outDir.mkdirs();
 }
-f.createNewFile();
+outDir.createNewFile();
 
+// import, process and save
 for (i=0; i<fileList.size(); i++) {
 	File file = new File (dir, fileList[i])
 	ImagePlus imp = importImage(file)
 	preProcessing(imp, 0.3)
+	String title = imp.getShortTitle()
+	File path = new File(outDir, "labels_${->title}.tif").getAbsolutePath()
+	ij.IJ.save(imp, path)
 }
