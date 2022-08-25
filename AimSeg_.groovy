@@ -38,8 +38,10 @@ import ij.process.FloatPolygon
 import ij.gui.PolygonRoi
 import ij.gui.ShapeRoi
 
-// Checks if an update site is active
-// If the update site is not active, shows a dialog asking the user to activate it
+/**
+ * Checks if an update site is active
+ * If the update site is not active, shows a dialog asking the user to activate it
+ */
 boolean isUpdateSiteActive (String updateSite) {
 	boolean checkUpdate = true
 	if (! updateService.getUpdateSite(updateSite).isActive()) {
@@ -49,16 +51,20 @@ boolean isUpdateSiteActive (String updateSite) {
 	return checkUpdate
 }
 
-// Installs the AimSeg macro that contains the shortcuts for the user edition
+/**
+ * Installs the AimSeg macro that contains the shortcuts for the user edition
+ */
 def installMacro () {
 	String toolsetsPath = IJ.getDir("macros") + "toolsets"
 	String ijmPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
 	IJ.run("Install...", "install=[${->ijmPath}]")
 }
 
-// Opens an image file
-// If the file extension is h5, the image is imported using the ilastik's importer
-// Otherwise, the file is imported using ImageJ's opener
+/**
+ * Opens an image file
+ * If the file extension is h5, the image is imported using the ilastik's importer
+ * Otherwise, the file is imported using ImageJ's opener
+ */
 ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
 	String imagePath = inputFile.getAbsolutePath()
 	if (!imagePath.endsWith(".h5")) {		
@@ -79,8 +85,10 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
 	return result
 }
 
-// Implements the Erode, Dilate, Open and Close operations using the doIterations method (see below)
-// This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
+/**
+ * Implements the Erode, Dilate, Open and Close operations using the doIterations method (see below)
+ * This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
+ */
 def run (ImageProcessor ip, String operation, int iterations, int count) {
 	int fg = Prefs.blackBackground ? 255 : 0
 	int foreground = ip.isInvertedLut() ? 255-fg : fg
@@ -100,8 +108,10 @@ def run (ImageProcessor ip, String operation, int iterations, int count) {
     ip.setBinaryThreshold()
 }
 
-// Implements the Erode and Dilate operations
-// This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
+/**
+ * Implements the Erode and Dilate operations
+ * This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
+ */
 def doIterations (ImageProcessor ip, String operation, int iterations, int count, int background) {
 	for (int i=0; i<iterations; i++) {
 		if (Thread.currentThread().isInterrupted()) return
@@ -117,10 +127,12 @@ def doIterations (ImageProcessor ip, String operation, int iterations, int count
 	}
 }
 
-// Implements the Binary fill operation
-// This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
-// Contributed by Gabriel Landini, G.Landini at bham.ac.uk
-// 21/May/2008
+/**
+ * Implements the Binary fill operation
+ * This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
+ * Contributed by Gabriel Landini, G.Landini at bham.ac.uk
+ * 21/May/2008
+ */
 def fill (ImageProcessor ip) {
     int fg = Prefs.blackBackground ? 255 : 0
     int foreground = ip.isInvertedLut() ? 255-fg : fg
@@ -149,11 +161,13 @@ def fill (ImageProcessor ip) {
     }
 }
 
-// Implements ImageJ's Particle Analyzer
-// The method will always return an ImagePlus
-// options is defined as an integer using ParticleAnalyzer fields
-// options is defined as an integer using Interface Measurements fields
-// results table is not given as an argument because the method is never used to measure
+/**
+ * Implements ImageJ's Particle Analyzer
+ * The method will always return an ImagePlus
+ * options is defined as an integer using ParticleAnalyzer fields
+ * options is defined as an integer using Interface Measurements fields
+ * results table is not given as an argument because the method is never used to measure
+ */
 ImagePlus analyzeParticles (ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
 	def rt = new ResultsTable()
 	def pa = new ParticleAnalyzer(options, measurements, rt, minSize, maxSize, minCirc, maxCirc)
@@ -168,9 +182,11 @@ ImagePlus analyzeParticles (ImagePlus imp, int options, int measurements, double
 	return impOutput
 }
 
-// Checks the group of each ROI
-// If the ROI group is not the specified, the ROI index is added to a list
-// All the ROIs in the list are deleted at the same time to avoid problems with index reordering
+/**
+ * Checks the group of each ROI
+ * If the ROI group is not the specified, the ROI index is added to a list
+ * All the ROIs in the list are deleted at the same time to avoid problems with index reordering
+ */
 def cleanRoiSet (ImagePlus imp, RoiManager rm) {
 	def roiDiscard = []
 	int count = rm.getCount()
@@ -190,7 +206,9 @@ def cleanRoiSet (ImagePlus imp, RoiManager rm) {
 	}
 }
 
-// Creates a binary from the ROI Manager
+/**
+ * Creates a binary from the ROI Manager
+ */
 ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
 	IJ.run(imp, "Select None", "");
 	rm.deselect()
@@ -200,9 +218,11 @@ ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
 	return impMask
 }
 
-// Creates an RGB image adding a binary mask as an overlay to the EM image
-// The overlay is filled with a specific color and alpha (transparency, 8-bit)
-// The output is a flatten image to save memory
+/**
+ * Creates an RGB image adding a binary mask as an overlay to the EM image
+ * The overlay is filled with a specific color and alpha (transparency, 8-bit)
+ * The output is a flatten image to save memory
+ */
 ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
 	ImageProcessor ip = impMask.getProcessor()
 	ip.setThreshold (255, 255)
@@ -221,10 +241,12 @@ ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
 	return impFlatten
 }
 
-// Implements MorphoLibJ's Marker Controlled Watershed
-// Requires an input (grayscale) image, a labeled image (seeds) and a binary image to restrict the flooding
-// For 2D images, it is possible to activate diagonal connectivity (8) or not (4)
-// Returns a labeled, 32-bit image
+/**
+ * Implements MorphoLibJ's Marker Controlled Watershed
+ * Requires an input (grayscale) image, a labeled image (seeds) and a binary image to restrict the flooding
+ * For 2D images, it is possible to activate diagonal connectivity (8) or not (4)
+ * Returns a labeled, 32-bit image
+ */
 ImagePlus runMarkerControlledWatershed (ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
 	def mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
 	ImageProcessor result = mcwt.applyWithPriorityQueue()
@@ -232,11 +254,13 @@ ImagePlus runMarkerControlledWatershed (ImageProcessor input, ImageProcessor lab
 	return impResult
 }
 
-// Implements Morphology's Binary Reconstruct, by Landini
-// It requires two ImagePlus, a mask (imp1) and a seed (imp2)
-// The method is set to not show a new image
-// Insted, reconstruction is performed on seed image
-// To create a new image change name (null) by a string and set create image true
+/**
+ * Implements Morphology's Binary Reconstruct, by Landini
+ * It requires two ImagePlus, a mask (imp1) and a seed (imp2)
+ * The method is set to not show a new image
+ * Insted, reconstruction is performed on seed image
+ * To create a new image change name (null) by a string and set create image true
+ */
 def runBinaryReconstruct (ImagePlus imp1, ImagePlus imp2) {
 	def BinaryReconstruct_ br = new BinaryReconstruct_()
 	Object[] result = br.exec(imp1, imp2, null, false, true, false )
@@ -247,8 +271,10 @@ def runBinaryReconstruct (ImagePlus imp1, ImagePlus imp2) {
 	}
 }
 
-// Transfers properties from ROI 1 to ROI 2
-// Used in convexHull method
+/**
+ * Transfers properties from ROI 1 to ROI 2
+ * Used in convexHull method
+ */
 def transferProperties (Roi roi1, Roi roi2) {
 	if (roi1==null || roi2==null)
 		return
@@ -260,9 +286,11 @@ def transferProperties (Roi roi1, Roi roi2) {
 		roi2.setGroup(roi1.getGroup())
 }
 
-// Replaces the original ROIs by their convex hull ROIs
-// Always select ROI index 0, as it is deleted at the end of the loop
-// New ROIs are added at the the end of the list
+/**
+ * Replaces the original ROIs by their convex hull ROIs
+ * Always select ROI index 0, as it is deleted at the end of the loop
+ * New ROIs are added at the the end of the list
+ */
 def convexHull (RoiManager rm) {
 	int roiCount = rm.getCount()
 	println "$roiCount selected ROIs"
@@ -277,7 +305,9 @@ def convexHull (RoiManager rm) {
 	}
 }
 
-// Replaces composite ROIs (ShapeRois) by the largest ROI within the ShapeRoi instance
+/**
+ * Replaces composite ROIs (ShapeRois) by the largest ROI within the ShapeRoi instance
+ */
 def replaceShapeRois(RoiManager rm) {
 	rm.getRoisAsArray().eachWithIndex { roi, index ->
 		if (roi instanceof ShapeRoi) {
