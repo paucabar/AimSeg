@@ -327,9 +327,9 @@ def replaceShapeRois(RoiManager rm) {
 }
 
 
-//////////////
-// START
-//////////////
+/**
+ * START
+ */
 
 // check update sites
 boolean checkIlastik = isUpdateSiteActive("ilastik")
@@ -358,13 +358,15 @@ if (!pe) {
 imp = importImage(imageFile, "/data", "tzyxc")
 imp.show()
 
-// import the corresponding probability map and object prediction
-// IMPORTANT:
-// 		* files must be stored in the imp parent folder
-// 		* files must be named after the imp filename, adding a tag as a suffix
-//		* default tags work for default ilastik output
-//		* tag for probability map = _Probabilities
-//		* tag for object predictions = _Object Predictions
+/**
+ * import the corresponding probability map and object prediction
+ * IMPORTANT:
+ * 		- files must be stored in the imp parent folder
+ * 		- files must be named after the imp filename, adding a tag as a suffix
+ * 		- default tags work for default ilastik output
+ * 		- tag for probability map = _Probabilities
+ * 		- tag for object predictions = _Object Predictions
+ */
 File parentPath = imageFile.getParentFile()
 def fileList = []
 parentPath.eachFile(FileType.FILES) {
@@ -383,9 +385,9 @@ IJ.run(impObj, "glasbey inverted", "")
 
 
 
-//////////////
-// STAGE 1
-//////////////
+/**
+ * STAGE 1
+ */
 
 // timing
 int t0 = System.currentTimeMillis()
@@ -479,9 +481,9 @@ println "Save RoiSet_IN"
 int t1 = System.currentTimeMillis()
 println t1-t0
 
-//////////////
-// PRE-STAGE 2
-//////////////
+/**
+ * PRE-STAGE 2
+ */
 
 // create IN final mask
 ImagePlus maskIn = createRoiMask(imp, rm)
@@ -490,9 +492,9 @@ imp.hide()
 ImagePlus impMaskOverlayIN = setMaskOverlay(imp, maskIn, 127)
 impMaskOverlayIN.show()
 
-//////////////
-// STAGE 2
-//////////////
+/**
+ * STAGE 2
+ */
 
 // timing
 t0 = System.currentTimeMillis()
@@ -550,9 +552,9 @@ println "Save RoiSet_OUT"
 t1 = System.currentTimeMillis()
 println t1-t0
 
-//////////////
-// PRE-STAGE 3
-//////////////
+/**
+ * PRE-STAGE 3
+ */
 
 // create OUT final mask
 ImagePlus impMaskOut = createRoiMask(impMaskOverlayIN, rm)
@@ -569,9 +571,9 @@ ImagePlus impMaskOverlayMyelin = setMaskOverlay(imp, impMyelinToCount, 127)
 impMyelinToCount.close()
 impMaskOverlayMyelin.show()
 
-//////////////
-// STAGE 3
-//////////////
+/**
+ * STAGE 3
+ */
 
 // timing
 t0 = System.currentTimeMillis()
@@ -654,9 +656,9 @@ impMaskOverlayMyelin.close()
 t1 = System.currentTimeMillis()
 println t1-t0
 
-//////////////
-// POST-PROCESSING
-//////////////
+/**
+ * POST-PROCESSING
+ */
 
 // replace ShapeRois from RoiSet_IN
 imp.show()
@@ -665,9 +667,9 @@ rm = rm.getInstance()
 replaceShapeRois(rm)
 return
 
-//////////////
-// RESET
-//////////////
+/**
+ * RESET
+ */
 
 // close all
 //rm.deselect()
