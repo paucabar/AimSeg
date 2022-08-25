@@ -18,6 +18,7 @@ def preProcessing(ImagePlus imp, float saturatedPixels) {
 	int bitDepth = imp.getBitDepth()
 	if (bitDepth > 8) {
 		def ic = new ImageConverter(imp)
+		//ic.setDoScaling(true)
 		ic.convertToGray8()
 	}
 	IJ.run(imp, "Enhance Contrast...", "saturated=$saturatedPixels update")
@@ -42,6 +43,6 @@ for (i=0; i<fileList.size(); i++) {
 	ImagePlus imp = importImage(file)
 	preProcessing(imp, 0.3)
 	String title = imp.getShortTitle()
-	File path = new File(outDir, "labels_${->title}.tif").getAbsolutePath()
+	path = new File(outDir, "${->title}.tif").getAbsolutePath()
 	ij.IJ.save(imp, path)
 }
