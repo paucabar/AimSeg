@@ -28,6 +28,13 @@ dir.eachFile(FileType.FILES) {
 	fileList << it.name
 }
 
+// create output folder
+File f = new File(dir.getParentFile(), dir.getName()+'_pre-processed');
+if (f.getParentFile() != null) {
+  f.mkdirs();
+}
+f.createNewFile();
+
 for (i=0; i<fileList.size(); i++) {
 	File file = new File (dir, fileList[i])
 	ImagePlus imp = importImage(file)
