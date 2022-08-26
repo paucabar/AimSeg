@@ -693,6 +693,10 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 def roiListIn = rm.getRoisAsArray()
 def areaListIn = roiListIn.collect(r -> r.getStatistics().area)
 println areaListIn
+
+// clear RoiManager
+rm.deselect()
+rm.runCommand(imp,"Delete")
 return
 
 /**
