@@ -341,6 +341,8 @@ ImagePlus labelFromRois(ImagePlus imp, RoiManager rm) {
 	return impLabel
 }
 
+
+
 /**
  * START
  */
@@ -701,6 +703,14 @@ rm.runCommand(imp,"Delete")
 // replace ShapeRois from RoiSet_OUT
 rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 replaceShapeRois(rm)
+
+// rename RoiSet_OUT with 3-digit code and save
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+	impLabelIN.setRoi(roi)
+	int code = roi.getStatistics().max as int
+	rm.rename(index, String.format("%03d", code))
+}
+rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 return
 
 /**
