@@ -692,11 +692,15 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 // measure IN area
 def roiListIn = rm.getRoisAsArray()
 def areaListIn = roiListIn.collect(r -> r.getStatistics().area)
-println areaListIn
+//println areaListIn
 
 // clear RoiManager
 rm.deselect()
 rm.runCommand(imp,"Delete")
+
+// replace ShapeRois from RoiSet_OUT
+rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
+replaceShapeRois(rm)
 return
 
 /**
