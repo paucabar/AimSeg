@@ -326,6 +326,21 @@ def replaceShapeRois(RoiManager rm) {
 	}
 }
 
+/**
+ * Creates a label image from the Roi Manager
+ */
+ImagePlus labelFromRois(ImagePlus imp, RoiManager rm) {
+	impLabel = IJ.createImage("Labeling", "16-bit black", imp.getWidth(), imp.getHeight(), 1)
+	ip = impLabel.getProcessor()
+	rm.getRoisAsArray().eachWithIndex { roi, index ->
+		ip.setColor(index+1)
+		ip.fill(roi)
+	}	
+	ip.resetMinAndMax()
+	IJ.run(impLabel, "glasbey inverted", "")
+	impLabel.show()
+	return impLabel
+}
 
 /**
  * START
@@ -665,6 +680,9 @@ imp.show()
 rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 rm = rm.getInstance()
 replaceShapeRois(rm)
+
+// create label image
+ImagePlus impLabelIN = labelFromRois (imp, rm)
 return
 
 /**
