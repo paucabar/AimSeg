@@ -688,6 +688,11 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 	rm.rename(index, String.format("%03d", index+1))
 }
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
+
+// measure IN area
+def roiListIn = rm.getRoisAsArray()
+def areaListIn = roiListIn.collect(r -> r.getStatistics().area)
+println areaListIn
 return
 
 /**
