@@ -683,10 +683,11 @@ replaceShapeRois(rm)
 // create label image
 ImagePlus impLabelIN = labelFromRois (imp, rm)
 
-// rename RoiSet_IN with 3-digit code
+// rename RoiSet_IN with 3-digit code and save
 rm.getRoisAsArray().eachWithIndex { roi, index ->
 	rm.rename(index, String.format("%03d", index+1))
 }
+rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 return
 
 /**
