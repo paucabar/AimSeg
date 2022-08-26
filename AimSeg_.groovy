@@ -338,7 +338,6 @@ ImagePlus labelFromRois(ImagePlus imp, RoiManager rm) {
 	}	
 	ip.resetMinAndMax()
 	IJ.run(impLabel, "glasbey inverted", "")
-	impLabel.show()
 	return impLabel
 }
 
@@ -683,6 +682,11 @@ replaceShapeRois(rm)
 
 // create label image
 ImagePlus impLabelIN = labelFromRois (imp, rm)
+
+// rename RoiSet_IN with 3-digit code
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+	rm.rename(index, String.format("%03d", index+1))
+}
 return
 
 /**
