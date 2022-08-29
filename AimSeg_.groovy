@@ -682,7 +682,7 @@ rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 rm = rm.getInstance()
 replaceShapeRois(rm)
 
-// create label image
+// create IN label image
 ImagePlus impLabelIN = labelFromRois (imp, rm)
 
 // rename RoiSet_IN with 3-digit code and save
@@ -711,6 +711,9 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 	rm.rename(index, String.format("%03d", code))
 }
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
+
+// create OUT label image
+ImagePlus impLabelOUT = labelFromRois (imp, rm)
 
 // measure OUT area
 def areaListOut = [null] * areaListIn.size()
