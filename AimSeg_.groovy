@@ -719,6 +719,10 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 	areaListOut[codeInt-1] = roi.getStatistics().area
 }
 //println areaListOut
+
+// clear RoiManager
+rm.deselect()
+rm.runCommand(imp,"Delete")
 return
 
 /**
