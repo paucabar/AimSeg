@@ -723,6 +723,10 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 // clear RoiManager
 rm.deselect()
 rm.runCommand(imp,"Delete")
+
+// replace ShapeRois from RoiSet_AXON
+rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
+replaceShapeRois(rm)
 return
 
 /**
