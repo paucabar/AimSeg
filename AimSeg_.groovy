@@ -711,6 +711,14 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 	rm.rename(index, String.format("%03d", code))
 }
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
+
+// measure OUT area
+def areaListOut = [null] * areaListIn.size()
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+	def codeInt = roi.getName() as int
+	areaListOut[codeInt-1] = roi.getStatistics().area
+}
+//println areaListOut
 return
 
 /**
