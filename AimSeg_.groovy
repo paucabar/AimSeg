@@ -735,6 +735,14 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 	rm.rename(index, String.format("%03d", code))
 }
 
+// measure AXON area
+def areaListAxon = [null] * areaListIn.size()
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+	codeInt = roi.getName() as int
+	areaListAxon[codeInt-1] = roi.getStatistics().area
+}
+println areaListAxon
+
 // save RoiSet_AXON
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 
