@@ -712,9 +712,6 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 }
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 
-// create OUT label image
-ImagePlus impLabelOUT = labelFromRois (imp, rm)
-
 // measure OUT area
 def areaListOut = [null] * areaListIn.size()
 rm.getRoisAsArray().eachWithIndex { roi, index ->
@@ -730,6 +727,17 @@ rm.runCommand(imp,"Delete")
 // replace ShapeRois from RoiSet_AXON
 rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 replaceShapeRois(rm)
+
+// rename RoiSet_AXON with 3-digit code
+rm.getRoisAsArray().eachWithIndex { roi, index ->
+	impLabelIN.setRoi(roi)
+	code = roi.getStatistics().max as int
+	rm.rename(index, String.format("%03d", code))
+}
+
+// save RoiSet_AXON
+rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
+
 return
 
 /**
