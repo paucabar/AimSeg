@@ -105,7 +105,7 @@ It is possible to edit the ROIs using the Fiji selection tools during the 3 AimS
 * <kbd>q</kbd> Toggle ROI mode (red/blue)
 * <kbd>a</kbd> Add ROI (note that those ROIs added using the Fiji default <kbd>t</kbd> shortcut will be ignored by AimSeg)
 * <kbd>d</kbd> Delete ROI
-* <kbd>u</kbd> Update ROI (edit the ROI before updating. E.g., hold <kbd>Shift</kbd> key while drawing a region to be added to the selected ROI. Conversely, <kbd>Alt</kbd>  while drawing a hole or region to be removed from the selected ROI)
+* <kbd>u</kbd> Update ROI (edit the ROI before updating. E.g., hold <kbd>Shift</kbd> key while drawing a region to be added to the selected ROI. Conversely, hold <kbd>Alt</kbd> key while drawing a hole or region to be removed from the selected ROI)
 * <kbd>z</kbd> Split ROI (will split a ROI made of multiple selection into different ROIs)
 * <kbd>c</kbd> Get convex hull
 ---
