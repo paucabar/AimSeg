@@ -5,7 +5,6 @@
 * [Fiji](https://fiji.sc/)
 * [ilastik](https://www.ilastik.org/) 1.3.3
 * _ilastik_ update site (Fiji). Once added, it is important to configure the ilastik executable location within the Fiji's plugin.
-* _IJPB-plugins_ update site (Fiji)
 * _Morphology_ update site (Fiji)
 
 How to [follow an update site](https://imagej.net/Following_an_update_site) in Fiji
@@ -78,7 +77,7 @@ By default, ilastik will store the output files together with the input files. P
 1. Run the **AimSeg** script (<code>Plugins>AimSeg>AimSeg</code>)
 2. Select the directory containing the image dataset and the ilastik output (both probability maps and object predictions)
 3. Set the myelin probability channel and the threshold to segment the object prediction image
-4. The pre-processing step may take a few seconds
+4. AimSeg may take a few seconds to initialise
 
 *Stage 1: Myelin inner boundary*
 
@@ -98,7 +97,8 @@ By default, ilastik will store the output files together with the input files. P
 * It is possible to edit the ROI selection
 * Click ok to finish the annotation process
 
-*ROI edition*
+---
+**ROI edition**
 
 It is possible to edit the ROIs using the Fiji selection tools during the 3 AimSeg stages. Additionally, stage 1 and 3 generate blue ROIs correponding to rejected objects. The user can toggle ROIs between selected (red) and rejected (blue). Below are listed the AimSeg shortcuts for ROI edition:
 
@@ -108,9 +108,4 @@ It is possible to edit the ROIs using the Fiji selection tools during the 3 AimS
 * <kbd>u</kbd> Update ROI (edit the ROI before updating. E.g., hold <kbd>Shift</kbd> key while drawing a region to be added to the selected ROI. Conversely, <kbd>Alt</kbd>  while drawing a hole or region to be removed from the selected ROI)
 * <kbd>z</kbd> Split ROI (will split a ROI made of multiple selection into different ROIs)
 * <kbd>c</kbd> Get convex hull
-
-### Results Table (Fiji)
-
-1. Run the **Results Table** macro (<code>Plugins>AimSeg>Results Table</code>)
-2. Select the directory containing the image dataset, the ilastik output and the ROI files 
-3. The macro will automatically analyze all the complete ROI sets 
+---
