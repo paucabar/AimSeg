@@ -336,7 +336,6 @@ ImagePlus labelFromRois(ImagePlus imp, RoiManager rm) {
 // check update sites
 boolean checkIlastik = isUpdateSiteActive("ilastik")
 boolean checkMorphology = isUpdateSiteActive("Morphology")
-boolean checkMorphoLibJ = isUpdateSiteActive("IJPB-plugins")
 
 // exit if any update site is missing
 if (!checkIlastik || !checkMorphoLibJ || !checkMorphology) {
