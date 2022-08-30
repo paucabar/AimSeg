@@ -706,6 +706,13 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 }
 //println areaListOut
 
+// replace IN result by 0 when there is no OUT Roi
+for (i in 0..areaListIn.size()-1) {
+	if(areaListOut[i] == 0) {
+		areaListIn[i] = 0
+	}
+}
+
 // clear RoiManager
 rm.deselect()
 rm.runCommand(imp,"Delete")
@@ -768,7 +775,7 @@ for (i in 0..areaListIn.size()-1) {
 //rt.show("Results Table")
 
 // save results table
-rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.xmls")
+rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.xml")
 
 /**
  * RESET
