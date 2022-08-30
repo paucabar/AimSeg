@@ -768,10 +768,17 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 
 // create and fill results table
 ResultsTable rt = new ResultsTable(areaListIn.size())
+rt.setPrecision(2)
 rt.setValues("AXON", areaListAxon as double[])
 rt.setValues("IN", areaListIn as double[])
 rt.setValues("OUT", areaListOut as double[])
-rt.setPrecision(2)
+
+// set labels
+for (i in 0..areaListIn.size()-1) {
+	rt.setLabel(String.format("%03d", i+1), i)
+}
+
+// show results table
 rt.show("Results Table")
 
 /**
@@ -779,8 +786,8 @@ rt.show("Results Table")
  */
 
 // close all
-//rm.deselect()
-//rm.runCommand(imp,"Delete")
+rm.deselect()
+rm.runCommand(imp,"Delete")
 rm.close()
 Commands cmd = new Commands()
 cmd.closeAll()
