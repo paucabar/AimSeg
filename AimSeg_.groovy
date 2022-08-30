@@ -32,7 +32,6 @@ import ij.gui.Overlay
 import ij.plugin.filter.ThresholdToSelection
 import java.awt.Color
 import ij.plugin.Duplicator
-import inra.ijpb.watershed.MarkerControlledWatershedTransform2D
 import ij.plugin.Commands
 import ij.process.FloatPolygon
 import ij.gui.PolygonRoi
@@ -239,19 +238,6 @@ ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
 	imp.setOverlay(ovl)
 	
 	return impFlatten
-}
-
-/**
- * Implements MorphoLibJ's Marker Controlled Watershed
- * Requires an input (grayscale) image, a labeled image (seeds) and a binary image to restrict the flooding
- * For 2D images, it is possible to activate diagonal connectivity (8) or not (4)
- * Returns a labeled, 32-bit image
- */
-ImagePlus runMarkerControlledWatershed (ImageProcessor input, ImageProcessor labels, ImageProcessor mask, int connectivity) {
-	def mcwt = new MarkerControlledWatershedTransform2D (input, labels, mask, connectivity)
-	ImageProcessor result = mcwt.applyWithPriorityQueue()
-	ImagePlus impResult = new ImagePlus("Out_to_count", result)
-	return impResult
 }
 
 /**
