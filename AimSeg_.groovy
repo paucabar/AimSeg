@@ -713,7 +713,7 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 
 // measure OUT area
-def areaListOut = [null] * areaListIn.size()
+double[] areaListOut = [0] * areaListIn.size()
 rm.getRoisAsArray().eachWithIndex { roi, index ->
 	def codeInt = roi.getName() as int
 	areaListOut[codeInt-1] = roi.getStatistics().area
@@ -736,7 +736,7 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 }
 
 // measure AXON area
-def areaListAxon = [null] * areaListIn.size()
+double[] areaListAxon = [0] * areaListIn.size()
 rm.getRoisAsArray().eachWithIndex { roi, index ->
 	codeInt = roi.getName() as int
 	areaListAxon[codeInt-1] = roi.getStatistics().area
@@ -745,7 +745,7 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 
 // create and measure AXON Rois missing
 for (i in 0..areaListIn.size()-1) {
-	if(areaListOut[i] != null && areaListAxon[i] == null) {
+	if(areaListOut[i] != 0 && areaListAxon[i] == 0) {
 		ImageProcessor ipLabelIN = impLabelIN.getProcessor()
 		ipLabelIN.setThreshold (i+1, i+1)
 		def tts = new ThresholdToSelection()
@@ -762,7 +762,17 @@ for (i in 0..areaListIn.size()-1) {
 // save RoiSet_AXON
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 
-return
+/**
+ * RESULTS TABLE
+ */
+
+// create and fill results table
+ResultsTable rt = new ResultsTable(areaListIn.size())
+rt.setValues("AXON", areaListAxon as double[])
+rt.setValues("IN", areaListIn as double[])
+rt.setValues("OUT", areaListOut as double[])
+rt.setPrecision(2)
+rt.show("Results Table")
 
 /**
  * RESET
