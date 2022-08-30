@@ -741,7 +741,23 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 	codeInt = roi.getName() as int
 	areaListAxon[codeInt-1] = roi.getStatistics().area
 }
-println areaListAxon
+//println areaListAxon
+
+// create and measure AXON Rois missing
+for (i in 0..areaListIn.size()-1) {
+	if(areaListOut[i] != null && areaListAxon[i] == null) {
+		ImageProcessor ipLabelIN = impLabelIN.getProcessor()
+		ipLabelIN.setThreshold (i+1, i+1)
+		def tts = new ThresholdToSelection()
+		roi = tts.convert(ipLabelIN)
+		roi.setName(String.format("%03d", i+1))
+		//roiCount = rm.getCount()
+		rm.addRoi(roi)
+		areaListAxon[i] = roi.getStatistics().area
+	}
+}
+//println areaListAxon
+//impLabelIN.show()
 
 // save RoiSet_AXON
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
