@@ -769,9 +769,9 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 // create and fill results table
 ResultsTable rt = new ResultsTable(areaListIn.size())
 rt.setPrecision(2)
-rt.setValues("AXON", areaListAxon as double[])
-rt.setValues("IN", areaListIn as double[])
-rt.setValues("OUT", areaListOut as double[])
+rt.setValues("Axon", areaListAxon as double[])
+rt.setValues("ICML", areaListIn as double[])
+rt.setValues("Fibre", areaListOut as double[])
 
 // set labels
 for (i in 0..areaListIn.size()-1) {
@@ -780,6 +780,9 @@ for (i in 0..areaListIn.size()-1) {
 
 // show results table
 rt.show("Results Table")
+
+// save results table
+rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.xmls")
 
 /**
  * RESET
