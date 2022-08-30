@@ -677,9 +677,9 @@ println t1-t0
  */
 
 // replace ShapeRois from RoiSet_IN
-imp.show()
+//imp.show()
 rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
-rm = rm.getInstance()
+//rm = rm.getInstance()
 replaceShapeRois(rm)
 
 // create IN label image
@@ -779,7 +779,7 @@ for (i in 0..areaListIn.size()-1) {
 }
 
 // show results table
-rt.show("Results Table")
+//rt.show("Results Table")
 
 // save results table
 rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.xmls")
