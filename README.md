@@ -52,7 +52,7 @@ The pre-processed dataset will be stored in a new folder named after the selecte
 
 ![pc1](https://user-images.githubusercontent.com/39589980/186393550-d30c133c-d275-4104-a467-8bb1d56910f1.png)
 
-By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the same folder.
+By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the same folder, henceforth, the work folder.
 
 ### Object classification (ilastik)
 
@@ -68,34 +68,38 @@ By default, ilastik will store the output files together with the input files. P
 
 ![pc2](https://user-images.githubusercontent.com/39589980/186394567-8c6c5a3c-80f0-4e1b-b810-071d8183ecbb.png)
 
-By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the same folder.
+By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the work folder.
 
 ### AimSeg (Fiji)
 
 *Run AimSeg*
 
 1. Run the **AimSeg** script (<code>Plugins>AimSeg>AimSeg</code>)
-2. Select the directory containing the image dataset and the ilastik output (both probability maps and object predictions)
+2. Select the electron microscopy image to be procecessed (please remember that the image dataset and the ilastik output, both probability maps and object predictions, must remain stored together in the work folder)
 3. Set the myelin probability channel and the threshold to segment the object prediction image
 4. AimSeg may take a few seconds to initialise
 
-*Stage 1: Myelin inner boundary*
+*Stage 1: Inner compact myelin layer (ICML)*
 
-* The raw elecron microscopy image will pop up and the objects will be detected as ROIs. The red ROIs correspond to the selected objects, whereas the blue ROIs corresponds to the rejected objects
+* The elecron microscopy image will pop up and the objects will be detected as ROIs. The red ROIs correspond to the selected objects, whereas the blue ROIs corresponds to the rejected objects
 * It is possible to edit the ROI selection using the Fiji selection tools (please see the **ROI edition** section below)
 * Click ok to proceed to the next stage
 
 *Stage 2: Fibre*
 
-* The raw elecron microscopy image merged with an additional magenta channel corresponding to the Stage 1 selection will pop up
+* The Stage 1 selection is added as a magenta overlay to the elecron microscopy image
 * It is possible to edit the ROI selection
 * Click ok to proceed to the next stage
 
-*Stage 3: Axoplasm*
+*Stage 3: Axon*
 
-* Fiji will display the raw elecron microscopy image merged with an additional magenta channel corresponding to the selected myelin. The red ROIs correspond to the selected objects, whereas the blue ROIs corresponds to the rejected objects
+* The selected compact myelin is added as a magenta overlay to the elecron microscopy image. The red ROIs correspond to the selected objects, whereas the blue ROIs corresponds to the rejected objects
 * It is possible to edit the ROI selection
 * Click ok to finish the annotation process
+
+*Post-processing and quantification*
+
+The last steps are fully automated. A results table file will be stored in the work folder.
 
 ---
 **ROI edition**
