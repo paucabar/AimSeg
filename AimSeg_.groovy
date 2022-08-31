@@ -338,7 +338,7 @@ boolean checkIlastik = isUpdateSiteActive("ilastik")
 boolean checkMorphology = isUpdateSiteActive("Morphology")
 
 // exit if any update site is missing
-if (!checkIlastik || !checkMorphoLibJ || !checkMorphology) {
+if (!checkIlastik || !checkMorphology) {
 	return
 }
 
