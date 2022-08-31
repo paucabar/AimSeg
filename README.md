@@ -3,11 +3,22 @@
 ## Requirements
 
 * [Fiji](https://fiji.sc/)
-* [ilastik](https://www.ilastik.org/) 1.3.3
-* _ilastik_ update site (Fiji). Once added, it is important to configure the ilastik executable location within the Fiji's plugin.
+* [ilastik](https://www.ilastik.org/) 1.3.3 or later
+* _ilastik_ update site (Fiji). Once added, it is important to set up the connection between ilastik and Fiji (only needs to be done once). Please fins a short guide below
 * _Morphology_ update site (Fiji)
 
 How to [follow an update site](https://imagej.net/Following_an_update_site) in Fiji
+
+---
+**How to set up the connection between ilastik and Fiji**
+
+* In Fiji, click on <code>Plugins > ilastik > Configure ilastik executable location</code>
+* <code>Browse</code> to select the *Path to ilastik executable*
+    * E.g., the typical Windows path is <code>C:\Program Files\ilastik-1.3.3post3\ilastik.exe</code> (mind the ilastik version if you are using a most recent one: <code>C:\Program Files\ilastik-[version]\ilastik.exe</code>)
+
+![image](https://user-images.githubusercontent.com/39589980/187649952-dfea6302-d439-49a9-9e2a-d00520ecc0b2.png)
+
+---
 
 ## Installation
 
