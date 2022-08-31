@@ -182,26 +182,18 @@ ImagePlus analyzeParticles (ImagePlus imp, int options, int measurements, double
 }
 
 /**
- * Checks the group of each ROI
- * If the ROI group is not the specified, the ROI index is added to a list
- * All the ROIs in the list are deleted at the same time to avoid problems with index reordering
+ * If there are group 1 ROIs, these are deleted
+ * If there are group 2 ROIs, these are set as group 0
  */
 def cleanRoiSet (ImagePlus imp, RoiManager rm) {
-	def roiDiscard = []
-	int count = rm.getCount()
-	rm.getRoisAsArray().eachWithIndex { roi, index ->
-	    if (roi.getGroup() != 2) {
-		    roiDiscard.add(index)
-	    } else {
-	    	roi.setGroup(0)
-	    	roi.setStrokeWidth(0)
-	    }
+	rm.selectGroup(1)
+	if(rm.selected() > 0) {
+		rm.runCommand(imp, "Delete")
 	}
-	if (roiDiscard.size > 0) {
-		println "Discard ROIs $roiDiscard"
-		int[] roiDiscardInt = roiDiscard as int[]
-		rm.setSelectedIndexes(roiDiscardInt)
-		rm.runCommand(imp,"Delete")
+	rm.selectGroup(2)
+	if(rm.selected() > 0) {
+		rm.setGroup(0)
+		rm.runCommand(imp, "Deselect")
 	}
 }
 
@@ -469,7 +461,6 @@ if (!automated) wfu.show()
 
 
 // discard group 1 ROIs and set group 2 ROIs as 0
-// set stroke width as 0
 cleanRoiSet(imp, rm)
 
 // save ROI set IN
@@ -541,7 +532,6 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 if (!automated) wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
-// set stroke width as 0
 cleanRoiSet(impMaskOverlayIN, rm)
 
 // save ROI set OUT
@@ -642,7 +632,6 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 if (!automated) wfu.show()
 
 // discard group 1 ROIs and set group 2 ROIs as 0
-// set stroke width as 0
 cleanRoiSet(impMaskOverlayMyelin, rm)
 
 // save ROI set AXON
