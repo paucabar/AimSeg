@@ -63,7 +63,7 @@ The pre-processed dataset will be stored in a new folder named after the selecte
 
 ![pc1](https://user-images.githubusercontent.com/39589980/186393550-d30c133c-d275-4104-a467-8bb1d56910f1.png)
 
-By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the same folder, henceforth, the work folder.
+By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the same folder, henceforth the working directory.
 
 ### Object classification (ilastik)
 
@@ -79,14 +79,14 @@ By default, ilastik will store the output files together with the input files. P
 
 ![pc2](https://user-images.githubusercontent.com/39589980/186394567-8c6c5a3c-80f0-4e1b-b810-071d8183ecbb.png)
 
-By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the work folder.
+By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the working directory.
 
 ### AimSeg (Fiji)
 
 *Run AimSeg*
 
 1. Run the **AimSeg** script (<code>Plugins>AimSeg>AimSeg</code>)
-2. Select the electron microscopy image to be procecessed (please remember that the image dataset and the ilastik output, both probability maps and object predictions, must remain stored together in the work folder)
+2. Select the electron microscopy image to be procecessed (please remember that the image dataset and the ilastik output, both probability maps and object predictions, must remain stored together in the working directory)
 3. Set the myelin probability channel and the threshold to segment the object prediction image
 4. AimSeg may take a few seconds to initialise
 
@@ -110,7 +110,7 @@ By default, ilastik will store the output files together with the input files. P
 
 *Post-processing and quantification*
 
-The last steps are fully automated. A results table file will be stored in the work folder.
+The last steps are fully automated. A results table file will be stored in the working directory.
 
 ---
 **ROI edition**
