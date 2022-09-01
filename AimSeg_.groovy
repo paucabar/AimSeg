@@ -797,20 +797,19 @@ for (i in 0..areaListIn.size()-1) {
 // save results table
 rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.xml")
 
+// timing
+t1 = System.currentTimeMillis()
+println t1-t0
+
 /**
  * RESET
  */
 
-// clean up
+// close any open image or RoiManager, reset Prefs and StartupMacros
 cleanUp()
-
-// reset Prefs.padEdges
 installMacro(false)
 Prefs.padEdges = pe
 Prefs.blackBackground = bb
 
-// timing
-t1 = System.currentTimeMillis()
-println t1-t0
 println "Processing finished"
 return
