@@ -69,6 +69,20 @@ def installMacro () {
 }
 
 /**
+ * Close any open image or RoiManager instance
+ */
+def cleanUp() {
+	RoiManager rm = RoiManager.getRawInstance()
+	if(rm != null) {
+		rm.deselect()
+		rm.runCommand("Delete")
+		rm.close()
+	}
+	Commands cmd = new Commands()
+	cmd.closeAll()
+}
+
+/**
  * Opens an image file
  * If the file extension is h5, the image is imported using the ilastik's importer
  * Otherwise, the file is imported using ImageJ's opener
@@ -345,6 +359,7 @@ if (!checkIlastik || !checkMorphology) {
 
 // setup
 installMacro()
+cleanUp()
 
 bb = Prefs.blackBackground
 if (!bb) {
@@ -778,12 +793,8 @@ rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.xml")
  * RESET
  */
 
-// close all
-rm.deselect()
-rm.runCommand(imp,"Delete")
-rm.close()
-Commands cmd = new Commands()
-cmd.closeAll()
+// clean up
+cleanUp()
 
 // reset Prefs.padEdges
 Prefs.padEdges = pe
