@@ -440,6 +440,7 @@ impOR.close()
 
 // RoiManager set selected objects as group 2 (red ROIs)
 RoiManager rm = RoiManager.getInstance()
+rm.setVisible(false)
 int roiCount = rm.getCount()
 println "$roiCount selected ROIs"
 rm.getRoisAsArray().eachWithIndex { roi, index ->
@@ -559,7 +560,6 @@ println t1-t0
 // create OUT final mask
 ImagePlus impMaskOut = createRoiMask(impMaskOverlayIN, rm)
 rm.runCommand(impMaskOverlayIN,"Delete")
-//rm.close()
 impMaskOverlayIN.close()
 
 // get myelin to count
