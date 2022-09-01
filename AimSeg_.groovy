@@ -223,6 +223,9 @@ def cleanRoiSet (ImagePlus imp, RoiManager rm) {
 		rm.setGroup(0)
 		rm.runCommand(imp, "Deselect")
 	}
+	rm.getRoisAsArray().eachWithIndex { roi, index ->
+		roi.setColor(Color.YELLOW)
+	}
 }
 
 /**
@@ -466,6 +469,7 @@ println "$roiCount selected ROIs"
 rm.getRoisAsArray().eachWithIndex { roi, index ->
     roi.setGroup(2)
     roi.setStrokeWidth(5)
+    roi.setColor(Color.RED)
 }
 
 // get other masks
@@ -482,6 +486,7 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
     if (index > roiCount -1) {
 	    roi.setGroup(1)
 	    roi.setStrokeWidth(5)
+	    roi.setColor(Color.BLUE)
     }
 }
 
@@ -556,6 +561,7 @@ println "$roiCount selected ROIs"
 rm.getRoisAsArray().eachWithIndex { roi, index ->
     roi.setGroup(2)
     roi.setStrokeWidth(5)
+    roi.setColor(Color.RED)
 }
 
 // wait for user
@@ -628,6 +634,7 @@ println "$roiCount selected ROIs"
 rm.getRoisAsArray().eachWithIndex { roi, index ->
     roi.setGroup(2)
     roi.setStrokeWidth(5)
+    roi.setColor(Color.RED)
 }
 
 // segment object predictions: reject class
@@ -654,6 +661,7 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
     if (index > roiCount -1) {
 	    roi.setGroup(1)
 	    roi.setStrokeWidth(5)
+	    roi.setColor(Color.BLUE)
     }
 }
 
