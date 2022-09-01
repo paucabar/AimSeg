@@ -8,6 +8,15 @@
 #@ LogService logService
 #@ StatusService statusService
 
+/**
+ * 
+ * 
+ * 
+ * Pau Carrillo Barberà
+ * Instituto de Biotecnología y Biomedicina (BioTecMed), Universitat de València (Valencia, Spain)
+ * Institute of Genetics and Cancer, University of Edinburgh (Edinburgh, United Kingdom)
+ * Last version 01/09/2022
+ */
 
 import java.io.File
 import ij.IJ
