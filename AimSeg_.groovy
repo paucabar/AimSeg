@@ -803,7 +803,7 @@ for (i in 0..areaListIn.size()-1) {
 //rt.show("Results Table")
 
 // save results table
-rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.xml")
+rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.tsv")
 
 // timing
 t1 = System.currentTimeMillis()
