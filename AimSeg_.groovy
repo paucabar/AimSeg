@@ -62,10 +62,15 @@ boolean isUpdateSiteActive (String updateSite) {
 /**
  * Installs the AimSeg macro that contains the shortcuts for the user edition
  */
-def installMacro () {
-	String toolsetsPath = IJ.getDir("macros") + "toolsets"
-	String ijmPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
-	IJ.run("Install...", "install=[${->ijmPath}]")
+def installMacro (boolean toolsetMacro) {
+	String macroPath
+	if(toolsetMacro) {
+		String toolsetsPath = IJ.getDir("macros") + "toolsets"
+		macroPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
+	} else {
+		macroPath = IJ.getDir("macros") + "StartupMacros.fiji.ijm"
+	}
+	IJ.run("Install...", "install=[${->macroPath}]")
 }
 
 /**
@@ -358,7 +363,7 @@ if (!checkIlastik || !checkMorphology) {
 }
 
 // setup
-installMacro()
+installMacro(true)
 cleanUp()
 
 bb = Prefs.blackBackground
@@ -800,6 +805,7 @@ rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.xml")
 cleanUp()
 
 // reset Prefs.padEdges
+installMacro(false)
 Prefs.padEdges = pe
 Prefs.blackBackground = bb
 
