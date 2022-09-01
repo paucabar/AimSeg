@@ -674,6 +674,9 @@ println t1-t0
  * POST-PROCESSING
  */
 
+// timing
+t0 = System.currentTimeMillis()
+
 // replace ShapeRois from RoiSet_IN
 //imp.show()
 rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
@@ -799,5 +802,9 @@ cleanUp()
 // reset Prefs.padEdges
 Prefs.padEdges = pe
 Prefs.blackBackground = bb
+
+// timing
+t1 = System.currentTimeMillis()
+println t1-t0
 println "Processing finished"
 return
