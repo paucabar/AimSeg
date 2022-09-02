@@ -282,7 +282,6 @@ def runBinaryReconstruct (ImagePlus imp1, ImagePlus imp2) {
 
 /**
  * Transfers properties from ROI 1 to ROI 2
- * Used in convexHull method
  */
 def transferProperties (Roi roi1, Roi roi2) {
 	if (roi1==null || roi2==null)
@@ -293,6 +292,8 @@ def transferProperties (Roi roi1, Roi roi2) {
 		roi2.setDrawOffset(roi1.getDrawOffset())
 	if (roi1.getGroup()!=null)
 		roi2.setGroup(roi1.getGroup())
+	if (roi1.getStrokeWidth()!=null)
+		roi2.setStrokeWidth(roi1.getStrokeWidth())
 }
 
 /**
