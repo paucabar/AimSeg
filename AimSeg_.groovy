@@ -369,6 +369,28 @@ ImagePlus labelFromRoiCodes(ImagePlus imp, RoiManager rm) {
 	return impLabel
 }
 
+/**
+ * Gets the intersection of each Roi and the corresponding label at imp
+ */
+def roiAndLabel(ImagePlus imp, RoiManager rm) {
+	rm.getRoisAsArray().eachWithIndex { roi, index ->
+		def codeInt = roi.getName() as int
+		ip = imp.getProcessor()
+		ip.setThreshold (codeInt, codeInt, ImageProcessor.NO_LUT_UPDATE)		
+		def tts = new ThresholdToSelection()
+		roiLabel = tts.convert(ip)
+		if(roiLabel != null) {
+			String name = roi.getName()
+			s1 = new ShapeRoi(roi)
+			s2 = new ShapeRoi(roiLabel)
+			s3 = s1.and(s2)
+			s3.setName(name)
+			transferProperties(roi, s3)
+			rm.setRoi(s3, index)
+		}
+	}
+}
+
 
 
 /**
@@ -759,6 +781,19 @@ for (i in 0..areaListIn.size()-1) {
 		areaListIn[i] = 0
 	}
 }
+
+// // create OUT label image
+impLabelOUT = labelFromRoiCodes(imp, rm)
+
+// clear RoiManager
+rm.deselect()
+rm.runCommand(imp,"Delete")
+
+// make sure IN Rois do not overflow OUT Rois
+rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
+roiAndLabel(impLabelOUT, rm)
+rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
+impLabelIN = labelFromRois(imp, rm)
 
 // clear RoiManager
 rm.deselect()
