@@ -790,11 +790,15 @@ for (i in 0..areaListIn.size()-1) {
 		def tts = new ThresholdToSelection()
 		roi = tts.convert(ipLabelIN)
 		roi.setName(String.format("%03d", i+1))
+		roi.setGroup(0)
+		roi.setColor(Color.YELLOW)
+		roi.setStrokeWidth(5)
 		//roiCount = rm.getCount()
 		rm.addRoi(roi)
 		areaListAxon[i] = roi.getStatistics().area
 	}
 }
+rm.runCommand("Sort")
 //println areaListAxon
 //impLabelIN.show()
 
