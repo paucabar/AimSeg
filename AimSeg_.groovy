@@ -336,13 +336,31 @@ def replaceShapeRois(RoiManager rm) {
 }
 
 /**
- * Creates a label image from the Roi Manager
+ * Creates a label image from the RoiManager
+ * Uses Roi indexes as labels
  */
 ImagePlus labelFromRois(ImagePlus imp, RoiManager rm) {
 	impLabel = IJ.createImage("Labeling", "16-bit black", imp.getWidth(), imp.getHeight(), 1)
 	ip = impLabel.getProcessor()
 	rm.getRoisAsArray().eachWithIndex { roi, index ->
 		ip.setColor(index+1)
+		ip.fill(roi)
+	}	
+	ip.resetMinAndMax()
+	IJ.run(impLabel, "glasbey inverted", "")
+	return impLabel
+}
+
+/**
+ * Creates a label image from the RoiManager
+ * Uses Roi codes as labels
+ */
+ImagePlus labelFromRoiCodes(ImagePlus imp, RoiManager rm) {
+	impLabel = IJ.createImage("Labeling", "16-bit black", imp.getWidth(), imp.getHeight(), 1)
+	ip = impLabel.getProcessor()
+	rm.getRoisAsArray().eachWithIndex { roi, index ->
+		def codeInt = roi.getName() as int
+		ip.setColor(codeInt)
 		ip.fill(roi)
 	}	
 	ip.resetMinAndMax()
