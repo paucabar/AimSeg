@@ -813,6 +813,9 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 	rm.rename(index, String.format("%03d", code))
 }
 
+// make sure AXON Rois do not overflow IN Rois
+roiAndLabel(impLabelIN, rm)
+
 // measure AXON area
 double[] areaListAxon = [0] * areaListIn.size()
 rm.getRoisAsArray().eachWithIndex { roi, index ->
