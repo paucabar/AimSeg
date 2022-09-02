@@ -746,10 +746,8 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 }
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 
-// measure IN area
-def roiListIn = rm.getRoisAsArray()
-def areaListIn = roiListIn.collect(r -> r.getStatistics().area)
-//println areaListIn
+// get IN count
+int inCount = rm.getCount()
 
 // clear RoiManager
 rm.deselect()
@@ -768,19 +766,12 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 
 // measure OUT area
-double[] areaListOut = [0] * areaListIn.size()
+double[] areaListOut = [0] * inCount
 rm.getRoisAsArray().eachWithIndex { roi, index ->
 	def codeInt = roi.getName() as int
 	areaListOut[codeInt-1] = roi.getStatistics().area
 }
 //println areaListOut
-
-// replace IN result by 0 when there is no OUT Roi
-for (i in 0..areaListIn.size()-1) {
-	if(areaListOut[i] == 0) {
-		areaListIn[i] = 0
-	}
-}
 
 // // create OUT label image
 impLabelOUT = labelFromRoiCodes(imp, rm)
@@ -795,9 +786,21 @@ roiAndLabel(impLabelOUT, rm)
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 impLabelIN = labelFromRois(imp, rm)
 
+// measure IN area
+def roiListIn = rm.getRoisAsArray()
+def areaListIn = roiListIn.collect(r -> r.getStatistics().area)
+//println areaListIn
+
 // clear RoiManager
 rm.deselect()
 rm.runCommand(imp,"Delete")
+
+// replace IN result by 0 when there is no OUT Roi
+for (i in 0..areaListIn.size()-1) {
+	if(areaListOut[i] == 0) {
+		areaListIn[i] = 0
+	}
+}
 
 // replace ShapeRois from RoiSet_AXON
 rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
