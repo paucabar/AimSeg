@@ -9,8 +9,43 @@
 #@ StatusService statusService
 
 /**
+ * AimSeg is a bioimage analysis tool for axon, inner tongue and myelin segmentation
+ * It has been deployed as a Groovy script for ImageJ. The latest relese is distributed
+ * through the AimSeg update site in Fiji:
  * 
+ * 		http://sites.imagej.net/AimSeg/http://sites.imagej.net/AimSeg/
  * 
+ * AimSeg is a semiautomated workflow that combines automated processing with user 
+ * edition to enable a better segmentation. The workflow relies on the combination 
+ * of ImageJ with machine learning toolkits to improve the segmentation of electron
+ * microscopy images. Specifically, it has been designed to work with ilastik, but
+ * similar toolkits have the potential to be combined with AimSeg (e.g., Weka).
+ * 
+ * AimSeg requires as imput:
+ * 		- An electron microscopy image (raw or pre-processed)
+ * 		- A probability map
+ * 		- An object prediction
+ * 
+ * The probability map must contain a channel corresponding to the compact myelin
+ * probability, whereas the object prediction should contain axon instances.
+ * Documentation on how to perform the training of the pixel and object classifiers
+ * in ilastik is available in GitHub:
+ * 
+ * 		- https://github.com/paucabar/AimSeg/blob/master/README.md
+ * 
+ * The AimSeg workflow is subdivided in three stages each corresponding to the
+ * segmentation of three components of the fibre cross-section (RoiSet):
+ * 		- The axon
+ * 		- The inner compact myelin layer (ICML), i.e., axon + inner tongue
+ * 		- The fibre, i.e, axon + inner tongue + compact myelin
+ * 
+ * For each stage, AimSeg proposes a segmentation output that the user can
+ * correct before proceeding to the next stage (Stage1:ICML, Stage2:fibre,
+ * Stage3:axon). A post-processing pipeline amend some typical mistakes
+ * introduced by hand drawing Rois and labels each Roi to establish a
+ * hierarchy between the 3 RoiSets (Fibre > ICML > Axon). Finally, the
+ * area of the Rois is quantified and stores in a results table
+ * (rows:labels;colums:RoiSets)
  * 
  * Pau Carrillo Barberà
  * Instituto de Biotecnología y Biomedicina (BioTecMed), Universitat de València (Valencia, Spain)
