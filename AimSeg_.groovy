@@ -12,33 +12,33 @@
  * AimSeg is a bioimage analysis tool for axon, inner tongue and myelin segmentation
  * It has been deployed as a Groovy script for ImageJ. The latest relese is distributed
  * through the AimSeg update site in Fiji:
- * 
+ *
  * 		http://sites.imagej.net/AimSeg/http://sites.imagej.net/AimSeg/
- * 
- * AimSeg is a semiautomated workflow that combines automated processing with user 
- * edition to enable a better segmentation. The workflow relies on the combination 
+ *
+ * AimSeg is a semiautomated workflow that combines automated processing with user
+ * edition to enable a better segmentation. The workflow relies on the combination
  * of ImageJ with machine learning toolkits to improve the segmentation of electron
  * microscopy images. Specifically, it has been designed to work with ilastik, but
  * similar toolkits have the potential to be combined with AimSeg (e.g., Weka).
- * 
+ *
  * AimSeg requires as imput:
  * 		- An electron microscopy image (raw or pre-processed)
  * 		- A probability map
  * 		- An object prediction
- * 
+ *
  * The probability map must contain a channel corresponding to the compact myelin
  * probability, whereas the object prediction should contain axon instances.
  * Documentation on how to perform the training of the pixel and object classifiers
  * in ilastik is available in GitHub:
- * 
+ *
  * 		- https://github.com/paucabar/AimSeg/blob/master/README.md
- * 
+ *
  * The AimSeg workflow is subdivided in three stages each corresponding to the
  * segmentation of three components of the fibre cross-section (RoiSet):
  * 		- The axon
  * 		- The inner compact myelin layer (ICML), i.e., axon + inner tongue
  * 		- The fibre, i.e, axon + inner tongue + compact myelin
- * 
+ *
  * For each stage, AimSeg proposes a segmentation output that the user can
  * correct before proceeding to the next stage (Stage1:ICML, Stage2:fibre,
  * Stage3:axon). A post-processing pipeline amend some typical mistakes
@@ -46,7 +46,7 @@
  * hierarchy between the 3 RoiSets (Fibre > ICML > Axon). Finally, the
  * area of the Rois is quantified and stores in a results table
  * (rows:labels;colums:RoiSets)
- * 
+ *
  * Pau Carrillo Barberà
  * Instituto de Biotecnología y Biomedicina (BioTecMed), Universitat de València (Valencia, Spain)
  * Institute of Genetics and Cancer, University of Edinburgh (Edinburgh, United Kingdom)
@@ -86,40 +86,40 @@ import ij.gui.ShapeRoi
  * If the update site is not active, shows a dialog asking the user to activate it
  */
 boolean isUpdateSiteActive (String updateSite) {
-	boolean checkUpdate = true
-	if (! updateService.getUpdateSite(updateSite).isActive()) {
-		ui.showDialog "Please activate the $updateSite update site"
-		checkUpdate = false
-	}
-	return checkUpdate
+    boolean checkUpdate = true
+    if (! updateService.getUpdateSite(updateSite).isActive()) {
+        ui.showDialog "Please activate the $updateSite update site"
+        checkUpdate = false
+    }
+    return checkUpdate
 }
 
 /**
  * Installs the AimSeg macro that contains the shortcuts for the user edition
  */
 def installMacro (boolean toolsetMacro) {
-	String macroPath
-	if(toolsetMacro) {
-		String toolsetsPath = IJ.getDir("macros") + "toolsets"
-		macroPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
-	} else {
-		macroPath = IJ.getDir("macros") + "StartupMacros.fiji.ijm"
-	}
-	IJ.run("Install...", "install=[${->macroPath}]")
+    String macroPath
+    if(toolsetMacro) {
+        String toolsetsPath = IJ.getDir("macros") + "toolsets"
+        macroPath = IJ.addSeparator(toolsetsPath)+"AimSeg_Macros.ijm"
+    } else {
+        macroPath = IJ.getDir("macros") + "StartupMacros.fiji.ijm"
+    }
+    IJ.run("Install...", "install=[${->macroPath}]")
 }
 
 /**
  * Close any open image or RoiManager instance
  */
 def cleanUp() {
-	RoiManager rm = RoiManager.getRawInstance()
-	if(rm != null) {
-		rm.deselect()
-		rm.runCommand("Delete")
-		rm.close()
-	}
-	Commands cmd = new Commands()
-	cmd.closeAll()
+    RoiManager rm = RoiManager.getRawInstance()
+    if(rm != null) {
+        rm.deselect()
+        rm.runCommand("Delete")
+        rm.close()
+    }
+    Commands cmd = new Commands()
+    cmd.closeAll()
 }
 
 /**
@@ -128,23 +128,23 @@ def cleanUp() {
  * Otherwise, the file is imported using ImageJ's opener
  */
 ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
-	String imagePath = inputFile.getAbsolutePath()
-	if (!imagePath.endsWith(".h5")) {		
-		def opener = new Opener()
-		String extension = imagePath[imagePath.lastIndexOf('.')+1..-1]
-		println "Importing $extension file"
-		result = opener.openImage(imagePath)
-	} else {
-		println "Importing h5 file"
-		def imp = new Hdf5DataSetReader<>(
-		                imagePath,
-		                datasetName,
-		                axisOrder.toLowerCase(),
-		                logService,
-		                statusService).read()
-		result = ImageJFunctions.wrap(imp, "Some title here")
-	}
-	return result
+    String imagePath = inputFile.getAbsolutePath()
+    if (!imagePath.endsWith(".h5")) {
+        def opener = new Opener()
+        String extension = imagePath[imagePath.lastIndexOf('.')+1..-1]
+        println "Importing $extension file"
+        result = opener.openImage(imagePath)
+    } else {
+        println "Importing h5 file"
+        def imp = new Hdf5DataSetReader<>(
+                imagePath,
+                datasetName,
+                axisOrder.toLowerCase(),
+                logService,
+                statusService).read()
+        result = ImageJFunctions.wrap(imp, "Some title here")
+    }
+    return result
 }
 
 /**
@@ -152,19 +152,19 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
  * This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
  */
 def run (ImageProcessor ip, String operation, int iterations, int count) {
-	int fg = Prefs.blackBackground ? 255 : 0
-	int foreground = ip.isInvertedLut() ? 255-fg : fg
-	int background = 255 - foreground
-	ip.setSnapshotCopyMode(true)
+    int fg = Prefs.blackBackground ? 255 : 0
+    int foreground = ip.isInvertedLut() ? 255-fg : fg
+    int background = 255 - foreground
+    ip.setSnapshotCopyMode(true)
 
-	if (operation.equals("erode") || operation.equals("dilate")) {
-		doIterations((ByteProcessor)ip, operation, iterations, count, background)
-	} else if (operation.equals("open")) {
-		doIterations(ip, "erode", iterations, count, background)
-		doIterations(ip, "dilate", iterations, count, background)
+    if (operation.equals("erode") || operation.equals("dilate")) {
+        doIterations((ByteProcessor)ip, operation, iterations, count, background)
+    } else if (operation.equals("open")) {
+        doIterations(ip, "erode", iterations, count, background)
+        doIterations(ip, "dilate", iterations, count, background)
     } else if (operation.equals("close")) {
-		doIterations(ip, "dilate", iterations, count, background)
-		doIterations(ip, "erode", iterations, count, background)
+        doIterations(ip, "dilate", iterations, count, background)
+        doIterations(ip, "erode", iterations, count, background)
     }
     ip.setSnapshotCopyMode(false)
     ip.setBinaryThreshold()
@@ -175,18 +175,18 @@ def run (ImageProcessor ip, String operation, int iterations, int count) {
  * This method is modified from the source code of the commands in the ImageJ's Process/Binary submenu
  */
 def doIterations (ImageProcessor ip, String operation, int iterations, int count, int background) {
-	for (int i=0; i<iterations; i++) {
-		if (Thread.currentThread().isInterrupted()) return
-		if (IJ.escapePressed()) {
-			boolean escapePressed = true
-			ip.reset()
-			return
-		}
-		if (operation.equals("erode"))
-			((ByteProcessor)ip).erode(count, background)
-		else
-			((ByteProcessor)ip).dilate(count, background)
-	}
+    for (int i=0; i<iterations; i++) {
+        if (Thread.currentThread().isInterrupted()) return
+        if (IJ.escapePressed()) {
+            boolean escapePressed = true
+            ip.reset()
+            return
+        }
+        if (operation.equals("erode"))
+            ((ByteProcessor)ip).erode(count, background)
+        else
+            ((ByteProcessor)ip).dilate(count, background)
+    }
 }
 
 /**
@@ -200,7 +200,7 @@ def fill (ImageProcessor ip) {
     int foreground = ip.isInvertedLut() ? 255-fg : fg
     int background = 255 - foreground
     ip.setSnapshotCopyMode(true)
-    
+
     int width = ip.getWidth()
     int height = ip.getHeight()
     def FloodFiller ff = new FloodFiller(ip)
@@ -216,10 +216,10 @@ def fill (ImageProcessor ip) {
     byte[] pixels = (byte[])ip.getPixels()
     int n = width*height
     for (int i=0; i<n; i++) {
-    if (pixels[i]==127)
-        pixels[i] = (byte)background
-    else
-        pixels[i] = (byte)foreground
+        if (pixels[i]==127)
+            pixels[i] = (byte)background
+        else
+            pixels[i] = (byte)foreground
     }
 }
 
@@ -231,17 +231,17 @@ def fill (ImageProcessor ip) {
  * results table is not given as an argument because the method is never used to measure
  */
 ImagePlus analyzeParticles (ImagePlus imp, int options, int measurements, double minSize, double maxSize, double minCirc, double maxCirc) {
-	def rt = new ResultsTable()
-	def pa = new ParticleAnalyzer(options, measurements, rt, minSize, maxSize, minCirc, maxCirc)
-	ImageProcessor ip = imp.getProcessor()
-	ip.setBinaryThreshold()
-	pa.setHideOutputImage(true)
-	pa.analyze(imp, ip)
-	ImagePlus impOutput = pa.getOutputImage()
-	if (impOutput.isInvertedLut()) {
-		IJ.run(impOutput, "Grays", "") // get the non-inverted LUT
-	}
-	return impOutput
+    def rt = new ResultsTable()
+    def pa = new ParticleAnalyzer(options, measurements, rt, minSize, maxSize, minCirc, maxCirc)
+    ImageProcessor ip = imp.getProcessor()
+    ip.setBinaryThreshold()
+    pa.setHideOutputImage(true)
+    pa.analyze(imp, ip)
+    ImagePlus impOutput = pa.getOutputImage()
+    if (impOutput.isInvertedLut()) {
+        IJ.run(impOutput, "Grays", "") // get the non-inverted LUT
+    }
+    return impOutput
 }
 
 /**
@@ -249,30 +249,30 @@ ImagePlus analyzeParticles (ImagePlus imp, int options, int measurements, double
  * If there are group 2 ROIs, these are set as group 0
  */
 def cleanRoiSet (ImagePlus imp, RoiManager rm) {
-	rm.selectGroup(1)
-	if(rm.selected() > 0) {
-		rm.runCommand(imp, "Delete")
-	}
-	rm.selectGroup(2)
-	if(rm.selected() > 0) {
-		rm.setGroup(0)
-		rm.runCommand(imp, "Deselect")
-	}
-	rm.getRoisAsArray().eachWithIndex { roi, index ->
-		roi.setColor(Color.YELLOW)
-	}
+    rm.selectGroup(1)
+    if(rm.selected() > 0) {
+        rm.runCommand(imp, "Delete")
+    }
+    rm.selectGroup(2)
+    if(rm.selected() > 0) {
+        rm.setGroup(0)
+        rm.runCommand(imp, "Deselect")
+    }
+    rm.getRoisAsArray().eachWithIndex { roi, index ->
+        roi.setColor(Color.YELLOW)
+    }
 }
 
 /**
  * Creates a binary from the ROI Manager
  */
 ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
-	IJ.run(imp, "Select None", "");
-	rm.deselect()
-	rm.runCommand(imp,"Combine")
-	ByteProcessor mask = imp.createRoiMask()
-	ImagePlus impMask = new ImagePlus("Mask", mask)
-	return impMask
+    IJ.run(imp, "Select None", "");
+    rm.deselect()
+    rm.runCommand(imp,"Combine")
+    ByteProcessor mask = imp.createRoiMask()
+    ImagePlus impMask = new ImagePlus("Mask", mask)
+    return impMask
 }
 
 /**
@@ -281,21 +281,21 @@ ImagePlus createRoiMask (ImagePlus imp, RoiManager rm) {
  * The output is a flatten image to save memory
  */
 ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
-	ImageProcessor ip = impMask.getProcessor()
-	ip.setThreshold (255, 255)
-	def tts = new ThresholdToSelection()
-	Roi roi = tts.convert(ip)
-	
-	def ovl = new Overlay(roi)
-	ovl.setFillColor(new Color(255,0,255,alpha))
-	
-	imp.setOverlay(ovl)
-	ImagePlus impFlatten = imp.flatten()
-	
-	ovl.clear()
-	imp.setOverlay(ovl)
-	
-	return impFlatten
+    ImageProcessor ip = impMask.getProcessor()
+    ip.setThreshold (255, 255)
+    def tts = new ThresholdToSelection()
+    Roi roi = tts.convert(ip)
+
+    def ovl = new Overlay(roi)
+    ovl.setFillColor(new Color(255,0,255,alpha))
+
+    imp.setOverlay(ovl)
+    ImagePlus impFlatten = imp.flatten()
+
+    ovl.clear()
+    imp.setOverlay(ovl)
+
+    return impFlatten
 }
 
 /**
@@ -306,29 +306,29 @@ ImagePlus setMaskOverlay (ImagePlus imp, ImagePlus impMask, int alpha) {
  * To create a new image change name (null) by a string and set create image true
  */
 def runBinaryReconstruct (ImagePlus imp1, ImagePlus imp2) {
-	def BinaryReconstruct_ br = new BinaryReconstruct_()
-	Object[] result = br.exec(imp1, imp2, null, false, true, false )
-	//parameters above are: mask ImagePlus, seed ImagePlus, name, create new image, white particles, connect4
-	if (null != result) {
-	  String name = (String) result[0]
-	  ImagePlus recons = (ImagePlus) result[1]
-	}
+    def BinaryReconstruct_ br = new BinaryReconstruct_()
+    Object[] result = br.exec(imp1, imp2, null, false, true, false )
+    //parameters above are: mask ImagePlus, seed ImagePlus, name, create new image, white particles, connect4
+    if (null != result) {
+        String name = (String) result[0]
+        ImagePlus recons = (ImagePlus) result[1]
+    }
 }
 
 /**
  * Transfers properties from ROI 1 to ROI 2
  */
 def transferProperties (Roi roi1, Roi roi2) {
-	if (roi1==null || roi2==null)
-		return
-		roi2.setStrokeColor(roi1.getStrokeColor())
-	if (roi1.getStroke()!=null)
-		roi2.setStroke(roi1.getStroke())
-		roi2.setDrawOffset(roi1.getDrawOffset())
-	if (roi1.getGroup()!=null)
-		roi2.setGroup(roi1.getGroup())
-	if (roi1.getStrokeWidth()!=null)
-		roi2.setStrokeWidth(roi1.getStrokeWidth())
+    if (roi1==null || roi2==null)
+        return
+    roi2.setStrokeColor(roi1.getStrokeColor())
+    if (roi1.getStroke()!=null)
+        roi2.setStroke(roi1.getStroke())
+    roi2.setDrawOffset(roi1.getDrawOffset())
+    if (roi1.getGroup()!=null)
+        roi2.setGroup(roi1.getGroup())
+    if (roi1.getStrokeWidth()!=null)
+        roi2.setStrokeWidth(roi1.getStrokeWidth())
 }
 
 /**
@@ -337,38 +337,38 @@ def transferProperties (Roi roi1, Roi roi2) {
  * New ROIs are added at the the end of the list
  */
 def convexHull (RoiManager rm) {
-	int roiCount = rm.getCount()
-	println "$roiCount selected ROIs"
-	rm.getRoisAsArray().eachWithIndex { roi, index ->
-		if (roi != null) {
-			rm.select(index)
-			FloatPolygon p = roi.getFloatConvexHull()
-			Roi roi2 = new PolygonRoi(p, Roi.POLYGON)
-			transferProperties(roi, roi2)
-			rm.setRoi(roi2, index)
-		}
-	}
+    int roiCount = rm.getCount()
+    println "$roiCount selected ROIs"
+    rm.getRoisAsArray().eachWithIndex { roi, index ->
+        if (roi != null) {
+            rm.select(index)
+            FloatPolygon p = roi.getFloatConvexHull()
+            Roi roi2 = new PolygonRoi(p, Roi.POLYGON)
+            transferProperties(roi, roi2)
+            rm.setRoi(roi2, index)
+        }
+    }
 }
 
 /**
  * Replaces composite ROIs (ShapeRois) by the largest ROI within the ShapeRoi instance
  */
 def replaceShapeRois(RoiManager rm) {
-	rm.getRoisAsArray().eachWithIndex { roi, index ->
-		if (roi instanceof ShapeRoi) {
-		    // Split the shape ROI
-		    def rois = ((ShapeRoi)roi).getRois()
-		    if (rois.size() > 1) {
-		        // Get the areas of all ROIs and find the largest
-		        def areas = rois.collect(r -> r.getStatistics().area)
-		        int indLargest = areas.indexOf(areas.max())
-		        assert indLargest >= 0 // Must happen or something has gone wrong (float comparison)
-		        def roiLargest = rois[indLargest]
-		        // replace the ShapeRoi by the largest Roi in the composite selection, removing the smaller ones
-				rm.setRoi(rois[indLargest], index)
-		    }
-		}
-	}
+    rm.getRoisAsArray().eachWithIndex { roi, index ->
+        if (roi instanceof ShapeRoi) {
+            // Split the shape ROI
+            def rois = ((ShapeRoi)roi).getRois()
+            if (rois.size() > 1) {
+                // Get the areas of all ROIs and find the largest
+                def areas = rois.collect(r -> r.getStatistics().area)
+                int indLargest = areas.indexOf(areas.max())
+                assert indLargest >= 0 // Must happen or something has gone wrong (float comparison)
+                def roiLargest = rois[indLargest]
+                // replace the ShapeRoi by the largest Roi in the composite selection, removing the smaller ones
+                rm.setRoi(rois[indLargest], index)
+            }
+        }
+    }
 }
 
 /**
@@ -376,15 +376,15 @@ def replaceShapeRois(RoiManager rm) {
  * Uses Roi indexes as labels
  */
 ImagePlus labelFromRois(ImagePlus imp, RoiManager rm) {
-	impLabel = IJ.createImage("Labeling", "16-bit black", imp.getWidth(), imp.getHeight(), 1)
-	ip = impLabel.getProcessor()
-	rm.getRoisAsArray().eachWithIndex { roi, index ->
-		ip.setColor(index+1)
-		ip.fill(roi)
-	}	
-	ip.resetMinAndMax()
-	IJ.run(impLabel, "glasbey inverted", "")
-	return impLabel
+    impLabel = IJ.createImage("Labeling", "16-bit black", imp.getWidth(), imp.getHeight(), 1)
+    ip = impLabel.getProcessor()
+    rm.getRoisAsArray().eachWithIndex { roi, index ->
+        ip.setColor(index+1)
+        ip.fill(roi)
+    }
+    ip.resetMinAndMax()
+    IJ.run(impLabel, "glasbey inverted", "")
+    return impLabel
 }
 
 /**
@@ -392,38 +392,38 @@ ImagePlus labelFromRois(ImagePlus imp, RoiManager rm) {
  * Uses Roi codes as labels
  */
 ImagePlus labelFromRoiCodes(ImagePlus imp, RoiManager rm) {
-	impLabel = IJ.createImage("Labeling", "16-bit black", imp.getWidth(), imp.getHeight(), 1)
-	ip = impLabel.getProcessor()
-	rm.getRoisAsArray().eachWithIndex { roi, index ->
-		def codeInt = roi.getName() as int
-		ip.setColor(codeInt)
-		ip.fill(roi)
-	}	
-	ip.resetMinAndMax()
-	IJ.run(impLabel, "glasbey inverted", "")
-	return impLabel
+    impLabel = IJ.createImage("Labeling", "16-bit black", imp.getWidth(), imp.getHeight(), 1)
+    ip = impLabel.getProcessor()
+    rm.getRoisAsArray().eachWithIndex { roi, index ->
+        def codeInt = roi.getName() as int
+        ip.setColor(codeInt)
+        ip.fill(roi)
+    }
+    ip.resetMinAndMax()
+    IJ.run(impLabel, "glasbey inverted", "")
+    return impLabel
 }
 
 /**
  * Gets the intersection of each Roi and the corresponding label at imp
  */
 def roiAndLabel(ImagePlus imp, RoiManager rm) {
-	rm.getRoisAsArray().eachWithIndex { roi, index ->
-		def codeInt = roi.getName() as int
-		ip = imp.getProcessor()
-		ip.setThreshold (codeInt, codeInt, ImageProcessor.NO_LUT_UPDATE)		
-		def tts = new ThresholdToSelection()
-		roiLabel = tts.convert(ip)
-		if(roiLabel != null) {
-			String name = roi.getName()
-			s1 = new ShapeRoi(roi)
-			s2 = new ShapeRoi(roiLabel)
-			s3 = s1.and(s2)
-			s3.setName(name)
-			transferProperties(roi, s3)
-			rm.setRoi(s3, index)
-		}
-	}
+    rm.getRoisAsArray().eachWithIndex { roi, index ->
+        def codeInt = roi.getName() as int
+        ImageProcessor ip = imp.getProcessor()
+        ip.setThreshold (codeInt, codeInt, ImageProcessor.NO_LUT_UPDATE)
+        def tts = new ThresholdToSelection()
+        roiLabel = tts.convert(ip)
+        if(roiLabel != null) {
+            String name = roi.getName()
+            s1 = new ShapeRoi(roi)
+            s2 = new ShapeRoi(roiLabel)
+            s3 = s1.and(s2)
+            s3.setName(name)
+            transferProperties(roi, s3)
+            rm.setRoi(s3, index)
+        }
+    }
 }
 
 
@@ -438,7 +438,7 @@ boolean checkMorphology = isUpdateSiteActive("Morphology")
 
 // exit if any update site is missing
 if (!checkIlastik || !checkMorphology) {
-	return
+    return
 }
 
 // setup
@@ -447,12 +447,12 @@ cleanUp()
 
 bb = Prefs.blackBackground
 if (!bb) {
-	Prefs.blackBackground=true
+    Prefs.blackBackground=true
 }
 
 pe = Prefs.padEdges
 if (!pe) {
-	Prefs.padEdges = true
+    Prefs.padEdges = true
 }
 
 // import EM image
@@ -471,7 +471,7 @@ imp.show()
 File parentPath = imageFile.getParentFile()
 def fileList = []
 parentPath.eachFile(FileType.FILES) {
-	fileList << it.name
+    fileList << it.name
 }
 String impNameWithoutExtension = imageFile.name.take(imageFile.name.lastIndexOf('.'))
 String probNameWithoutExtension = impNameWithoutExtension+"_Probabilities"
@@ -560,9 +560,9 @@ otherMasks.close()
 // RoiManager set other objects as group 1 (blue ROIs)
 rm.getRoisAsArray().eachWithIndex { roi, index ->
     if (index > roiCount -1) {
-	    roi.setGroup(1)
-	    roi.setStrokeWidth(5)
-	    roi.setColor(Color.BLUE)
+        roi.setGroup(1)
+        roi.setStrokeWidth(5)
+        roi.setColor(Color.BLUE)
     }
 }
 
@@ -715,11 +715,11 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 
 // segment object predictions: reject class
 if (objThr == "Above") {
-	minObj=objLabel+1
-	maxObj=255
+    minObj=objLabel+1
+    maxObj=255
 } else {
-	minObj=0
-	maxObj=objLabel-1
+    minObj=0
+    maxObj=objLabel-1
 }
 ImagePlus impRejectMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
 impRejectMasks.getProcessor().setThreshold(minObj, maxObj, ImageProcessor.NO_LUT_UPDATE)
@@ -735,9 +735,9 @@ impRejectMasks.close()
 // RoiManager set other objects as group 1 (blue ROIs)
 rm.getRoisAsArray().eachWithIndex { roi, index ->
     if (index > roiCount -1) {
-	    roi.setGroup(1)
-	    roi.setStrokeWidth(5)
-	    roi.setColor(Color.BLUE)
+        roi.setGroup(1)
+        roi.setStrokeWidth(5)
+        roi.setColor(Color.BLUE)
     }
 }
 
@@ -777,7 +777,7 @@ ImagePlus impLabelIN = labelFromRois (imp, rm)
 
 // rename RoiSet_IN with 3-digit code and save
 rm.getRoisAsArray().eachWithIndex { roi, index ->
-	rm.rename(index, String.format("%03d", index+1))
+    rm.rename(index, String.format("%03d", index+1))
 }
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 
@@ -794,17 +794,17 @@ replaceShapeRois(rm)
 
 // rename RoiSet_OUT with 3-digit code and save
 rm.getRoisAsArray().eachWithIndex { roi, index ->
-	impLabelIN.setRoi(roi)
-	int code = roi.getStatistics().max as int
-	rm.rename(index, String.format("%03d", code))
+    impLabelIN.setRoi(roi)
+    int code = roi.getStatistics().max as int
+    rm.rename(index, String.format("%03d", code))
 }
 rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 
 // measure OUT area
 double[] areaListOut = [0] * inCount
 rm.getRoisAsArray().eachWithIndex { roi, index ->
-	def codeInt = roi.getName() as int
-	areaListOut[codeInt-1] = roi.getStatistics().area
+    def codeInt = roi.getName() as int
+    areaListOut[codeInt-1] = roi.getStatistics().area
 }
 //println areaListOut
 
@@ -832,9 +832,9 @@ rm.runCommand(imp,"Delete")
 
 // replace IN result by 0 when there is no OUT Roi
 for (i in 0..areaListIn.size()-1) {
-	if(areaListOut[i] == 0) {
-		areaListIn[i] = 0
-	}
+    if(areaListOut[i] == 0) {
+        areaListIn[i] = 0
+    }
 }
 
 // replace ShapeRois from RoiSet_AXON
@@ -843,9 +843,9 @@ replaceShapeRois(rm)
 
 // rename RoiSet_AXON with 3-digit code
 rm.getRoisAsArray().eachWithIndex { roi, index ->
-	impLabelIN.setRoi(roi)
-	code = roi.getStatistics().max as int
-	rm.rename(index, String.format("%03d", code))
+    impLabelIN.setRoi(roi)
+    code = roi.getStatistics().max as int
+    rm.rename(index, String.format("%03d", code))
 }
 
 // make sure AXON Rois do not overflow IN Rois
@@ -854,26 +854,26 @@ roiAndLabel(impLabelIN, rm)
 // measure AXON area
 double[] areaListAxon = [0] * areaListIn.size()
 rm.getRoisAsArray().eachWithIndex { roi, index ->
-	codeInt = roi.getName() as int
-	areaListAxon[codeInt-1] = roi.getStatistics().area
+    codeInt = roi.getName() as int
+    areaListAxon[codeInt-1] = roi.getStatistics().area
 }
 //println areaListAxon
 
 // create and measure AXON Rois missing
 for (i in 0..areaListIn.size()-1) {
-	if(areaListOut[i] != 0 && areaListAxon[i] == 0) {
-		ImageProcessor ipLabelIN = impLabelIN.getProcessor()
-		ipLabelIN.setThreshold (i+1, i+1)
-		def tts = new ThresholdToSelection()
-		roi = tts.convert(ipLabelIN)
-		roi.setName(String.format("%03d", i+1))
-		roi.setGroup(0)
-		roi.setColor(Color.YELLOW)
-		roi.setStrokeWidth(5)
-		//roiCount = rm.getCount()
-		rm.addRoi(roi)
-		areaListAxon[i] = roi.getStatistics().area
-	}
+    if(areaListOut[i] != 0 && areaListAxon[i] == 0) {
+        ImageProcessor ipLabelIN = impLabelIN.getProcessor()
+        ipLabelIN.setThreshold (i+1, i+1)
+        def tts = new ThresholdToSelection()
+        Roi roiTemp = tts.convert(ipLabelIN)
+        roiTemp.setName(String.format("%03d", i+1))
+        roiTemp.setGroup(0)
+        roiTemp.setColor(Color.YELLOW)
+        roiTemp.setStrokeWidth(5)
+        //roiCount = rm.getCount()
+        rm.addRoi(roiTemp)
+        areaListAxon[i] = roiTemp.getStatistics().area
+    }
 }
 rm.runCommand("Sort")
 //println areaListAxon
@@ -895,7 +895,7 @@ rt.setValues("Fibre", areaListOut as double[])
 
 // set labels
 for (i in 0..areaListIn.size()-1) {
-	rt.setLabel(String.format("%03d", i+1), i)
+    rt.setLabel(String.format("%03d", i+1), i)
 }
 
 // show results table
