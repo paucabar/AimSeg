@@ -1,3 +1,19 @@
+macro "Select Brush Tool [1]" {
+	setTool("brush");
+}
+
+macro "Select Freehand Tool [2]" {
+	setTool("freehand");
+}
+
+macro "Select Wand Tool [3]" {
+	setTool("wand");
+}
+
+macro "Select None [0]" {
+	run("Select None");
+}
+
 // macro to switch the color of the selected ROI
 macro "Toggle ROI group [q]" {
 	index=roiManager("index");
