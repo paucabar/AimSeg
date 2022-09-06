@@ -1,5 +1,17 @@
 # AimSeg
 
+## Table of contents
+
+* [Requirements](https://github.com/paucabar/AimSeg/blob/master/README.md#requirements)
+* [Installation](https://github.com/paucabar/AimSeg/blob/master/README.md#installation)
+* [Test Dataset](https://github.com/paucabar/AimSeg/blob/master/README.md#test-dataset)
+* [Usage](https://github.com/paucabar/AimSeg/blob/master/README.md#usage)
+   * [Pre-processing (Fiji)](https://github.com/paucabar/AimSeg/blob/master/README.md#pre-processing-fiji)
+   * [Pixel classification (ilastik)](https://github.com/paucabar/AimSeg/blob/master/README.md#pixel-classification-ilastik)
+   * [Object classification (ilastik)](https://github.com/paucabar/AimSeg/blob/master/README.md#object-classification-ilastik)
+   * [AimSeg (Fiji)](https://github.com/paucabar/AimSeg/blob/master/README.md#aimseg-fiji)
+* [Train Classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#train-classifiers)
+
 ## Requirements
 
 * [Fiji](https://fiji.sc/)
@@ -41,7 +53,7 @@ See [here](https://imagej.net/Following_an_update_site)
 Download an example [image dataset](https://drive.google.com/drive/folders/1DEFtn71krM6cOjsnZpIEFMCBVmAYk9Lq?usp=sharing) and two [ilastik projects](https://drive.google.com/drive/folders/1tNyDpmd0wwBx-MKH-LhOZaZBgYMfTz2J?usp=sharing) for pixel and object classification.
 
 * To use the provided image dataset and ilastik classifiers, just follow the documentation below and always use the defaults for parameterisation.
-* To train your own classifiers, please check the specific documentation at the last section of this README (*Train Classifiers*).
+* To train your own classifiers, please go to [Train Classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#train-classifiers).
 
 ## Usage
 
