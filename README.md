@@ -123,4 +123,11 @@ It is possible to edit the ROIs using the Fiji selection tools during the 3 AimS
 * <kbd>u</kbd> Update ROI (edit the ROI before updating. E.g., hold <kbd>Shift</kbd> key while drawing a region to be added to the selected ROI. Conversely, hold <kbd>Alt</kbd> key while drawing a hole or region to be removed from the selected ROI)
 * <kbd>z</kbd> Split ROI (will split a ROI made of multiple selection into different ROIs)
 * <kbd>c</kbd> Get convex hull
+* <kbd>0</kbd> Select none (empty selection)
+
+AimSeg shortcuts to set the selection tool:
+
+* <kbd>1</kbd> Select Brush Tool. Note that once created a brush selection, it will be only possible to edit that selection. To addd a new selection, first deselect the latest one by pressing <kbd>0</kbd> (select none)
+* <kbd>2</kbd> Select Freehand Tool
+* <kbd>3</kbd> Select Wand Tool
 ---
