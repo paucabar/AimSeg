@@ -1,4 +1,5 @@
 #@ File(label="Select directory", style="directory") dir
+#@ boolean(label="Normalize", value=false, persist=true) normalize
 
 import ij.IJ
 import ij.process.ImageConverter
@@ -15,13 +16,15 @@ ImagePlus importImage (File inputFile) {
 }
 
 def preProcessing(ImagePlus imp, float saturatedPixels) {
+	if (normalize) {
+		IJ.run(imp, "Enhance Contrast...", "saturated=$saturatedPixels update")
+	}
 	int bitDepth = imp.getBitDepth()
 	if (bitDepth > 8) {
 		def ic = new ImageConverter(imp)
 		//ic.setDoScaling(true)
 		ic.convertToGray8()
 	}
-	IJ.run(imp, "Enhance Contrast...", "saturated=$saturatedPixels update")
 }
 
 // create file list
@@ -31,9 +34,9 @@ dir.eachFile(FileType.FILES) {
 }
 
 // create output folder
-File outDir = new File(dir.getParentFile(), dir.getName()+'_pre-processed');
+File outDir = new File(dir.getParentFile(), dir.getName()+'_pre-processed')
 if (outDir.getParentFile() != null) {
-  outDir.mkdirs();
+  outDir.mkdirs()
 }
 outDir.createNewFile();
 
