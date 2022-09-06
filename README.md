@@ -7,9 +7,11 @@
 * _ilastik_ update site (Fiji). Once added, it is important to set up the connection between ilastik and Fiji (only needs to be done once). Please fins a short guide below
 * _Morphology_ update site (Fiji)
 
-How to [follow an update site](https://imagej.net/Following_an_update_site) in Fiji
-
 ---
+**How to follow an update site in Fiji**
+
+See [here](https://imagej.net/Following_an_update_site)
+
 **How to set up the connection between ilastik and Fiji**
 
 * In Fiji, click on <code>Plugins > ilastik > Configure ilastik executable location</code>
@@ -38,7 +40,8 @@ How to [follow an update site](https://imagej.net/Following_an_update_site) in F
 
 Download an example [image dataset](https://drive.google.com/drive/folders/1DEFtn71krM6cOjsnZpIEFMCBVmAYk9Lq?usp=sharing) and two [ilastik projects](https://drive.google.com/drive/folders/1tNyDpmd0wwBx-MKH-LhOZaZBgYMfTz2J?usp=sharing) for pixel and object classification.
 
-* In order to use the provided image dataset and ilastik classifiers, use the **Format transformation** macro (see below) to convert the images into 8-bit and save them as TIF files.
+* To use the provided image dataset and ilastik classifiers, just follow the documentation below and always use the defaults for parameterisation.
+* To train your own classifiers, please check the specific documentation at the last section of this README (*Train Classifiers*).
 
 ## Usage
 
@@ -48,9 +51,10 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 
 1. Run the **Pre-processing** script (<code>Plugins>AimSeg>Pre-processing</code>)
 2. Select the directory containing the image dataset to be transformed
-3. Run
+3. Check <code>Normalize</code> if you want to use the Fiji's Enhance Contrast command (0.3 % sat pixels)
+4. Run
 
-The pre-processed dataset will be stored in a new folder named after the selected folder adding the postfix  *_normalized*. The original images are converted to 8-bit, normalized using Fiji's Enhance Contrast command (0.3 % sat pixels) and saved as tif files.
+The pre-processed dataset will be stored in a new folder named after the selected folder adding the postfix  *_pre-processed*. The original images are converted to 8-bit and saved as tif files.
 
 ### Pixel classification (ilastik)
 
@@ -131,3 +135,13 @@ AimSeg shortcuts to set the selection tool:
 * <kbd>2</kbd> Select Freehand Tool
 * <kbd>3</kbd> Select Wand Tool
 ---
+
+## Train Classifiers
+
+### Pixel classification (ilastik)
+
+**TODO**
+
+### Object classification (ilastik)
+
+**TODO**
