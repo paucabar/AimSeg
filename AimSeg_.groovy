@@ -435,15 +435,17 @@ def roiAndLabel(ImagePlus imp, RoiManager rm) {
  */
 def roiIntersection(map1, map2, rm2) {
 	rm2.getRoisAsArray().eachWithIndex { roi, index ->
-		if(map1[roi.getName()] != null) {
+		if(map1[roi.getName()] != null && map2[roi.getName()]) {
 			s1 = new ShapeRoi(map1[roi.getName()])
 			s2 = new ShapeRoi(map2[roi.getName()])
 			s3 = s1.and(s2)
 			s3.setName(roi.getName())
 			transferProperties(roi, s3)
 			rm2.setRoi(s3, index)
+			map2[roi.getName()] = s3
 		}
 	}
+	return map2
 }
 
 
@@ -860,7 +862,7 @@ impLabelOUT = labelFromRoiCodes(imp, rmOut)
 // make sure IN Rois do not overflow OUT Rois
 //rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 //roiAndLabel(impLabelOUT, rmIn)
-roiIntersection(mapOut, mapIn, rmIn)
+mapIn = roiIntersection(mapOut, mapIn, rmIn)
 rmIn.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 impLabelIN = labelFromRois(imp, rmIn)
 
@@ -893,6 +895,7 @@ rmAxon.getRoisAsArray().eachWithIndex { roi, index ->
 
 // make sure AXON Rois do not overflow IN Rois
 roiAndLabel(impLabelIN, rmAxon)
+mapAxon = roiIntersection(mapIn, mapAxon, rmAxon)
 
 // measure AXON area
 double[] areaListAxon = [0] * areaListIn.size()
