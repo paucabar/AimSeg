@@ -80,6 +80,7 @@ import ij.plugin.Commands
 import ij.process.FloatPolygon
 import ij.gui.PolygonRoi
 import ij.gui.ShapeRoi
+import ij.measure.Calibration
 
 /**
  * Checks if an update site is active
@@ -766,6 +767,12 @@ println t1-t0
 // timing
 t0 = System.currentTimeMillis()
 
+// get calibration
+cal = imp.getCalibration()
+float calX = cal.getX(1)
+float calY = cal.getY(1)
+String calUnit = cal.getUnit()
+
 // replace ShapeRois from RoiSet_IN
 //imp.show()
 rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
@@ -804,7 +811,7 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 double[] areaListOut = [0] * inCount
 rm.getRoisAsArray().eachWithIndex { roi, index ->
     def codeInt = roi.getName() as int
-    areaListOut[codeInt-1] = roi.getStatistics().area
+    areaListOut[codeInt-1] = roi.getStatistics().area * calX * calY
 }
 //println areaListOut
 
@@ -823,7 +830,7 @@ impLabelIN = labelFromRois(imp, rm)
 
 // measure IN area
 def roiListIn = rm.getRoisAsArray()
-def areaListIn = roiListIn.collect(r -> r.getStatistics().area)
+def areaListIn = roiListIn.collect(r -> r.getStatistics().area * calX * calY)
 //println areaListIn
 
 // clear RoiManager
@@ -855,7 +862,7 @@ roiAndLabel(impLabelIN, rm)
 double[] areaListAxon = [0] * areaListIn.size()
 rm.getRoisAsArray().eachWithIndex { roi, index ->
     codeInt = roi.getName() as int
-    areaListAxon[codeInt-1] = roi.getStatistics().area
+    areaListAxon[codeInt-1] = roi.getStatistics().area * calX * calY
 }
 //println areaListAxon
 
@@ -872,7 +879,7 @@ for (i in 0..areaListIn.size()-1) {
         roiTemp.setStrokeWidth(5)
         //roiCount = rm.getCount()
         rm.addRoi(roiTemp)
-        areaListAxon[i] = roiTemp.getStatistics().area
+        areaListAxon[i] = roiTemp.getStatistics().area * calX * calY
     }
 }
 rm.runCommand("Sort")
