@@ -406,28 +406,6 @@ ImagePlus labelFromRoiCodes(ImagePlus imp, RoiManager rm) {
 }
 
 /**
- * Gets the intersection of each Roi and the corresponding label at imp
- */
-def roiAndLabel(ImagePlus imp, RoiManager rm) {
-    rm.getRoisAsArray().eachWithIndex { roi, index ->
-        def codeInt = roi.getName() as int
-        ImageProcessor ip = imp.getProcessor()
-        ip.setThreshold (codeInt, codeInt, ImageProcessor.NO_LUT_UPDATE)
-        def tts = new ThresholdToSelection()
-        roiLabel = tts.convert(ip)
-        if(roiLabel != null) {
-            String name = roi.getName()
-            s1 = new ShapeRoi(roi)
-            s2 = new ShapeRoi(roiLabel)
-            s3 = s1.and(s2)
-            s3.setName(name)
-            transferProperties(roi, s3)
-            rm.setRoi(s3, index)
-        }
-    }
-}
-
-/**
  * Gets the intersection of each Roi pair (according to key) from two maps
  * Updates the RoiManager corresponding to map2
  * The method ensures that Rois in map2 are always contained in their parent
