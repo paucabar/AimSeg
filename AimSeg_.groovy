@@ -778,8 +778,13 @@ RoiManager rmIn = new RoiManager(false)
 RoiManager rmOut = new RoiManager(false)
 RoiManager rmAxon = new RoiManager(false)
 
+// create 3 empty maps
+def mapIn = [:]
+def mapOut = [:]
+def mapAxon = [:]
+
 // replace ShapeRois from RoiSet_IN
-//imp.show()
+imp.show()
 rmIn.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 //rm = rm.getInstance()
 replaceShapeRois(rmIn)
@@ -789,7 +794,11 @@ ImagePlus impLabelIN = labelFromRois (imp, rmIn)
 
 // rename RoiSet_IN with 3-digit code and save
 rmIn.getRoisAsArray().eachWithIndex { roi, index ->
-    rmIn.rename(index, String.format("%03d", index+1))
+    String nameTemp = String.format("%03d", index+1)
+    rmIn.rename(index, nameTemp)
+    mapIn[nameTemp] = roi
+    mapOut[nameTemp] = null
+    mapAxon[nameTemp] = null
 }
 rmIn.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 
@@ -808,11 +817,15 @@ replaceShapeRois(rmOut)
 rmOut.getRoisAsArray().eachWithIndex { roi, index ->
     impLabelIN.setRoi(roi)
     int code = roi.getStatistics().max as int
-    rmOut.rename(index, String.format("%03d", code))
+    String nameTemp2 = String.format("%03d", code)
+    rmOut.rename(index, nameTemp2)
+    mapOut[nameTemp2] = roi
 }
 rmOut.runCommand("Sort")
 rmOut.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
-
+println mapIn
+println mapOut
+return
 // measure OUT area
 double[] areaListOut = [0] * inCount
 rmOut.getRoisAsArray().eachWithIndex { roi, index ->
