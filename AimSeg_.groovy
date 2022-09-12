@@ -773,69 +773,75 @@ float calX = cal.getX(1)
 float calY = cal.getY(1)
 String calUnit = cal.getUnit()
 
+// create 3 RoiManager
+RoiManager rmIn = new RoiManager(false)
+RoiManager rmOut = new RoiManager(false)
+RoiManager rmAxon = new RoiManager(false)
+
 // replace ShapeRois from RoiSet_IN
 //imp.show()
-rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
+rmIn.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 //rm = rm.getInstance()
-replaceShapeRois(rm)
+replaceShapeRois(rmIn)
 
 // create IN label image
-ImagePlus impLabelIN = labelFromRois (imp, rm)
+ImagePlus impLabelIN = labelFromRois (imp, rmIn)
 
 // rename RoiSet_IN with 3-digit code and save
-rm.getRoisAsArray().eachWithIndex { roi, index ->
-    rm.rename(index, String.format("%03d", index+1))
+rmIn.getRoisAsArray().eachWithIndex { roi, index ->
+    rmIn.rename(index, String.format("%03d", index+1))
 }
-rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
+rmIn.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 
 // get IN count
-int inCount = rm.getCount()
+int inCount = rmIn.getCount()
 
 // clear RoiManager
-rm.deselect()
-rm.runCommand(imp,"Delete")
+//rm.deselect()
+//rm.runCommand(imp,"Delete")
 
 // replace ShapeRois from RoiSet_OUT
-rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
-replaceShapeRois(rm)
+rmOut.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
+replaceShapeRois(rmOut)
 
 // rename RoiSet_OUT with 3-digit code and save
-rm.getRoisAsArray().eachWithIndex { roi, index ->
+rmOut.getRoisAsArray().eachWithIndex { roi, index ->
     impLabelIN.setRoi(roi)
     int code = roi.getStatistics().max as int
-    rm.rename(index, String.format("%03d", code))
+    rmOut.rename(index, String.format("%03d", code))
 }
-rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
+rmOut.runCommand("Sort")
+rmOut.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 
 // measure OUT area
 double[] areaListOut = [0] * inCount
-rm.getRoisAsArray().eachWithIndex { roi, index ->
+rmOut.getRoisAsArray().eachWithIndex { roi, index ->
     def codeInt = roi.getName() as int
     areaListOut[codeInt-1] = roi.getStatistics().area * calX * calY
 }
 //println areaListOut
 
 // // create OUT label image
-impLabelOUT = labelFromRoiCodes(imp, rm)
+impLabelOUT = labelFromRoiCodes(imp, rmOut)
 
 // clear RoiManager
-rm.deselect()
-rm.runCommand(imp,"Delete")
+//rm.deselect()
+//rm.runCommand(imp,"Delete")
 
 // make sure IN Rois do not overflow OUT Rois
-rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
-roiAndLabel(impLabelOUT, rm)
-rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
-impLabelIN = labelFromRois(imp, rm)
+//rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
+roiAndLabel(impLabelOUT, rmIn)
+rmIn.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
+impLabelIN = labelFromRois(imp, rmIn)
 
 // measure IN area
-def roiListIn = rm.getRoisAsArray()
+def roiListIn = rmIn.getRoisAsArray()
 def areaListIn = roiListIn.collect(r -> r.getStatistics().area * calX * calY)
 //println areaListIn
 
 // clear RoiManager
-rm.deselect()
-rm.runCommand(imp,"Delete")
+//rm.deselect()
+//rm.runCommand(imp,"Delete")
 
 // replace IN result by 0 when there is no OUT Roi
 for (i in 0..areaListIn.size()-1) {
@@ -845,22 +851,22 @@ for (i in 0..areaListIn.size()-1) {
 }
 
 // replace ShapeRois from RoiSet_AXON
-rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
-replaceShapeRois(rm)
+rmAxon.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
+replaceShapeRois(rmAxon)
 
 // rename RoiSet_AXON with 3-digit code
-rm.getRoisAsArray().eachWithIndex { roi, index ->
+rmAxon.getRoisAsArray().eachWithIndex { roi, index ->
     impLabelIN.setRoi(roi)
     code = roi.getStatistics().max as int
-    rm.rename(index, String.format("%03d", code))
+    rmAxon.rename(index, String.format("%03d", code))
 }
 
 // make sure AXON Rois do not overflow IN Rois
-roiAndLabel(impLabelIN, rm)
+roiAndLabel(impLabelIN, rmAxon)
 
 // measure AXON area
 double[] areaListAxon = [0] * areaListIn.size()
-rm.getRoisAsArray().eachWithIndex { roi, index ->
+rmAxon.getRoisAsArray().eachWithIndex { roi, index ->
     codeInt = roi.getName() as int
     areaListAxon[codeInt-1] = roi.getStatistics().area * calX * calY
 }
@@ -878,16 +884,16 @@ for (i in 0..areaListIn.size()-1) {
         roiTemp.setColor(Color.YELLOW)
         roiTemp.setStrokeWidth(5)
         //roiCount = rm.getCount()
-        rm.addRoi(roiTemp)
+        rmAxon.addRoi(roiTemp)
         areaListAxon[i] = roiTemp.getStatistics().area * calX * calY
     }
 }
-rm.runCommand("Sort")
+rmAxon.runCommand("Sort")
 //println areaListAxon
 //impLabelIN.show()
 
 // save RoiSet_AXON
-rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
+rmAxon.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
 
 /**
  * RESULTS TABLE
@@ -920,6 +926,9 @@ println t1-t0
  */
 
 // close any open image or RoiManager, reset Prefs and StartupMacros
+rmIn.close()
+rmOut.close()
+rmAxon.close()
 cleanUp()
 installMacro(false)
 Prefs.padEdges = pe
