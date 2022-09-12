@@ -427,6 +427,24 @@ def roiAndLabel(ImagePlus imp, RoiManager rm) {
     }
 }
 
+/**
+ * Gets the intersection of each Roi pair (according to key) from two maps
+ * Updates the RoiManager corresponding to map2
+ * The method ensures that Rois in map2 are always contained in their parent
+ * (i.e., same key in map1)
+ */
+def roiIntersection(map1, map2, rm2) {
+	rm2.getRoisAsArray().eachWithIndex { roi, index ->
+		if(map1[roi.getName()] != null) {
+			s1 = new ShapeRoi(map1[roi.getName()])
+			s2 = new ShapeRoi(map2[roi.getName()])
+			s3 = s1.and(s2)
+			s3.setName(roi.getName())
+			transferProperties(roi, s3)
+			rm2.setRoi(s3, index)
+		}
+	}
+}
 
 
 /**
@@ -823,9 +841,7 @@ rmOut.getRoisAsArray().eachWithIndex { roi, index ->
 }
 rmOut.runCommand("Sort")
 rmOut.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
-println mapIn
-println mapOut
-return
+
 // measure OUT area
 double[] areaListOut = [0] * inCount
 rmOut.getRoisAsArray().eachWithIndex { roi, index ->
@@ -843,7 +859,8 @@ impLabelOUT = labelFromRoiCodes(imp, rmOut)
 
 // make sure IN Rois do not overflow OUT Rois
 //rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
-roiAndLabel(impLabelOUT, rmIn)
+//roiAndLabel(impLabelOUT, rmIn)
+roiIntersection(mapOut, mapIn, rmIn)
 rmIn.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 impLabelIN = labelFromRois(imp, rmIn)
 
