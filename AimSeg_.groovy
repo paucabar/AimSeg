@@ -389,23 +389,6 @@ ImagePlus labelFromRois(ImagePlus imp, RoiManager rm) {
 }
 
 /**
- * Creates a label image from the RoiManager
- * Uses Roi codes as labels
- */
-ImagePlus labelFromRoiCodes(ImagePlus imp, RoiManager rm) {
-    impLabel = IJ.createImage("Labeling", "16-bit black", imp.getWidth(), imp.getHeight(), 1)
-    ip = impLabel.getProcessor()
-    rm.getRoisAsArray().eachWithIndex { roi, index ->
-        def codeInt = roi.getName() as int
-        ip.setColor(codeInt)
-        ip.fill(roi)
-    }
-    ip.resetMinAndMax()
-    IJ.run(impLabel, "glasbey inverted", "")
-    return impLabel
-}
-
-/**
  * Gets the intersection of each Roi pair (according to key) from two maps
  * Updates the RoiManager corresponding to map2
  * The method ensures that Rois in map2 are always contained in their parent
@@ -830,16 +813,12 @@ rmOut.getRoisAsArray().eachWithIndex { roi, index ->
 }
 //println areaListOut
 
-// // create OUT label image
-impLabelOUT = labelFromRoiCodes(imp, rmOut)
-
 // clear RoiManager
 //rm.deselect()
 //rm.runCommand(imp,"Delete")
 
 // make sure IN Rois do not overflow OUT Rois
 //rm.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
-//roiAndLabel(impLabelOUT, rmIn)
 mapIn = roiIntersection(mapOut, mapIn, rmIn)
 rmIn.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 impLabelIN = labelFromRois(imp, rmIn)
@@ -872,7 +851,6 @@ rmAxon.getRoisAsArray().eachWithIndex { roi, index ->
 }
 
 // make sure AXON Rois do not overflow IN Rois
-roiAndLabel(impLabelIN, rmAxon)
 mapAxon = roiIntersection(mapIn, mapAxon, rmAxon)
 
 // measure AXON area
