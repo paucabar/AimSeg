@@ -3,6 +3,7 @@
 #@ String (label="Object Prediction Threshold", choices={"Below", "Above"}, value="Above", style="radioButtonHorizontal") objThr
 #@ Integer (label="Object Prediction Label", value=2, max=10, min=1, style="listBox") objLabel
 #@ boolean (label="Automated", value=true, persist=false) automated
+#@ boolean (label="Add axons", value=false, persist=false) addAxons
 #@ UpdateService updateService
 #@ UIService ui
 #@ LogService logService
@@ -396,7 +397,7 @@ ImagePlus labelFromRois(ImagePlus imp, RoiManager rm) {
  * The method ensures that Rois in map2 are always contained in their parent
  * (i.e., same key in map1)
  */
-def roiIntersection(map1, map2, rm2) {
+def roiIntersection(Map<String, Roi> map1, Map<String, Roi> map2, RoiManager rm2) {
 	rm2.getRoisAsArray().eachWithIndex { roi, index ->
 		if(map1[roi.getName()] != null && map2[roi.getName()]) {
 			s1 = new ShapeRoi(map1[roi.getName()])
@@ -869,20 +870,22 @@ rmAxon.getRoisAsArray().eachWithIndex { roi, index ->
 //println areaListAxon
 
 // create and measure AXON Rois missing
-for (i in 0..areaListIn.size()-1) {
-    if(areaListOut[i] != 0 && areaListAxon[i] == 0) {
-        ImageProcessor ipLabelIN = impLabelIN.getProcessor()
-        ipLabelIN.setThreshold (i+1, i+1)
-        def tts = new ThresholdToSelection()
-        Roi roiTemp = tts.convert(ipLabelIN)
-        roiTemp.setName(String.format("%03d", i+1))
-        roiTemp.setGroup(0)
-        roiTemp.setColor(Color.YELLOW)
-        roiTemp.setStrokeWidth(5)
-        //roiCount = rm.getCount()
-        rmAxon.addRoi(roiTemp)
-        areaListAxon[i] = roiTemp.getStatistics().area * calX * calY
-    }
+if(addAxons) {
+	for (i in 0..areaListIn.size()-1) {
+	    if(areaListOut[i] != 0 && areaListAxon[i] == 0) {
+	        ImageProcessor ipLabelIN = impLabelIN.getProcessor()
+	        ipLabelIN.setThreshold (i+1, i+1)
+	        def tts = new ThresholdToSelection()
+	        Roi roiTemp = tts.convert(ipLabelIN)
+	        roiTemp.setName(String.format("%03d", i+1))
+	        roiTemp.setGroup(0)
+	        roiTemp.setColor(Color.YELLOW)
+	        roiTemp.setStrokeWidth(5)
+	        //roiCount = rm.getCount()
+	        rmAxon.addRoi(roiTemp)
+	        areaListAxon[i] = roiTemp.getStatistics().area * calX * calY
+	    }
+	}
 }
 rmAxon.runCommand("Sort")
 //println areaListAxon
@@ -897,7 +900,7 @@ rmAxon.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip
 
 // create and fill results table
 ResultsTable rt = new ResultsTable(areaListIn.size())
-rt.setPrecision(2)
+rt.setPrecision(5)
 rt.setValues("Axon", areaListAxon as double[])
 rt.setValues("ICML", areaListIn as double[])
 rt.setValues("Fibre", areaListOut as double[])
