@@ -50,8 +50,9 @@ print(f, "\\Headings:n\tImage Name\tROI code\tAxon area\tInner Myelin area\tOute
 run("ROI Manager...");
 setBatchMode(true);
 n=0;
-start=getTime();
+
 for (i=0; i<count; i++) {
+	start=getTime();
 	name=substring(images[i], 0, lastIndexOf(images[i], "."));
 	
 	//skip images missing some ROI set
@@ -221,7 +222,7 @@ for (i=0; i<count; i++) {
 		for (j=0; j<roiNumberIn.length; j++) {
 			axonString=d2s(areaAxon[j], 0);
 			if (axonString!="NaN") {
-				print(roiNumberIn[j]);
+				//print(roiNumberIn[j]);
 				run("Clear Results");
 				selectImage("InnerMyelin_CountMasks");
 				setThreshold(j+1, j+1);
@@ -280,15 +281,14 @@ for (i=0; i<count; i++) {
 			print(f, n+1 + "\t" + name + "\t" + roiNumberIn[j] + "\t" + areaAxon[j] + "\t" + areaIn[j] + "\t" + areaOut[j]);
 			n++;
 		}
+		//timing
+		elapsed=round(getTime()-start);
+		print(elapsed);
 	}
 }
 setBatchMode(false);
 
-//timing
-elapsed=round((getTime()-start)/1000);
-print("\\Clear");
-print("End of process");
-print("Elapsed time "+hours_minutes_seconds(elapsed));
+
 
 
 //save results table
