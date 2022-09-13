@@ -765,7 +765,7 @@ def mapOut = [:]
 def mapAxon = [:]
 
 // replace ShapeRois from RoiSet_IN
-imp.show()
+//imp.show()
 rmIn.open(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 //rm = rm.getInstance()
 replaceShapeRois(rmIn)
@@ -915,6 +915,7 @@ println t1-t0
  */
 
 // close any open image or RoiManager, reset Prefs and StartupMacros
+rm.close()
 rmIn.close()
 rmOut.close()
 rmAxon.close()
