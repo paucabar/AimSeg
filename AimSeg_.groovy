@@ -852,7 +852,9 @@ replaceShapeRois(rmAxon)
 rmAxon.getRoisAsArray().eachWithIndex { roi, index ->
     impLabelIN.setRoi(roi)
     code = roi.getStatistics().max as int
-    rmAxon.rename(index, String.format("%03d", code))
+    String nameTemp3 = String.format("%03d", code)
+    rmAxon.rename(index, nameTemp3)
+    mapAxon[nameTemp3] = roi
 }
 
 // make sure AXON Rois do not overflow IN Rois
