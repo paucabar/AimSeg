@@ -115,8 +115,10 @@ def installMacro (boolean toolsetMacro) {
 def cleanUp() {
     RoiManager rm = RoiManager.getRawInstance()
     if(rm != null) {
-        rm.deselect()
-        rm.runCommand("Delete")
+        if(rm.getCount() > 0) {
+        	rm.deselect()
+        	rm.runCommand("Delete")
+        }
         rm.close()
     }
     Commands cmd = new Commands()
@@ -473,7 +475,7 @@ IJ.run(impObj, "glasbey inverted", "")
  */
 
 // timing
-int t0 = System.currentTimeMillis()
+int t0s1 = System.currentTimeMillis()
 
 // create myelin mask
 impProb.setPosition(probChannel)
@@ -563,8 +565,9 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_IN.zip")
 println "Save RoiSet_IN"
 
 // timing
-int t1 = System.currentTimeMillis()
-println t1-t0
+int t1s1 = System.currentTimeMillis()
+int tS1 = t1s1-t0s1
+println tS1
 
 /**
  * PRE-STAGE 2
@@ -582,7 +585,7 @@ impMaskOverlayIN.show()
  */
 
 // timing
-t0 = System.currentTimeMillis()
+int t0s2 = System.currentTimeMillis()
 
 // duplicate IN final mask
 def dup = new Duplicator()
@@ -634,8 +637,9 @@ rm.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_OUT.zip")
 println "Save RoiSet_OUT"
 
 // timing
-t1 = System.currentTimeMillis()
-println t1-t0
+int t1s2 = System.currentTimeMillis()
+int tS2 = t1s2-t0s2
+println tS2
 
 /**
  * PRE-STAGE 3
@@ -660,7 +664,7 @@ impMaskOverlayMyelin.show()
  */
 
 // timing
-t0 = System.currentTimeMillis()
+int t0s3 = System.currentTimeMillis()
 
 // segment object predictions: select class
 ImagePlus impAxonMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
@@ -738,15 +742,16 @@ rm.runCommand(impMaskOverlayMyelin,"Delete")
 impMaskOverlayMyelin.close()
 
 // timing
-t1 = System.currentTimeMillis()
-println t1-t0
+int t1s3 = System.currentTimeMillis()
+int tS3 = t1s3-t0s3
+println tS3
 
 /**
  * POST-PROCESSING
  */
 
 // timing
-t0 = System.currentTimeMillis()
+int t0pp = System.currentTimeMillis()
 
 // get calibration
 cal = imp.getCalibration()
@@ -907,8 +912,9 @@ for (i in 0..areaListIn.size()-1) {
 rt.saveAs(parentPathS+File.separator+impNameWithoutExtension+"_Results.tsv")
 
 // timing
-t1 = System.currentTimeMillis()
-println t1-t0
+int t1pp = System.currentTimeMillis()
+int tPP = t1pp-t0pp
+println tPP
 
 /**
  * RESET
@@ -924,5 +930,18 @@ installMacro(false)
 Prefs.padEdges = pe
 Prefs.blackBackground = bb
 
-println "Processing finished"
+/**
+ * LOG
+ */
+ 
+IJ.log("Timing Stage 1 (ms): $tS1")
+IJ.log("Timing Stage 2 (ms): $tS2")
+IJ.log("Timing Stage 3 (ms): $tS3")
+IJ.log("Timing Post-processing (ms): $tPP")
+if(calUnit == "pixel") {
+	IJ.log("Area unit: pixel")
+} else {
+	IJ.log("Area unit: squared $calUnit")
+}
+IJ.log("AimSeg processing finished")
 return
