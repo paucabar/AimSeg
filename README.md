@@ -104,7 +104,9 @@ By default, ilastik will store the output files together with the input files. P
 1. Run the **AimSeg** script (<code>Plugins>AimSeg>AimSeg</code>)
 2. Select the electron microscopy image to be procecessed (please remember that the image dataset and the ilastik output, both probability maps and object predictions, must remain stored together in the working directory)
 3. Set the myelin probability channel and the threshold to segment the object prediction image
-4. AimSeg may take a few seconds to initialise
+4. The <code>Automated</code> mode will skip the user-edition steps
+5. The <code>Axon Autocomplete</code> will create axon ROIs when these are not detected by AimSeg or added by the user. In this case, AimSeg assumes that the inner tongue of those fibres missing the axon ROI has shrunk completely, so it automatically generates an axon ROI equivalent to the inner compact myelin layer (ICML) ROI.
+6. AimSeg may take a few seconds to initialise, as it starts importing the image files.
 
 *Stage 1: Inner compact myelin layer (ICML)*
 
