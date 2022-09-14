@@ -2,8 +2,8 @@
 #@ Integer (label="Myelin Probability Channel", value=1, max=3, min=1, style="listBox") probChannel
 #@ String (label="Object Prediction Threshold", choices={"Below", "Above"}, value="Above", style="radioButtonHorizontal") objThr
 #@ Integer (label="Object Prediction Label", value=2, max=10, min=1, style="listBox") objLabel
-#@ boolean (label="Automated", value=true, persist=false) automated
-#@ boolean (label="Add axons", value=false, persist=false) addAxons
+#@ boolean (label="Automated", value=false, persist=true) automated
+#@ boolean (label="Axon Autocomplete", value=true, persist=true) autocomplete
 #@ UpdateService updateService
 #@ UIService ui
 #@ LogService logService
@@ -870,7 +870,7 @@ rmAxon.getRoisAsArray().eachWithIndex { roi, index ->
 //println areaListAxon
 
 // create and measure AXON Rois missing
-if(addAxons) {
+if(autocomplete) {
 	for (i in 0..areaListIn.size()-1) {
 	    if(areaListOut[i] != 0 && areaListAxon[i] == 0) {
 	        ImageProcessor ipLabelIN = impLabelIN.getProcessor()
