@@ -613,7 +613,8 @@ IJ.run(impMyelinOutlines, "Watershed", "")
 ImagePlus impMyelinOutlines2 = impInToCount.duplicate()
 runBinaryReconstruct(impMyelinOutlines, impMyelinOutlines2)
 run (impMyelinOutlines2.getProcessor(), "close", 1, 1)
-impMyelinOutlines2 = analyzeParticles(impMyelinOutlines2, options_add_manager, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
+int options_exclude_add = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.EXCLUDE_EDGE_PARTICLES + ParticleAnalyzer.ADD_TO_MANAGER
+impMyelinOutlines2 = analyzeParticles(impMyelinOutlines2, options_exclude_add, measurements_area, 0, Double.POSITIVE_INFINITY, 0, 1)
 impMyelinOutlines.close()
 impMyelinOutlines2.close()
 
