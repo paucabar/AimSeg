@@ -2,8 +2,8 @@
 
 ## Table of contents
 
-* [Overview](https://github.com/paucabar/AimSeg/edit/master/README.md#overview)
-* [How to cite](https://github.com/paucabar/AimSeg/edit/master/README.md#how-to-cite)
+* [Overview](https://github.com/paucabar/AimSeg/blob/master/README.md#overview)
+* [How to cite](https://github.com/paucabar/AimSeg/blob/master/README.md#how-to-cite)
 * [Requirements](https://github.com/paucabar/AimSeg/blob/master/README.md#requirements)
 * [Installation](https://github.com/paucabar/AimSeg/blob/master/README.md#installation)
 * [Test Dataset](https://github.com/paucabar/AimSeg/blob/master/README.md#test-dataset)
