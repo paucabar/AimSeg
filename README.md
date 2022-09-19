@@ -12,7 +12,7 @@
    * [Pixel classification (ilastik)](https://github.com/paucabar/AimSeg/blob/master/README.md#pixel-classification-ilastik)
    * [Object classification (ilastik)](https://github.com/paucabar/AimSeg/blob/master/README.md#object-classification-ilastik)
    * [AimSeg (Fiji)](https://github.com/paucabar/AimSeg/blob/master/README.md#aimseg-fiji)
-* [Filtering (optional)](https://github.com/paucabar/AimSeg/blob/master/README.md#filtering-optional)
+   * [Filtering (optional)](https://github.com/paucabar/AimSeg/blob/master/README.md#filtering-optional)
 * [Train Classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#train-classifiers)
 
 ## Overview
@@ -161,14 +161,14 @@ AimSeg shortcuts to set the selection tool:
 * <kbd>3</kbd> Select Wand Tool
 ---
 
-## Filtering (optional)
+### Filtering (optional)
 
 It is possible to filter out those ROIs corresponding to fibre cross-sections on the edges or missing any ROI set. Currently, this option is not included in AimSeg, but it can be done after running the main AimSeg workflow:
 
-1. In this GitHub repository, fo to the [Post-processing_RoiSets](https://github.com/paucabar/AimSeg/blob/master/Post-processing_RoiSets.groovy) script
+1. In this GitHub repository, go to the [Post-processing_RoiSets](https://github.com/paucabar/AimSeg/blob/master/Post-processing_RoiSets.groovy) script
 2. Copy the code
 3. In Fiji, create a new script (<code>File > > New > Script...</code>)
-4. In the script editor, set Groovy as the script language ((<code>Language > Groovy</code>))
+4. In the script editor, set Groovy as the script language (<code>Language > Groovy</code>)
 5. <code>Run</code>
 6. <code>Browse</code> to select the _Image File_ (note that the RoiSets (zip files) must be stored in the image file parent folder to access them)
 7. The <code>Axon Autocomplete</code> will create axon ROIs when these are missing, like the AimSeg workflow.
