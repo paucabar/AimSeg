@@ -216,4 +216,40 @@ It is possible to filter out those ROIs corresponding to fibre cross-sections on
 
 ### Object classification (ilastik)
 
-**TODO**
+1. Create a new <code>Object Classification [Inputs: Raw Data, Pixel Prediction Map]</code> project
+2. Set the workflow modules
+
+**Input Data**
+
+* Click on the <code>Add new..</code> dropdown menu located in the <code>Raw Data</code> tab
+* Click on <code>Add separate Image(s)...</code>
+* Browse and select some files from your image dataset
+* Select the <code>Prediction Maps</code> tab
+* Add the _Pixel Prediction Map_ corresponding to each Raw Data
+* Check that all the Raw Data files are linked properly to its corresponding _Pixel Prediction Map_
+
+**Threshold and Size Filter**
+
+* Select <code>Simple</code> in the <code>Method</code> dropdown menu
+* Select the axoplasm channel in the <code>Input</code> dropdown menu
+* Set a sigma value in the two <code>Smooth</code> boxes
+* Set the minimun size of the expected axons (in pixels) in the <code>Min Size Filter</code> box
+* Set the maximum size of the expected axons (in pixels) in the <code>Max Size Filter</code> box
+
+![Snag_26dad41f](https://user-images.githubusercontent.com/39589980/58541240-571fff80-81fb-11e9-9179-3d436db9009f.png)
+
+**Object Feature Selection**
+
+* Click on <code>Select Features</code>
+* Click on <code>All excl. Location</code> to select all the features, except those related with the object location
+* Click <code>OK</code>
+
+**Object Classification**
+
+* Click on <code>Add Label</code> to add new classes
+* The minimum number of classes is 2: axon or other.
+* We used 3 for our classifier: axon (big), axon (small), inner tongue
+* Label the white masks  to train the classifier. Use the brush to assign labels to masks and the eraser to eliminate labels
+* Click on <code>Live Update</code> to check how the classifier is performing
+
+![OC steps](https://user-images.githubusercontent.com/39589980/58761085-56130900-8540-11e9-86c6-b23ee4917ea0.png)
