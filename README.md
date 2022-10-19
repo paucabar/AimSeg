@@ -177,7 +177,42 @@ It is possible to filter out those ROIs corresponding to fibre cross-sections on
 
 ### Pixel classification (ilastik)
 
-**TODO**
+1. Create a new <code>Pixel Classification</code> project
+2. Set the workflow modules:
+
+**Input Data**
+
+* Click on the <code>Add new..</code> dropdown menu located in the <code>Raw Data</code> tab
+* Click on <code>Add separate Image(s)...</code>
+* Browse and select some files from your image dataset
+
+**Feature Selection**
+
+* Click on <code>Select Features...</code>
+* Select a subset of features. Alternatively, start by selecting all the features.
+* Click _<code>OK</code>
+
+**Training**
+
+* Create 3 classes: myelin, axoplasm and membrane
+* Annotate pixels for the different classes using the brush tool
+* The <code>Live Update</code> mode will facilitate the annotation process, as it provides the user with immediate feedback
+
+**Prediction Export**
+
+* In the <code>Source</code> drop-down menu select <code>Probabilities</code>
+* Click on <code>Choose Export Image Settings</code>
+* In the <code>Format</code> drop-down menu, select <code>tif</code> for a faster performance of data import in Fiji. Alternatively, <code>hdf5</code> can also be imported, but expect a slower performance
+* **DO NOT** change the other settings
+* Click <code>OK</code>
+
+**Batch Processing**
+
+* Click on <code>Select Raw Data Files...</code>
+* Browse the entire image dataset
+* Click on <code>Open</code>
+* Click on <code>Process all files</code>
+* Wait until the process is done
 
 ### Object classification (ilastik)
 
