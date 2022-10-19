@@ -17,7 +17,7 @@
 
 ## Overview
 
-TODO
+AimSeg is a bioimage analysis workflow that combines machines learning with automated post-processing and user-guidance to perform the segmentation of axon, inner cytoplasmic tongue and compact myelin on electron microscopy (EM) data. The workflow uses pixel and object classification to facilitate the process, whereas a semi-automated mode enables users to amend the automated selection performed by AimSeg.
 
 ## How to cite
 
