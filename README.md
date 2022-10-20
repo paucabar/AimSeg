@@ -198,6 +198,8 @@ It is possible to filter out those ROIs corresponding to fibre cross-sections on
 * Annotate pixels for the different classes using the brush tool
 * The <code>Live Update</code> mode will facilitate the annotation process, as it provides the user with immediate feedback
 
+![pixel classification annotation](https://user-images.githubusercontent.com/39589980/197034819-69fb2d5e-d27f-4548-af0b-9e5d0f4ce3f0.png)
+
 **Prediction Export**
 
 * In the <code>Source</code> drop-down menu select <code>Probabilities</code>
