@@ -233,6 +233,7 @@ It is possible to filter out those ROIs corresponding to fibre cross-sections on
 * Select <code>Simple</code> in the <code>Method</code> dropdown menu
 * Select the axoplasm channel in the <code>Input</code> dropdown menu
 * Set a sigma value in the two <code>Smooth</code> boxes
+* Set a threshold to segment the axoplasm probability (range 0-1)
 * Set the minimun size of the expected axons (in pixels) in the <code>Min Size Filter</code> box
 * Set the maximum size of the expected axons (in pixels) in the <code>Max Size Filter</code> box
 
