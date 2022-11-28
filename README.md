@@ -17,7 +17,7 @@
 
 ## Overview
 
-AimSeg is a bioimage analysis workflow that combines machines learning with automated post-processing and user-guidance to perform the segmentation of axon, inner cytoplasmic tongue and compact myelin on electron microscopy (EM) data. The workflow uses pixel and object classification to facilitate the process, whereas a semi-automated mode enables users to amend the automated selection performed by AimSeg.
+AimSeg is a bioimage analysis workflow that combines machine learning with automated post-processing and user-guidance to perform the segmentation of axon, inner cytoplasmic tongue and compact myelin on electron microscopy (EM) data. The workflow uses pixel and object classification to facilitate the process, whereas a semi-automated mode enables users to amend the automated selection performed by AimSeg.
 
 ## How to cite
 
@@ -27,7 +27,7 @@ Available soon...
 
 * [Fiji](https://fiji.sc/)
 * [ilastik](https://www.ilastik.org/) 1.3.3 or later
-* _ilastik_ update site (Fiji). Once added, it is important to set up the connection between ilastik and Fiji (only needs to be done once). Please fins a short guide below
+* _ilastik_ update site (Fiji). Once added, it is important to set up the connection between ilastik and Fiji (only needs to be done once). Please find a short guide below
 * _Morphology_ update site (Fiji)
 
 ---
@@ -57,7 +57,7 @@ See [here](https://imagej.net/Following_an_update_site)
 8. <code>Close</code> the update sites window
 9. <code>Apply changes</code>
 10. Restart Fiji
-11. Check if <code>AimSeg</code> appears now in the <code>Plugins</code> dropdown menu (note that it will be placed at the bottom of the dropdown menu)
+11. Check if <code>AimSeg</code> appears now in the <code>Plugins</code> dropdown menu (note that it will be placed at the bottom of the list)
 
 ## Test Dataset
 
@@ -68,9 +68,13 @@ Download an example [image dataset](https://drive.google.com/drive/folders/1DEFt
 
 ## Usage
 
+The AimSeg core is run in Fiji, but it also requires a pixel and an object classifier that can be trained on a different software. Our workflow uses ilastik, but AimSeg has the potential to use probability maps and object predictions generreted using different tools. The documentation includes instructions to use models pre-trained in ilastik. The subtitle of each section includes, in parentheses, the software to be used (i.e., Fiji or ilastik).
+
+NOTE: to use the example dataset and pre-trained models just use the AimSeg default parameters.
+
 ### Pre-processing (Fiji)
 
-Please note that ilastik only supports a series of file formats (check [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, it may be necessary to transform the image dataset into a format supported by ilastik. Moreover, in order to reuse an ilastik project in different datasets, it will be necessary to use the same settings in the format transformation step to pre-process the input data.
+Please note that ilastik only supports a series of file formats (check [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, it may be necessary to transform the image dataset into a format supported by ilastik. Moreover, in order to reuse an ilastik project in different datasets, it will be necessary to use the same settings in the format transformation step to pre-process the input data. Normalisation may be helpful to reuse the same trained model for different datasets.
 
 1. Run the **Pre-processing** script (<code>Plugins>AimSeg>Pre-processing</code>)
 2. Select the directory containing the image dataset to be transformed
@@ -85,8 +89,8 @@ The pre-processed dataset will be stored in a new folder named after the selecte
 2. Select a pre-trained pixel classifier
 3. Go to the <code>Batch Processing</code> applet
 4. Click on <code>Select Raw Data Files...</code>
-5. Load the raw data files
-6. Click on <code>Process all files</code>
+5. Select and load all the images to predicted
+6. Click on <code>Process all files</code>. Processing all the files may take some time, depending on factors such as the number of images to be predicted, the size of the images or the number of features that the classifier computes
 
 ![pc1](https://user-images.githubusercontent.com/39589980/186393550-d30c133c-d275-4104-a467-8bb1d56910f1.png)
 
@@ -94,14 +98,16 @@ By default, ilastik will store the output files together with the input files. P
 
 ### Object classification (ilastik)
 
+If you just run the pixel classifier, click <code>Project > Close</code> to return to the ilastik main menu. Do not save the changes, unless you made any modification on the training or export parameters (e.g., use different features, add new annotations or a select a different file type to export) that you wish to preserve.
+
 1. Click on <code>Browse Files</code> (Open Project... submenu)
 2. Select a pre-trained object classifier
 3. Go to the <code>Batch Processing</code> applet
 4. Click on <code>Select Raw Data Files...</code>
-5. Load the raw data files
+5. Select and load all the images to predicted
 6. Switch to the <code>Prediction Maps</code> tab
 7. Click on <code>Select Prediction Maps Files...</code>
-8. Load the prediction maps files (sorted to match the raw data list)
+8. Load the prediction map files (sorted to match the raw data list)
 9. Click on <code>Process all files</code>
 
 ![pc2](https://user-images.githubusercontent.com/39589980/186394567-8c6c5a3c-80f0-4e1b-b810-071d8183ecbb.png)
