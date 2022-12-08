@@ -14,6 +14,14 @@ macro "Select None [0]" {
 	run("Select None");
 }
 
+macro "Show Annotations [s]" {
+	roiManager("show all with labels");
+}
+
+macro "Hide Annotations [h]" {
+	roiManager("show none");
+}
+
 // macro to switch the color of the selected ROI
 macro "Toggle ROI group [q]" {
 	index=roiManager("index");
