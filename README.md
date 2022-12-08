@@ -160,6 +160,8 @@ It is possible to edit the ROIs using the Fiji selection tools during the 3 AimS
 * <kbd>z</kbd> Split ROI (will split a ROI made of multiple selection into different ROIs)
 * <kbd>c</kbd> Get convex hull
 * <kbd>0</kbd> Select none (empty selection)
+* <kbd>s</kbd> Show annotations
+* <kbd>h</kbd> Hide annotations
 
 AimSeg shortcuts to set the selection tool:
 
