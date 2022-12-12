@@ -10,7 +10,7 @@ macro "Select Wand Tool [3]" {
 	setTool("wand");
 }
 
-macro "Select None [0]" {
+macro "Select None [n0]" {
 	run("Select None");
 }
 
