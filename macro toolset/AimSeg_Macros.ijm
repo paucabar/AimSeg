@@ -22,6 +22,24 @@ macro "Hide Annotations [h]" {
 	roiManager("show none");
 }
 
+function updateBrushSize(value, multiple) {
+	brushWidth = call("ij.gui.Toolbar.getBrushSize");
+	brushWidth = parseInt(brushWidth);
+	call("ij.gui.Toolbar.setBrushSize", roundMultiple(brushWidth + value, multiple));
+}
+
+function roundMultiple(x, multiple) {
+    return round(x/multiple)*multiple;
+}
+
+macro "Increase Brush Size [n8]" {
+	updateBrushSize(3, 3);
+}
+
+macro "Decrease Brush Size [n2]" {
+	updateBrushSize(-3, 3);
+}
+
 // macro to switch the color of the selected ROI
 macro "Toggle ROI group [q]" {
 	index=roiManager("index");
