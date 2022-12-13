@@ -1,7 +1,7 @@
 #@ File(label="Image File", style="open") imageFile
 #@ Integer (label="Myelin Probability Channel", value=1, max=3, min=1, style="listBox") probChannel
-#@ String (label="Object Prediction Threshold", choices={"Below", "Above"}, value="Above", style="radioButtonHorizontal") objThr
-#@ Integer (label="Object Prediction Label", value=2, max=10, min=1, style="listBox") objLabel
+#@ String (label="Object Prediction Threshold", choices={"Below", "Above"}, value="Below", style="radioButtonHorizontal") objThr
+#@ Integer (label="Object Prediction Label", value=3, max=10, min=1, style="listBox") objLabel
 #@ boolean (label="Automated", value=false, persist=true) automated
 #@ boolean (label="Axon Autocomplete", value=true, persist=true) autocomplete
 #@ UpdateService updateService
@@ -669,8 +669,16 @@ impMaskOverlayMyelin.show()
 int t0s3 = System.currentTimeMillis()
 
 // segment object predictions: select class
+if (objThr == "Above") {
+    minObj=objLabel+1
+    maxObj=255
+} else {
+    minObj=1
+    maxObj=objLabel-1
+}
+
 ImagePlus impAxonMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
-impAxonMasks.getProcessor().setThreshold(1, 2, ImageProcessor.NO_LUT_UPDATE)
+impAxonMasks.getProcessor().setThreshold(minObj, maxObj, ImageProcessor.NO_LUT_UPDATE)
 impAxonMasks.setProcessor(impAxonMasks.getProcessor().createMask())
 run (impAxonMasks.getProcessor(), "close", 5, 1)
 fill(impAxonMasks.getProcessor())
@@ -703,11 +711,11 @@ rm.getRoisAsArray().eachWithIndex { roi, index ->
 
 // segment object predictions: reject class
 if (objThr == "Above") {
-    minObj=objLabel+1
-    maxObj=255
+    minObj=1
+    maxObj=objLabel
 } else {
-    minObj=0
-    maxObj=objLabel-1
+    minObj=objLabel
+    maxObj=255
 }
 ImagePlus impRejectMasks = dup.run(impObj, 1, 1, 1, 1, 1, 1);
 impRejectMasks.getProcessor().setThreshold(minObj, maxObj, ImageProcessor.NO_LUT_UPDATE)
