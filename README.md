@@ -68,7 +68,7 @@ Download an example [image dataset](https://drive.google.com/drive/folders/1DEFt
 
 ## Usage
 
-The AimSeg core is run in Fiji, but it also requires a pixel and an object classifier that can be trained on a different software. Our workflow uses ilastik, but AimSeg has the potential to use probability maps and object predictions generreted using different tools. The documentation includes instructions to use models pre-trained in ilastik. The subtitle of each section includes, in parentheses, the software to be used (i.e., Fiji or ilastik).
+The AimSeg core is run in Fiji, but it also requires a pixel and an object classifier that can be trained on a different software. Our workflow uses ilastik, but AimSeg has the potential to use probability maps and object predictions generated using different tools. The documentation includes instructions to use models pre-trained in ilastik. The subtitle of each section includes, in parentheses, the software to be used (i.e., Fiji or ilastik).
 
 NOTE: to use the example dataset and pre-trained models just use the AimSeg default parameters.
 
