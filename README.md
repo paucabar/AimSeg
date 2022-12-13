@@ -5,6 +5,7 @@
 * [Overview](https://github.com/paucabar/AimSeg/blob/master/README.md#overview)
 * [How to cite](https://github.com/paucabar/AimSeg/blob/master/README.md#how-to-cite)
 * [Requirements](https://github.com/paucabar/AimSeg/blob/master/README.md#requirements)
+* [Dependencies](https://github.com/paucabar/AimSeg/blob/master/README.md#dependencies)
 * [Installation](https://github.com/paucabar/AimSeg/blob/master/README.md#installation)
 * [Test Dataset](https://github.com/paucabar/AimSeg/blob/master/README.md#test-dataset)
 * [Usage](https://github.com/paucabar/AimSeg/blob/master/README.md#usage)
@@ -27,6 +28,9 @@ Available soon...
 
 * [Fiji](https://fiji.sc/)
 * [ilastik](https://www.ilastik.org/) 1.3.3 or later
+
+## Dependencies
+
 * _ilastik_ update site (Fiji). Once added, it is important to set up the connection between ilastik and Fiji (only needs to be done once). Please find a short guide below
 * _Morphology_ update site (Fiji)
 
