@@ -137,7 +137,7 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
         def opener = new Opener()
         String extension = imagePath[imagePath.lastIndexOf('.')+1..-1]
         println "Importing $extension file"
-        result = opener.openImage(imagePath)
+        result = opener.openUsingBioFormats(imagePath)
     } else {
         println "Importing h5 file"
         def imp = new Hdf5DataSetReader<>(
