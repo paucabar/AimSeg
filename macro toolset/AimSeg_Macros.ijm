@@ -61,6 +61,7 @@ macro "Add ROI [a]" {
 	roiManager("select", count-1);
 	RoiManager.setGroup(2);
 	roiManager("Set Line Width", 5);
+	run("Select None");
 }
 
 macro "Delete ROI [d]" {
