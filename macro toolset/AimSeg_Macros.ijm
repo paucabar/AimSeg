@@ -65,8 +65,10 @@ macro "Add ROI [a]" {
 }
 
 macro "Delete ROI [d]" {
-	roiManager("Delete");
-	run("Select None");
+	if(roiManager("index") != -1){
+		roiManager("Delete");
+		run("Select None");
+	}
 }
 
 macro "Update ROI [u]" {
