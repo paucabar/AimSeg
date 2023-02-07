@@ -13,8 +13,9 @@ ImagePlus importImage (File inputFile) {
 	def opener = new Opener()
 	// Use DM3_Reader.java is available (and required)
 	opener.useHandleExtraFileTypes = true
-	result = opener.openImage(imagePath)
-//	opener.open(imagePath)
+    String extension = imagePath[imagePath.lastIndexOf('.')+1..-1]
+    println "Importing $extension file"
+    result = opener.openUsingBioFormats(imagePath)
 	return result
 }
 
