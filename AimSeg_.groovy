@@ -1,5 +1,6 @@
 #@ File(label="Image File", style="open") imageFile
 #@ Integer (label="Myelin Probability Channel", value=1, max=3, min=1, style="listBox") probChannel
+#@ Integer (label="Stage1 min area (pixels)", value=10000, min=0, style="listBox") inMinArea
 #@ String (label="Object Prediction Threshold", choices={"Below", "Above"}, value="Below", style="radioButtonHorizontal") objThr
 #@ Integer (label="Object Prediction Label", value=3, max=10, min=1, style="listBox") objLabel
 #@ boolean (label="Automated", value=false, persist=true) automated
@@ -469,7 +470,11 @@ impProb = importImage(probFile, "/exported_data", "yxc")
 impObj = importImage(objFile, "/exported_data", "yxc")
 IJ.run(impObj, "glasbey inverted", "")
 
-
+// get calibration
+cal = imp.getCalibration()
+float calX = cal.getX(1)
+float calY = cal.getY(1)
+String calUnit = cal.getUnit()
 
 /**
  * STAGE 1
@@ -517,7 +522,7 @@ impNoEdges.close()
 impEdges.close()
 
 // get inner masks
-int inMinArea = 10000 // min size to filter IN particles
+//int inMinArea = 10000 // min size to filter IN particles
 int options_add_manager = ParticleAnalyzer.SHOW_MASKS + ParticleAnalyzer.ADD_TO_MANAGER
 ImagePlus innerMasks = analyzeParticles(impOR, options_add_manager, measurements_area, inMinArea, Double.POSITIVE_INFINITY, 0.4, 1)
 impOR.close()
@@ -762,12 +767,6 @@ println tS3
 
 // timing
 int t0pp = System.currentTimeMillis()
-
-// get calibration
-cal = imp.getCalibration()
-float calX = cal.getX(1)
-float calY = cal.getY(1)
-String calUnit = cal.getUnit()
 
 // create 3 RoiManager
 RoiManager rmIn = new RoiManager(false)
