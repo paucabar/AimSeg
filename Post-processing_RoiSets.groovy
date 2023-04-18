@@ -1,5 +1,6 @@
 #@ File(label="Image File", style="open") imageFile
-#@ boolean (label="Axon Autocomplete", value=true, persist=false) autocomplete
+#@ boolean (label="Axon Autocomplete", value=true, persist=true) autocomplete
+#@ boolean (label="Export Binary Mask", value=true, persist=true) exp_binary
 #@ UpdateService updateService
 #@ UIService ui
 #@ LogService logService
@@ -9,6 +10,8 @@ import ij.IJ
 import ij.Prefs
 import ij.io.Opener
 import ij.ImagePlus
+import ij.process.ImageProcessor
+import ij.process.ByteProcessor
 import groovy.io.FileType
 import net.imglib2.img.display.imagej.ImageJFunctions
 import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
@@ -17,6 +20,7 @@ import ij.gui.Roi
 import java.awt.Color
 import ij.plugin.Commands
 import ij.gui.ShapeRoi
+import ij.io.FileSaver
 
 /**
  * Checks if an update site is active
@@ -202,6 +206,18 @@ def excludeEdgesRois(ImagePlus imp, RoiManager rm) {
     cleanRoiSet (imp, rm)
 }
 
+/**
+ * Creates a binary from the ROI Manager
+ */
+ImagePlus createRoiMask2 (ImagePlus imp, RoiManager rm) {
+    IJ.run(imp, "Select None", "");
+    rm.deselect()
+    rm.runCommand(imp,"Combine")
+    ByteProcessor mask = imp.createRoiMask()
+    ImagePlus impMask = new ImagePlus("Mask", mask)
+    return impMask
+}
+
 
 /**
  * START
@@ -351,6 +367,29 @@ rmAxon.runCommand("Sort")
 
 // save RoiSet_AXON
 rmAxon.save(parentPathS+File.separator+impNameWithoutExtension+"_RoiSet_AXON.zip")
+
+// save binary images
+if(exp_binary){
+	File exportAxonPath = new File(parentPathS+File.separator+'Post_processed_Axon_Masks')
+	if (!exportAxonPath.exists())
+   		exportAxonPath.mkdirs()
+	File exportInPath = new File(parentPathS+File.separator+'Post_processed_In_Masks')
+	if (!exportInPath.exists())
+   		exportInPath.mkdirs()
+	File exportOutPath = new File(parentPathS+File.separator+'Post_processed_Out_Masks')
+	if (!exportOutPath.exists())
+   		exportOutPath.mkdirs()
+	binary_axon = createRoiMask2 (imp, rmAxon)
+	binary_in = createRoiMask2 (imp, rmIn)
+	binary_out = createRoiMask2 (imp, rmOut)
+	
+	FileSaver fs_axon = new FileSaver(binary_axon)
+	fs_axon.saveAsTiff(parentPathS+File.separator+'Post_processed_Axon_Masks'+File.separator+impNameWithoutExtension+".tif")
+	FileSaver fs_in = new FileSaver(binary_in)
+	fs_in.saveAsTiff(parentPathS+File.separator+'Post_processed_In_Masks'+File.separator+impNameWithoutExtension+".tif")
+	FileSaver fs_out = new FileSaver(binary_out)
+	fs_out.saveAsTiff(parentPathS+File.separator+'Post_processed_Out_Masks'+File.separator+impNameWithoutExtension+".tif")
+}
 
 /**
  * RESET
