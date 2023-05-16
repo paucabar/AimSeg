@@ -66,7 +66,7 @@ See [here](https://imagej.net/Following_an_update_site)
 
 ## Test Dataset
 
-Download an example [image dataset](https://drive.google.com/drive/folders/1DEFtn71krM6cOjsnZpIEFMCBVmAYk9Lq?usp=sharing) and two [ilastik projects](https://drive.google.com/drive/folders/1tNyDpmd0wwBx-MKH-LhOZaZBgYMfTz2J?usp=sharing) for pixel and object classification.
+Download an example [image dataset](https://doi.org/10.5281/zenodo.6327209) and two [ilastik projects](https://drive.google.com/drive/folders/1tNyDpmd0wwBx-MKH-LhOZaZBgYMfTz2J?usp=sharing) for pixel and object classification.
 
 * To use the provided image dataset and ilastik classifiers, just follow the documentation below and always use the defaults for parameterisation.
 * To train your own classifiers, please go to [Train Classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#train-classifiers).
