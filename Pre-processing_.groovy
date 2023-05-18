@@ -22,7 +22,7 @@ ImagePlus importImage (File inputFile) {
 }
 
 ImagePlus resizeImage(ImagePlus imp, float downsample) {
-	ImageProcessor ip = imp.getProcessor().resize((imp.getWidth()/downsample).intValue(), (imp.getHeight()/downsample).intValue(), false)
+	ImageProcessor ip = imp.getProcessor().resize(Math.ceil(imp.getWidth()/downsample).intValue(), Math.ceil(imp.getHeight()/downsample).intValue(), false)
 	ImagePlus result = new ImagePlus(imp.getTitle(), ip)
 	return result
 }
