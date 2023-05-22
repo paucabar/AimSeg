@@ -1,12 +1,13 @@
 #@ File(label="Select directory", style="directory") dir
 #@ float(label="Downsample", value=2.0, persist=true) downsample
 #@ boolean(label="Normalize", value=false, persist=true) normalize
+#@ boolean(label="8-bit", value=false, persist=true) eightBit
 
 import ij.IJ
 import ij.process.ImageConverter
 import ij.io.Opener
 import ij.ImagePlus
-import ij.process.ImageProcessor
+//import ij.process.ImageProcessor
 import java.io.File
 import groovy.io.FileType
 
@@ -22,8 +23,9 @@ ImagePlus importImage (File inputFile) {
 }
 
 ImagePlus resizeImage(ImagePlus imp, float downsample) {
-	ImageProcessor ip = imp.getProcessor().resize(Math.ceil(imp.getWidth()/downsample).intValue(), Math.ceil(imp.getHeight()/downsample).intValue(), false)
-	ImagePlus result = new ImagePlus(imp.getTitle(), ip)
+	ImagePlus result = imp.resize(Math.ceil(imp.getWidth()/downsample).intValue(), Math.ceil(imp.getHeight()/downsample).intValue(), "none")
+	//ImageProcessor ip = imp.getProcessor().resize(Math.ceil(imp.getWidth()/downsample).intValue(), Math.ceil(imp.getHeight()/downsample).intValue(), false)
+	//ImagePlus result = new ImagePlus(imp.getTitle(), ip)
 	return result
 }
 
@@ -35,7 +37,7 @@ def preProcessing(ImagePlus imp, float saturatedPixels, float downsample) {
 		imp = resizeImage(imp, downsample)
 	}
 	int bitDepth = imp.getBitDepth()
-	if (bitDepth > 8) {
+	if (eightBit && bitDepth > 8) {
 		def ic = new ImageConverter(imp)
 		//ic.setDoScaling(true)
 		ic.convertToGray8()
@@ -64,12 +66,12 @@ for (i=0; i<fileList.size(); i++) {
 	if (file.isHidden())
 		continue
 	ImagePlus imp = importImage(file)
+	String title = imp.getShortTitle()
+	println "Processing ${->title}"
 	// Shouldn't happen if we only have images - but check anyway
 	if (imp == null)
 		continue
 	imp = preProcessing(imp, 0.1, downsample)
-	String title = imp.getShortTitle()
-	println "${->title} processed"
 	path = new File(outDir, "${->title}.tif").getAbsolutePath()
 	ij.IJ.save(imp, path)
 }
