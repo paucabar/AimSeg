@@ -66,9 +66,9 @@ See [here](https://imagej.net/Following_an_update_site)
 10. Restart Fiji
 11. Check if <code>AimSeg</code> appears now in the <code>Plugins</code> dropdown menu (note that it will be placed at the bottom of the list)
 
-## Test Dataset
+## Dataset and pre-trained classifiers
 
-Download an example [image dataset](https://doi.org/10.5281/zenodo.6327209) and two [ilastik projects](https://drive.google.com/drive/folders/1tNyDpmd0wwBx-MKH-LhOZaZBgYMfTz2J?usp=sharing) for pixel and object classification.
+The AimSeg validation ground truth and classifiers are available in [Zenodo](https://doi.org/10.5281/zenodo.8021007).
 
 * To use the provided image dataset and ilastik classifiers, just follow the documentation below and always use the defaults for parameterisation.
 * To train your own classifiers, please go to [Train Classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#train-classifiers).
