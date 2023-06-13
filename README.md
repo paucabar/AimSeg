@@ -7,7 +7,7 @@
 * [Requirements](https://github.com/paucabar/AimSeg/blob/master/README.md#requirements)
 * [Dependencies](https://github.com/paucabar/AimSeg/blob/master/README.md#dependencies)
 * [Installation](https://github.com/paucabar/AimSeg/blob/master/README.md#installation)
-* [Test Dataset](https://github.com/paucabar/AimSeg/blob/master/README.md#test-dataset)
+* [Dataset and pre-trained classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#test-dataset)
 * [Usage](https://github.com/paucabar/AimSeg/blob/master/README.md#usage)
    * [Pre-processing (Fiji)](https://github.com/paucabar/AimSeg/blob/master/README.md#pre-processing-fiji)
    * [Pixel classification (ilastik)](https://github.com/paucabar/AimSeg/blob/master/README.md#pixel-classification-ilastik)
