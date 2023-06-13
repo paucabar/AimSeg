@@ -18,11 +18,11 @@
 
 ## Overview
 
-AimSeg is a bioimage analysis workflow that combines machine learning with automated post-processing and user-guidance to perform the segmentation of axon, inner cytoplasmic tongue and compact myelin on electron microscopy (EM) data. The workflow uses pixel and object classification to facilitate the process, whereas a semi-automated mode enables users to amend the automated selection performed by AimSeg.
+AimSeg is a bioimage analysis workflow that combines machine learning with automated post-processing and user-guidance to perform the segmentation of axon, inner cytoplasmic tongue and compact myelin on electron microscopy (EM) data. The workflow uses pixel and object classification to facilitate the process, whereas a supervised mode enables users to amend the automated selection performed by AimSeg.
 
 ## How to cite
 
-If you use AimSeg please cite:
+If you use AimSeg for your research, please cite:
 * Ana Maria Rondelli, Jose Manuel Morante-Redolat, Peter Bankhead, Bertrand Vernay, Anna Williams, Pau Carrillo-Barberà. AimSeg: a machine-learning-aided tool for axon, inner tongue and myelin segmentation. bioRxiv 2023.01.02.522533; doi: https://doi.org/10.1101/2023.01.02.522533
 
 ## Requirements
@@ -30,10 +30,12 @@ If you use AimSeg please cite:
 * [Fiji](https://fiji.sc/)
 * [ilastik](https://www.ilastik.org/) 1.3.3 or later
 
-## Dependencies
+## Dependencies (Fiji)
 
-* _ilastik_ update site (Fiji). Once added, it is important to set up the connection between ilastik and Fiji (only needs to be done once). Please find a short guide below
-* _Morphology_ update site (Fiji)
+Add the following sites to your list of update sites in Fiji:
+* _ilastik_ site (once added, set up the connection between ilastik and Fiji)
+* _IJPB-plugins_ site
+* _Morphology_ site
 
 ---
 **How to follow an update site in Fiji**
