@@ -140,6 +140,7 @@ By default, ilastik will store the output files together with the input files. P
 11. The <code>Axon Autocomplete</code> will create axon ROIs when these are not detected by AimSeg or added by the user. In this case, AimSeg assumes that the inner tongue of those fibres missing the axon ROI has shrunk completely, so it automatically generates an axon ROI equivalent to the inner region ROI. Recommended only for <code>Supervised</code> mode
 
 **Supervised Mode**
+
 *Stage 1: Inner Region*
 
 * The elecron microscopy image will pop up and the objects will be detected as ROIs. The red ROIs correspond to the selected objects, whereas the blue ROIs corresponds to the rejected objects
@@ -162,28 +163,41 @@ By default, ilastik will store the output files together with the input files. P
 ---
 **ROI edition**
 
-It is possible to edit the ROIs using the Fiji selection tools during the 3 AimSeg stages. Additionally, stage 1 and 3 generate blue ROIs correponding to rejected objects. The user can toggle ROIs between selected (red) and rejected (blue). Below are listed the AimSeg shortcuts for ROI edition:
+AimSeg includes shortcuts to set the visualisation parameters:
 
-* <kbd>q</kbd> Toggle ROI mode (red/blue)
-* <kbd>a</kbd> Add ROI (note that those ROIs added using the Fiji default <kbd>t</kbd> shortcut will be ignored by AimSeg)
-* <kbd>d</kbd> Delete ROI
-* <kbd>u</kbd> Update ROI (edit the ROI before updating. E.g., hold <kbd>Shift</kbd> key while drawing a region to be added to the selected ROI. Conversely, hold <kbd>Alt</kbd> key while drawing a hole or region to be removed from the selected ROI)
-* <kbd>z</kbd> Split ROI (will split a ROI made of multiple selection into different ROIs)
-* <kbd>c</kbd> Get convex hull
-* <kbd>s</kbd> Show annotations
-* <kbd>h</kbd> Hide annotations
+* <kbd>F</kbd> Fill ROI colour
+* <kbd>R</kbd> Hide ROIs
+* <kbd>N</kbd> Display RoiManager
+
+AimSeg also includes shortcuts to modify selections
+
+* <kbd>G</kbd> Toggle ROI group (selected: red / rejected: blue)
+* <kbd>A</kbd> Add ROI
+* <kbd>Shift</kbd><kbd>D</kbd> Delete ROI
+* <kbd>S</kbd> Split ROI
+* <kbd>M</kbd> Merge ROIs
+* <kbd>X</kbd> Get convex hull
+* <kbd>D</kbd> Dilate
+* <kbd>E</kbd> Erode
+
+It is possible to edit the ROIs using the Fiji shortcuts during the 3 AimSeg stages:
+
+* Hold <kbd>Shift</kbd> key while drawing a region to be added to the selected ROI
+* Hold <kbd>Alt</kbd> key while drawing a hole or region to be removed from the selected ROI
+* <kbd>U</kbd> Update ROI after manual edition
 
 AimSeg shortcuts to set the selection tool (on the top row of the keyboard):
 
-* <kbd>1</kbd> Select Brush Tool. Note that once created a brush selection, it will be only possible to edit that selection. To addd a new selection, first deselect the latest one by pressing <kbd>0</kbd> on the numerical keypad
+Shortcuts to select tools
+* <kbd>1</kbd> Select Brush Tool. Note that once created a brush selection, it will be only possible to edit that selection. To addd a new selection, first deselect the latest one by pressing <kbd>n0</kbd> (n = numerical keypad)
 * <kbd>2</kbd> Select Freehand Tool
 * <kbd>3</kbd> Select Wand Tool
 
-AimSeg shortcuts for the brush tool (on the numerical keypad):
+AimSeg shortcuts for the brush tool (n = numerical keypad):
 
-* <kbd>0</kbd> Select none (empty selection) before creating a new ROI with the brush tool
-* <kbd>8</kbd> Increase the size of the brush tool (+3)
-* <kbd>2</kbd> Decrease the size of the brush tool (-3)
+* <kbd>n0</kbd> Select none (empty selection) before creating a new ROI with the brush tool
+* <kbd>n8</kbd> Increase the size of the brush tool (+3)
+* <kbd>n2</kbd> Decrease the size of the brush tool (-3)
 ---
 
 ### Filtering (optional)
