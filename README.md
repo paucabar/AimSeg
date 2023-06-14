@@ -125,17 +125,22 @@ By default, ilastik will store the output files together with the input files. P
 
 ### AimSeg (Fiji)
 
-*Run AimSeg*
+**AimSeg parameters**
 
-1. Run the **AimSeg** script (<code>Plugins>AimSeg>AimSeg</code>)
+1. Run **AimSeg** (<code>Plugins>AimSeg>AimSeg</code>)
 2. Select the electron microscopy image (one at a time) to be procecessed (please remember that the image dataset and the ilastik output, both probability maps and object predictions, must remain stored together in the working directory)
-3. Set the myelin probability channel (the ilastik pixel classification generates a probability map, i.e., a multi-channel image where each channel corresponds to the different pixel labels defined for the training; starts from 1)
-4. Set the threshold to segment the object prediction image (the ilastik object classification generates a object prediction, i.e., a single image where the pixel values of each object correspond to the different object labels defined for the training; starts from 1). <code>Object Prediction Threshold</code> determines if the selected objects will be those below or above the <code>Object Prediction Label</code>
-5. The <code>Automated</code> mode will skip the user-edition steps, obtain and store all the ROIs, save the results table (as .tsv) and clean up all the images in memory
-6. The <code>Axon Autocomplete</code> will create axon ROIs when these are not detected by AimSeg or added by the user. In this case, AimSeg assumes that the inner tongue of those fibres missing the axon ROI has shrunk completely, so it automatically generates an axon ROI equivalent to the inner compact myelin layer (ICML) ROI.
-7. AimSeg may take a few seconds to initialise, as it starts importing the image files.
+3. Set the <code>Myelin Probability Channel</code> (the ilastik pixel classification generates a probability map, i.e., a multi-channel image where each channel corresponds to the different pixel labels defined for the training; starts from 1)
+4. Set the <code>Myelin threshold</code> to find the myelinated axons
+5. Set the <code>Min Area</code> of the inner region (wrapped by compact myelin)
+6. Set the <code>Min Circularity</code> of the inner region
+7. Set a value to <code>correct the myelin threhold</code> to define the fibre outline
+8. Set the parameters to slect the objects classified as axons (the ilastik object classification generates a object prediction, i.e., a single image where the pixel values of each object correspond to the different object labels defined for the training; starts from 1). Set the <code>Object Prediction Threshold</code> and specify if the selected objects are expected to be <code>Below</code> or <code>Above</code> the threshold.
+9. AIimSeg includes some methods to further process the axon mask, which are listed under the <code>Axon Correction</code> menu. Methods based on watershed need to specify the <code>Axon Probability Channel</code>
+10. Set the <code>Automated</code> mode to skip the user-edition steps. Otherwise AimSeg will enter the <code>Supervised</code>
+11. The <code>Axon Autocomplete</code> will create axon ROIs when these are not detected by AimSeg or added by the user. In this case, AimSeg assumes that the inner tongue of those fibres missing the axon ROI has shrunk completely, so it automatically generates an axon ROI equivalent to the inner region ROI. Recommended only for <code>Supervised</code> mode
 
-*Stage 1: Inner compact myelin layer (ICML)*
+**Supervised Mode**
+*Stage 1: Inner Region*
 
 * The elecron microscopy image will pop up and the objects will be detected as ROIs. The red ROIs correspond to the selected objects, whereas the blue ROIs corresponds to the rejected objects
 * It is possible to edit the ROI selection using the Fiji selection tools (please see the **ROI edition** section below)
@@ -153,9 +158,6 @@ By default, ilastik will store the output files together with the input files. P
 * It is possible to edit the ROI selection
 * Click ok to finish the annotation process
 
-*Post-processing and quantification*
-
-The last steps are fully automated. A results table (tsv file) will be stored in the working directory.
 
 ---
 **ROI edition**
