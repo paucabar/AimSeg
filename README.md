@@ -202,15 +202,13 @@ AimSeg shortcuts for the brush tool (n = numerical keypad):
 
 ### Filtering (optional)
 
-It is possible to filter out those ROIs corresponding to fibre cross-sections on the edges or missing any ROI set. Currently, this option is not included in AimSeg, but it can be done after running the main AimSeg workflow:
+It is possible to filter out those ROIs corresponding to fibre cross-sections on the edges or missing any ROI set. Additionally, if any ROI set is manually edited, the hierarchy will be re-established
 
-1. In this GitHub repository, go to the [Post-processing_RoiSets](https://github.com/paucabar/AimSeg/blob/master/Post-processing_RoiSets.groovy) script
-2. Copy the code
-3. In Fiji, create a new script (<code>File > > New > Script...</code>)
-4. In the script editor, set Groovy as the script language (<code>Language > Groovy</code>)
+1. Run the **Filtering** script (<code>Plugins>AimSeg>Post-processing RoiSets</code>)
+2. <code>Browse</code> to select the _Image File_ (note that the RoiSets (zip files) must be stored in the image file parent folder to access them)
+3. The <code>Axon Autocomplete</code> mode will create axon ROIs when these are missing, like the AimSeg workflow.
+4. Check <code>Export Binary Mask</code> to store the corresponding ROI masks in the working directory.
 5. <code>Run</code>
-6. <code>Browse</code> to select the _Image File_ (note that the RoiSets (zip files) must be stored in the image file parent folder to access them)
-7. The <code>Axon Autocomplete</code> will create axon ROIs when these are missing, like the AimSeg workflow.
 
 ## Train Classifiers
 
