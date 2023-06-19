@@ -88,9 +88,8 @@ ImagePlus impLabel = IJ.createImage("Labeling", "16-bit black", imp.getWidth(), 
 impLabel = label_semantic (impLabel, 1, rmOut)
 impLabel = label_semantic (impLabel, 2, rmIn)
 impLabel = label_semantic (impLabel, 3, rmAxon)
-//IJ.run(impLabel, "glasbey inverted", "")
 
-
-impR = setMaskOverlay (imp, impLabel, 1, 255, 0, 0, 50)
-impG = setMaskOverlay (impR, impLabel, 2, 0, 255, 0, 50)
-impB = setMaskOverlay (impG, impLabel, 3, 0, 0, 255, 50)
+// set label colours
+impMyelin = setMaskOverlay (imp, impLabel, 1, 82, 207, 255, 50)
+impTongue = setMaskOverlay (impMyelin, impLabel, 2, 255, 165, 4, 50)
+impAxon = setMaskOverlay (impTongue, impLabel, 3, 160, 205, 0, 50)
