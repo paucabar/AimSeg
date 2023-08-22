@@ -24,7 +24,7 @@ ImagePlus importImage (File inputFile) {
 }
 
 ImagePlus resizeImage(ImagePlus imp, float downsample) {
-	ImagePlus result = imp.resize(Math.ceil(imp.getWidth()/downsample).intValue(), Math.ceil(imp.getHeight()/downsample).intValue(), "none")
+	ImagePlus result = imp.resize(Math.round(imp.getWidth()/downsample).intValue(), Math.round(imp.getHeight()/downsample).intValue(), "none")
 	return result
 }
 
