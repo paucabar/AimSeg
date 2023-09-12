@@ -174,6 +174,7 @@ AimSeg also includes shortcuts to modify selections
 * <kbd>G</kbd> Toggle ROI group (selected: red / rejected: blue)
 * <kbd>A</kbd> Add ROI
 * <kbd>Shift</kbd><kbd>D</kbd> Delete ROI
+* <kbd>L</kbd> Rename ROIs according to list index
 * <kbd>S</kbd> Split ROI
 * <kbd>M</kbd> Merge ROIs
 * <kbd>X</kbd> Get convex hull
