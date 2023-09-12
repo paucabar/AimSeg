@@ -88,3 +88,7 @@ macro "Merge Rois [m]" {
 macro "Convex Hull [x]" {
 	run(" convexHull ", "")
 }
+
+macro "Sort Rois [l]" {
+	run(" sortRois ", "")
+}
