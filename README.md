@@ -67,8 +67,9 @@ See [here](https://imagej.net/Following_an_update_site)
 11. Check if <code>AimSeg</code> appears now in the <code>Plugins</code> dropdown menu (note that it will be placed at the bottom of the list)
 
 ## Dataset and pre-trained classifiers
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8351731.svg)](https://doi.org/10.5281/zenodo.8351731)
 
-The AimSeg validation ground truth and classifiers are available in [Zenodo](https://doi.org/10.5281/zenodo.8021007).
+The AimSeg ground truth and classifiers are available in [Zenodo](https://doi.org/10.5281/zenodo.8351731).
 
 * To use the provided image dataset and ilastik classifiers, just follow the documentation below and always use the defaults for parameterisation.
 * To train your own classifiers, please go to [Train Classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#train-classifiers).
