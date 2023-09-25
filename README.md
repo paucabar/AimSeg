@@ -1,21 +1,12 @@
 # AimSeg - Axon, Inner tongue and Myelin Segmentation
 
-## Table of contents
-
-* [Overview](https://github.com/paucabar/AimSeg/blob/master/README.md#overview)
-* [How to cite](https://github.com/paucabar/AimSeg/blob/master/README.md#how-to-cite)
-* [Dataset and pre-trained classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#test-dataset)
-* [Usage](https://github.com/paucabar/AimSeg/blob/master/README.md#usage)
-   * [Pre-processing (Fiji)](https://github.com/paucabar/AimSeg/blob/master/README.md#pre-processing-fiji)
-   * [Pixel classification (ilastik)](https://github.com/paucabar/AimSeg/blob/master/README.md#pixel-classification-ilastik)
-   * [Object classification (ilastik)](https://github.com/paucabar/AimSeg/blob/master/README.md#object-classification-ilastik)
-   * [AimSeg (Fiji)](https://github.com/paucabar/AimSeg/blob/master/README.md#aimseg-fiji)
-   * [Filtering (optional)](https://github.com/paucabar/AimSeg/blob/master/README.md#filtering-optional)
-* [Train Classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#train-classifiers)
-
 ## Overview
 
 AimSeg is a bioimage analysis tool that blends machine learning, automated post-processing, and user guidance to achieve the segmentation of axons, inner tongue, and compact myelin in electron microscopy data. The workflow relies on pixel and object classifiers trained in ilastik, while a supervised mode empowers users to refine the automated selections made by AimSeg.
+
+## Kickstart Tutorial
+
+
 
 ## How to cite
 
@@ -26,9 +17,6 @@ If you use AimSeg for your research, please cite:
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8351731.svg)](https://doi.org/10.5281/zenodo.8351731)
 
 The AimSeg ground truth and classifiers are available in [Zenodo](https://doi.org/10.5281/zenodo.8351731).
-
-* To use the provided image dataset and ilastik classifiers, just follow the documentation below and always use the defaults for parameterisation.
-* To train your own classifiers, please go to [Train Classifiers](https://github.com/paucabar/AimSeg/blob/master/README.md#train-classifiers).
 
 ## Usage
 
@@ -48,37 +36,6 @@ Please note that ilastik only supports a series of file formats (check [Supporte
 6. Run
 
 The pre-processed dataset will be stored in a new folder named after the selected folder adding the postfix  *_pre-processed*. The original images are converted to 32-bit for normalisation and saved as tif files.
-
-### Pixel classification / Autocontext (ilastik)
-
-1. Click on <code>Browse Files</code> (Open Project... submenu)
-2. Select a pre-trained pixel classifier or autocontext project
-3. Go to the <code>Batch Processing</code> applet
-4. Click on <code>Select Raw Data Files...</code>
-5. Select and load all the images to be predicted
-6. Click on <code>Process all files</code>. Processing all the files may take some time, depending on factors such as the number of images to be predicted, the size of the images or the number of features that the classifier computes
-
-![pc1](https://user-images.githubusercontent.com/39589980/186393550-d30c133c-d275-4104-a467-8bb1d56910f1.png)
-
-By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the same folder, henceforth the working directory.
-
-### Object classification (ilastik)
-
-If you just run the pixel classifier, click <code>Project > Close</code> to return to the ilastik main menu. Do not save the changes, unless you made any modification on the training or export parameters (e.g., use different features, add new annotations or select a different file type to export) that you wish to preserve.
-
-1. Click on <code>Browse Files</code> (Open Project... submenu)
-2. Select a pre-trained object classifier
-3. Go to the <code>Batch Processing</code> applet
-4. Click on <code>Select Raw Data Files...</code>
-5. Select and load all the images to be predicted
-6. Switch to the <code>Prediction Maps</code> tab
-7. Click on <code>Select Prediction Maps Files...</code>
-8. Load the prediction map files (sorted to match the raw data list)
-9. Click on <code>Process all files</code>
-
-![pc2](https://user-images.githubusercontent.com/39589980/186394567-8c6c5a3c-80f0-4e1b-b810-071d8183ecbb.png)
-
-By default, ilastik will store the output files together with the input files. Please do not relocate these files, as AimSeg needs the ilastik output files to be stored in the working directory.
 
 ### AimSeg (Fiji)
 
