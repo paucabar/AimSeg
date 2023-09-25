@@ -11,7 +11,7 @@ If you use AimSeg for your research, please cite:
 
 ## Kickstart Tutorial
 
-<a href="https://www.youtube.com/watch?v=MVZz_lly8Sw"><img src="https://img.youtube.com/vi/MVZz_lly8Sw/maxresdefault.jpg" width="700"></a>
+<a href="https://www.youtube.com/watch?v=9TrODRqGJdQ"><img src="https://img.youtube.com/vi/9TrODRqGJdQ/maxresdefault.jpg" width="700"></a>
 
 For a more detailed explanation of AimSeg usage, please consult the [In-Depth AimSeg Usage Handbook](https://github.com/paucabar/AimSeg/blob/master/documentation/HANDBOOK.md). [Setup](https://github.com/paucabar/AimSeg/blob/master/documentation/SETUP.md) instructions, a comprehensive list of [shortcuts](https://github.com/paucabar/AimSeg/blob/master/documentation/SHORTCUTS.md), and a guide on [training](https://github.com/paucabar/AimSeg/blob/master/documentation/ILASTIK_TRAINING.md) your own ilastik models for data [processing](https://github.com/paucabar/AimSeg/blob/master/documentation/ILASTIK_PROCESSING.md) are available in separate documents.
 
