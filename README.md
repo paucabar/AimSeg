@@ -19,4 +19,5 @@ For a more detailed explanation of AimSeg usage, please consult the [In-Depth Ai
 
 The AimSeg ground truth and classifiers are available in [Zenodo](https://doi.org/10.5281/zenodo.8351731).
 
+![ground truth transparent background](https://github.com/paucabar/AimSeg/assets/39589980/1b100ef4-463d-4c3f-8870-131f6d39f56f)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8351731.svg)](https://doi.org/10.5281/zenodo.8351731)
