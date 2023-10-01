@@ -8,7 +8,7 @@ AimSeg is conveniently distributed through a Fiji update site, simplifying the i
 
 AimSeg relies on both pixel and object classification, which must be completed prior to running the AimSeg core. Our documentation provides comprehensive [guidelines for training ilastik classifiers](https://github.com/paucabar/AimSeg/blob/master/documentation/ILASTIK_TRAINING.md). Furthermore, the documentation includes instructions for utilising these ilastik classifiers to [process data](https://github.com/paucabar/AimSeg/blob/master/documentation/ILASTIK_PROCESSING.md) and convert it into a compatible format for AimSeg.
 
-Note that for enhanced generalisation, it's advisable to preprocess both the training data and the experimental data in a consistent manner. To facilitate this, AimSeg offers a [pre-processing command](https://github.com/paucabar/AimSeg/blob/master/documentation/HANDBOOK.md#pre-processing) that incorporates some common operations (e.g., normalisation).
+Note that for enhanced generalisation, it's advisable to preprocess both the training data and the experimental data in a consistent manner. To facilitate this, AimSeg offers a [pre-processing command](https://github.com/paucabar/AimSeg/blob/master/documentation/HANDBOOK.md#other-aimseg-commands) that incorporates some common operations (e.g., normalisation).
 
 ### Getting Started
 
@@ -88,27 +88,36 @@ AimSeg generates exports in two distinct file formats:
 
 **Pre-processing**
 
-Please note that ilastik only supports a series of file formats (check [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, it may be necessary to transform the image dataset into a format supported by ilastik. Moreover, in order to reuse an ilastik project in different datasets, it will be necessary to pre-process the input data using the same parameters. Normalisation may be helpful to reuse the same trained model for different datasets.
+Please take note that ilastik has specific supported file format (refer to [Supported File Formats](https://www.ilastik.org/documentation/basics/dataselection.html)). Therefore, you may need to convert your image dataset into a format compatible with ilastik. Additionally, to utilise the same trained model on different datasets, it's important to pre-process the input data with consistent parameters. Normalisation can be advantageous when aiming to apply the same trained model to various datasets.
 
-1. Run the **Pre-processing** script (<code>Plugins>AimSeg>Pre-processing</code>)
-2. Select the directory containing the image dataset to be pre-processed
-3. Image width and height will be divided by the <code>Downsample</code> value
-4. Check <code>Normalize</code> if you want to stretch the image histogram in a 0-1 range
-5. Set the percentage of saturated pixels (<code>% Sat Pixels</code>)
-6. Run
+1. Execute the **Pre-processing** script by going to <code>Plugins > AimSeg > Pre-processing</code>.
+2. Select the directory containing the image dataset that requires pre-processing.
+3. The image width and height will be divided by the <code>Downsample</code> value.
+4. Check the <code>Normalize</code> option if you wish to stretch the image histogram within a 0-1 range.
+5. Set the percentage of saturated pixels using <code>% Sat Pixels</code>.
+6. Click the <code>Run</code> button.
 
-The pre-processed dataset will be stored in a new folder named after the selected folder adding the postfix  *_pre-processed*. The original images are converted to 32-bit for normalisation and saved as tif files.
+The pre-processed dataset will be saved in a new folder named after the selected folder with the addition of the postfix __pre-processed_. The original images are converted to 32-bit for normalisation and saved as TIF files.
 
+**Post-processing RoiSets (optional)**
 
-**Filtering (optional)**
+This command allows you to filter out ROIs corresponding to fiber cross-sections on the edges or any missing ROI sets. Additionally, if any ROI set is manually edited, the hierarchy will be re-established.
 
-It is possible to filter out those ROIs corresponding to fibre cross-sections on the edges or missing any ROI set. Additionally, if any ROI set is manually edited, the hierarchy will be re-established
+1. Run the **Post-processing** RoiSets script by navigating to <code>Plugins > AimSeg > Post-processing RoiSets</code>.
+2. Use the <code>Browse</code> button to select the _Image File_ (note that the RoiSets (ZIP) should be stored in the parent folder of the image file for access).
+3. The <code>Axon Autocomplete</code> mode will generate axon ROIs in cases where they are missing, following the AimSeg workflow.
+4. Check the <code>Export Binary Mask</code> option to store the corresponding ROI masks in the working directory.
+5. Click <code>Run</code>.
 
-1. Run the **Filtering** script (<code>Plugins>AimSeg>Post-processing RoiSets</code>)
-2. <code>Browse</code> to select the _Image File_ (note that the RoiSets (zip files) must be stored in the image file parent folder to access them)
-3. The <code>Axon Autocomplete</code> mode will create axon ROIs when these are missing, like the AimSeg workflow.
-4. Check <code>Export Binary Mask</code> to store the corresponding ROI masks in the working directory.
-5. <code>Run</code>
+**Export Masks**
+
+This command exports two different types of masks:
+* Instance labels for the axon, inner region, and fiber.
+* Semantic masks obtained by combining the labels, differentiating between four semantic classes: axon, inner tongue, myelin, and background.
+
+**Visialise**
+
+This command displays an overlay of the semantic segmentation on the original image for visualization purposes.
 
 ## How to cite
 
