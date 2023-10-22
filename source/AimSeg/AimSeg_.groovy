@@ -79,7 +79,7 @@ import ij.measure.Measurements
 import ij.plugin.ImageCalculator
 import ij.gui.WaitForUserDialog
 import net.imglib2.img.display.imagej.ImageJFunctions
-import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
+import org.ilastik.ilastik4ij.io.ImportCommand
 import ij.plugin.frame.RoiManager
 import ij.gui.Roi
 import ij.gui.Overlay
@@ -154,7 +154,7 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
         result = opener.openUsingBioFormats(imagePath)
     } else {
         println "Importing h5 file"
-        def imp = new Hdf5DataSetReader<>(
+        def imp = new ImportCommand<>(
                 imagePath,
                 datasetName,
                 axisOrder.toLowerCase(),
