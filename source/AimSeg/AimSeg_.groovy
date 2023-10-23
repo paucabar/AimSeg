@@ -16,8 +16,6 @@
 #@ Boolean (label="Axon Autocomplete", value=true, persist=true) autocomplete
 #@ UpdateService updateService
 #@ UIService ui
-#@ LogService logService
-#@ StatusService statusService
 
 /**
  * AimSeg is a bioimage analysis tool for axon, inner tongue and myelin segmentation
@@ -79,7 +77,9 @@ import ij.measure.Measurements
 import ij.plugin.ImageCalculator
 import ij.gui.WaitForUserDialog
 import net.imglib2.img.display.imagej.ImageJFunctions
-import org.ilastik.ilastik4ij.io.ImportCommand
+import org.ilastik.ilastik4ij.hdf5.Hdf5
+import static org.ilastik.ilastik4ij.util.ImgUtils.reversed
+import static org.ilastik.ilastik4ij.util.ImgUtils.toImagejAxes
 import ij.plugin.frame.RoiManager
 import ij.gui.Roi
 import ij.gui.Overlay
@@ -141,6 +141,15 @@ def cleanUp() {
 }
 
 /**
+ * Function to import an image from an HDF5 file with ilastik4ij
+ */
+ImagePlus importHDF5Image(File inputFile, String datasetName, String axisOrder) {
+	def imp = Hdf5.readDataset(inputFile, datasetName, toImagejAxes(reversed(axisOrder.toLowerCase())))
+	ImagePlus result = ImageJFunctions.wrap(imp, "Some title here")
+	return result
+}
+
+/**
  * Opens an image file
  * If the file extension is h5, the image is imported using the ilastik's importer
  * Otherwise, the file is imported using ImageJ's opener
@@ -154,14 +163,8 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
         result = opener.openUsingBioFormats(imagePath)
     } else {
         println "Importing h5 file"
-        def imp = new ImportCommand<>(
-                imagePath,
-                datasetName,
-                axisOrder.toLowerCase(),
-                logService,
-                statusService).read()
-        result = ImageJFunctions.wrap(imp, "Some title here")
-    }
+        result = importHDF5Image(inputFile, datasetName, axisOrder)
+	}
     return result
 }
 
