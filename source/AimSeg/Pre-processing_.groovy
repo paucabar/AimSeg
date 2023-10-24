@@ -1,7 +1,7 @@
 #@ File(label="Select directory", style="directory") dir
-#@ Float(label="Downsample", value=1, min=0.05, max=10, stepSize=0.05, style="format:#.##", persist=true) downsamplePrimitive
+#@ Float(label="Downsample", value=1, min=0.05, max=10, stepSize=0.05, style="format:#.##", persist=true) downsampleFloat
 #@ boolean(label="Normalize", value=false, persist=true) normalize
-#@ Float(label="% Sat Pixels", value=1, min=0.01, max=10, stepSize=0.25, style="format:#.##", persist=true) saturatedPrimitive
+#@ Float(label="% Sat Pixels", value=1, min=0.01, max=10, stepSize=0.25, style="format:#.##", persist=true) saturatedFloat
 
 import ij.IJ
 import ij.process.ImageConverter
@@ -13,8 +13,8 @@ import java.io.File
 import groovy.io.FileType
 
 // Float conversion
-float downsample = downsamplePrimitive
-float saturated = saturatedPrimitive
+float downsample = downsampleFloat
+float saturated = saturatedFloat
 
 ImagePlus importImage (File inputFile) {
 	String imagePath = inputFile.getAbsolutePath()
