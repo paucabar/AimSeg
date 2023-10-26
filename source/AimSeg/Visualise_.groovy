@@ -4,7 +4,9 @@ import java.io.File
 import ij.IJ
 import ij.io.Opener
 import ij.ImagePlus
-import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
+import org.ilastik.ilastik4ij.hdf5.Hdf5
+import static org.ilastik.ilastik4ij.util.ImgUtils.reversed
+import static org.ilastik.ilastik4ij.util.ImgUtils.toImagejAxes
 import ij.plugin.frame.RoiManager
 import ij.gui.Overlay
 import ij.plugin.filter.ThresholdToSelection
@@ -12,6 +14,15 @@ import ij.process.ImageProcessor
 import ij.gui.Roi
 import java.awt.Color
 
+
+/**
+ * Function to import an image from an HDF5 file with ilastik4ij
+ */
+ImagePlus importHDF5Image(File inputFile, String datasetName, String axisOrder) {
+	def imp = Hdf5.readDataset(inputFile, datasetName, toImagejAxes(reversed(axisOrder.toLowerCase())))
+	ImagePlus result = ImageJFunctions.wrap(imp, "Some title here")
+	return result
+}
 
 /**
  * Opens an image file
@@ -27,14 +38,8 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
         result = opener.openUsingBioFormats(imagePath)
     } else {
         println "Importing h5 file"
-        def imp = new Hdf5DataSetReader<>(
-                imagePath,
-                datasetName,
-                axisOrder.toLowerCase(),
-                logService,
-                statusService).read()
-        result = ImageJFunctions.wrap(imp, "Some title here")
-    }
+        result = importHDF5Image(inputFile, datasetName, axisOrder)
+	}
     return result
 }
 
@@ -90,6 +95,6 @@ impLabel = label_semantic (impLabel, 2, rmIn)
 impLabel = label_semantic (impLabel, 3, rmAxon)
 
 // set label colours
-impMyelin = setMaskOverlay (imp, impLabel, 1, 82, 207, 255, 50)
-impTongue = setMaskOverlay (impMyelin, impLabel, 2, 255, 165, 4, 50)
-impAxon = setMaskOverlay (impTongue, impLabel, 3, 160, 205, 0, 50)
+impMyelin = setMaskOverlay (imp, impLabel, 1, 82, 207, 255, 128)
+impTongue = setMaskOverlay (impMyelin, impLabel, 2, 255, 165, 4, 128)
+impAxon = setMaskOverlay (impTongue, impLabel, 3, 160, 205, 0, 128)

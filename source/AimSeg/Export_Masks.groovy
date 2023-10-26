@@ -5,14 +5,23 @@ import ij.IJ
 import ij.io.Opener
 import ij.io.FileSaver
 import ij.ImagePlus
-import org.ilastik.ilastik4ij.hdf5.Hdf5DataSetReader
+import org.ilastik.ilastik4ij.hdf5.Hdf5
+import static org.ilastik.ilastik4ij.util.ImgUtils.reversed
+import static org.ilastik.ilastik4ij.util.ImgUtils.toImagejAxes
 import ij.plugin.frame.RoiManager
-//import ij.gui.Overlay
 import ij.plugin.filter.ThresholdToSelection
 import ij.process.ImageProcessor
 import ij.gui.Roi
-//import java.awt.Color
 
+
+/**
+ * Function to import an image from an HDF5 file with ilastik4ij
+ */
+ImagePlus importHDF5Image(File inputFile, String datasetName, String axisOrder) {
+	def imp = Hdf5.readDataset(inputFile, datasetName, toImagejAxes(reversed(axisOrder.toLowerCase())))
+	ImagePlus result = ImageJFunctions.wrap(imp, "Some title here")
+	return result
+}
 
 /**
  * Opens an image file
@@ -28,14 +37,8 @@ ImagePlus importImage (File inputFile, String datasetName, String axisOrder) {
         result = opener.openUsingBioFormats(imagePath)
     } else {
         println "Importing h5 file"
-        def imp = new Hdf5DataSetReader<>(
-                imagePath,
-                datasetName,
-                axisOrder.toLowerCase(),
-                logService,
-                statusService).read()
-        result = ImageJFunctions.wrap(imp, "Some title here")
-    }
+        result = importHDF5Image(inputFile, datasetName, axisOrder)
+	}
     return result
 }
 
@@ -112,4 +115,6 @@ new FileSaver(impSemantic).saveAsTiff(semanticDir.getAbsolutePath()+File.separat
 new FileSaver(impFibre).saveAsTiff(fibreDir.getAbsolutePath()+File.separator+impNameWithoutExtension+".tif")
 new FileSaver(impInnerMyelin).saveAsTiff(innerMyelinDir.getAbsolutePath()+File.separator+impNameWithoutExtension+".tif")
 new FileSaver(impAxon).saveAsTiff(axonDir.getAbsolutePath()+File.separator+impNameWithoutExtension+".tif")
+
+println "Exported $impNameWithoutExtension masks"
 return
