@@ -7,7 +7,7 @@ AimSeg is a bioimage analysis tool that blends machine learning, automated post-
 ## How to cite
 
 If you use AimSeg for your research, please cite:
-* Ana Maria Rondelli, Jose Manuel Morante-Redolat, Peter Bankhead, Bertrand Vernay, Anna Williams, Pau Carrillo-Barberà. AimSeg: a machine-learning-aided tool for axon, inner tongue and myelin segmentation. bioRxiv 2023.01.02.522533; doi: https://doi.org/10.1101/2023.01.02.522533
+* Carrillo-Barberà P, Rondelli AM, Morante-Redolat JM, Vernay B, Williams A, Bankhead P (2023) AimSeg: A machine-learning-aided tool for axon, inner tongue and myelin segmentation. PLoS Comput Biol 19(11): e1010845. DOI: [doi.org/10.1371/journal.pcbi.1010845](https://doi.org/10.1371/journal.pcbi.1010845)
 
 ## Kickstart Tutorial
 
