@@ -512,7 +512,7 @@ float[] roiEdges (ImagePlus imp, RoiManager rm) {
             double y = b.getY()
             height = imp.getRawStatistics().height
             width = imp.getRawStatistics().width
-            if (x == 0 || y == 0 || x + w >= width || y + h >= height) {
+            if (x <= 0 || y <= 0 || x + w >= width || y + h >= height) {
             	list.add(1.0 as float)
             } else {
             	list.add(0.0 as float)
